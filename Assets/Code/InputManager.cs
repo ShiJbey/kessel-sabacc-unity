@@ -40,7 +40,7 @@ namespace Sabacc
 			// MenuOpenCloseInput = m_OpenCloseMenuAction.WasPressedThisFrame();
 			if ( m_NavigateAction.WasPressedThisFrame() )
 			{
-				Debug.Log( Gamepad.current.displayName );
+				//Debug.Log( Gamepad.current.displayName );
 				//Vector2 direction = m_NavigateAction.ReadValue<Vector2>();
 				//Debug.Log( "Navigation pressed: " + direction.ToString() );
 			}
