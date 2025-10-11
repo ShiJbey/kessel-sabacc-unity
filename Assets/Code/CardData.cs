@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Sabacc
 {
@@ -8,6 +8,7 @@ namespace Sabacc
         [field: SerializeField] public string Name;
         [field: SerializeField] public CardValue Value;
         [field: SerializeField] public CardSuit Suit;
-        [field: SerializeField] public Sprite Sprite;
+        [field: SerializeField] public Sprite FrontSprite;
+		[field: SerializeField] public Sprite BackSprite;
     }
 }
