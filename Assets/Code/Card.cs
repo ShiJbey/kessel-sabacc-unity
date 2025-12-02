@@ -14,7 +14,9 @@ namespace Sabacc
 
 		public int ScoreOverride { get; set;  }
 
-        public Sprite Sprite => m_Data.Sprite;
+        public Sprite FrontSprite => m_Data.FrontSprite;
+
+		public Sprite BackSprite => m_Data.BackSprite;
 
         public Card(CardData data)
         {

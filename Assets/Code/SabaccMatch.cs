@@ -48,13 +48,31 @@ namespace Sabacc
 		public int StartingChips => m_StartingChips;
 		public Player[] Players => m_Players;
 
-		public SabaccMatch(int startingChips)
+		public SabaccMatch(int numPlayers, int startinigChips)
 		{
 			m_CurrentRound = 1;
 			m_CurrentTurnTaker = 0;
 			m_PlayerWhoStartedRound = 0;
 			m_CurrentTurn = 0;
-			m_StartingChips = startingChips;
+			m_StartingChips = startinigChips;
+			m_Players = new Player[numPlayers];
+			for (int i = 0; i < numPlayers; i++)
+			{
+				m_Players[i] = new Player();
+			}
+		}
+
+		/// <summary>
+		/// Reset Blood and Sand decks.
+		/// </summary>
+		public void ResetDecks()
+		{
+
+		}
+
+		public void DealToPlayer(int playerIndex)
+		{
+			// m_Players[playerIndex].Cards;
 		}
 
 		public int IncrementTurn()
