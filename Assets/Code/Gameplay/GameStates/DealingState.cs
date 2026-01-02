@@ -1,0 +1,50 @@
+using System.Threading.Tasks;
+using UnityEngine;
+
+namespace KesselSabacc.Gameplay.GameStates
+{
+	public class DealingState : IGameState
+	{
+		private KesselSabaccController _gameController;
+
+		public Task OnEnter()
+		{
+			_gameController = GameplayManager.Instance.GameController;
+			_gameController.ResetDecksAndPiles();
+			return Task.CompletedTask;
+		}
+
+		public Task OnExit()
+		{
+			return Task.CompletedTask;
+		}
+
+		public void OnInput()
+		{
+
+		}
+
+		public void OnUpdate()
+		{
+			Debug.Log( "Dealing Cards" );
+
+			foreach ( var player in _gameController.Players )
+			{
+				if ( player.Model.IsDisqualified ) continue;
+
+				player.Model.AddCardToHand( _gameController.Model.BloodDeck.Pop() );
+				player.Model.AddCardToHand( _gameController.Model.SandDeck.Pop() );
+			}
+
+			_gameController.Model.BloodDiscardPile.Add(
+				_gameController.Model.BloodDeck.Pop()
+			);
+
+			_gameController.Model.SandDiscardPile.Add(
+				_gameController.Model.SandDeck.Pop()
+			);
+
+			GameplayManager.Instance.GoToTurnTakingState();
+		}
+	}
+}

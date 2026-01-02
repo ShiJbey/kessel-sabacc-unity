@@ -1,28 +1,28 @@
-using System.Collections.Generic;
 using System;
 using UnityEngine;
 
-namespace Sabacc
+namespace KesselSabacc
 {
-	[CreateAssetMenu( fileName = "DeckConfiguration", menuName = "Sabacc/DeckConfiguration" )]
-	public class DeckConfiguration : ScriptableObject
-	{
-		[Tooltip("The types of cards add to a fresh version of this deck.")]
-		[SerializeField]
-		public List<DeckCardCount> m_CardCounts;
+    [CreateAssetMenu( fileName = "DeckConfiguration", menuName = "Sabacc/DeckConfiguration" )]
+    public class DeckConfiguration : ScriptableObject
+    {
+        public Sprite bloodCardBack;
+        public Sprite sandCardBack;
+        public DeckCardConfig sylopCards;
+        public DeckCardConfig oneCards;
+        public DeckCardConfig twoCards;
+        public DeckCardConfig threeCards;
+        public DeckCardConfig fourCards;
+        public DeckCardConfig fiveCards;
+        public DeckCardConfig sixCards;
+        public DeckCardConfig imposterCards;
+    }
 
-		public IEnumerable<DeckCardCount> CardCounts => m_CardCounts;
-
-	}
-
-	[Serializable]
-	public class DeckCardCount
-	{
-		[Tooltip("The card type.")]
-		public CardData cardData;
-
-		[Tooltip("The number of this card that should be in a fresh deck.")]
-		public int count;
-	}
+    [Serializable]
+    public class DeckCardConfig
+    {
+        public Sprite bloodFront;
+        public Sprite sandFront;
+        public int count;
+    }
 }
-

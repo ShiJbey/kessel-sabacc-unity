@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 592d4ae5a77e9f946b5709eb74b8e3cb, type: 3}
+  m_Name: StandardDeck
+  m_EditorClassIdentifier: 
+  bloodCardBack: {fileID: 1852652304, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+  sandCardBack: {fileID: -1821309033, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+  sylopCards:
+    bloodFront: {fileID: 1363787609, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: 1314376027, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    count: 1
+  oneCards:
+    bloodFront: {fileID: -1966503233, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: -2032802704, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    count: 3
+  twoCards:
+    bloodFront: {fileID: 705617475, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: -1998930838, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    count: 3
+  threeCards:
+    bloodFront: {fileID: -85111770, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: 1387212894, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    count: 3
+  fourCards:
+    bloodFront: {fileID: -1458809934, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: 1599729137, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    count: 3
+  fiveCards:
+    bloodFront: {fileID: 659734928, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: 1582420304, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    count: 3
+  sixCards:
+    bloodFront: {fileID: -1982159482, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: 490073600, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    count: 3
+  imposterCards:
+    bloodFront: {fileID: -842224745, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: 1794151879, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    count: 3

@@ -1,13 +1,13 @@
 using System;
 
-namespace LoveHina
+namespace KesselSabacc
 {
-	[Serializable]
-	public struct NewGameData
-	{
-		public string playerName;
-		public int startingChips;
-		public int shiftTokensEnabled;
-		public int numberOfPlayers;
-	}
+    [Serializable]
+    public struct NewGameData
+    {
+        public string playerName;
+        public int startingChips;
+        public int shiftTokensEnabled;
+        public int numberOfPlayers;
+    }
 }

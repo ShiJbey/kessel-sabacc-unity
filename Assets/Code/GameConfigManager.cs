@@ -1,25 +1,25 @@
 using UnityEngine;
 
-namespace LoveHina
+namespace KesselSabacc
 {
-	public class GameConfigManager : MonoBehaviour
-	{
-		[SerializeField]
-		private GameConfig m_Config;
+    public class GameConfigManager : MonoBehaviour
+    {
+        [SerializeField]
+        private GameConfig m_Config;
 
-		public GameConfig Config => m_Config;
+        public GameConfig Config => m_Config;
 
-		public static GameConfigManager Instance { get; private set; }
+        public static GameConfigManager Instance { get; private set; }
 
-		private void Awake()
-		{
-			if ( Instance != null )
-			{
-				Destroy( gameObject );
-				return;
-			}
+        private void Awake()
+        {
+            if ( Instance != null )
+            {
+                Destroy( gameObject );
+                return;
+            }
 
-			Instance = this;
-		}
-	}
+            Instance = this;
+        }
+    }
 }

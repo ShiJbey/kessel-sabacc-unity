@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace LoveHina
+namespace KesselSabacc
 {
     public class SettingsManager : MonoBehaviour
     {
@@ -33,17 +33,17 @@ namespace LoveHina
 
         private void Awake()
         {
-            if (Instance != null)
+            if ( Instance != null )
             {
-                Destroy(gameObject);
+                Destroy( gameObject );
                 return;
             }
 
             Instance = this;
 
-            if (dontDestroyOnLoad)
+            if ( dontDestroyOnLoad )
             {
-                DontDestroyOnLoad(this);
+                DontDestroyOnLoad( this );
             }
         }
 
@@ -53,28 +53,28 @@ namespace LoveHina
             // If it succeeds, update the settings with those loaded in
             // otherwise, just pass a new settings object.
             GameSettings playerPrefSettings = LoadSettingsFromPlayerPrefs();
-            if (playerPrefSettings != null)
+            if ( playerPrefSettings != null )
             {
-                UpdateSettings(playerPrefSettings);
+                UpdateSettings( playerPrefSettings );
             }
             else
             {
-                UpdateSettings(new GameSettings());
+                UpdateSettings( new GameSettings() );
             }
         }
 
 
         public static void UpdateSettings(GameSettings settings)
         {
-            Instance.settings = new GameSettings(settings);
+            Instance.settings = new GameSettings( settings );
             Instance.SaveSettingsToPlayerPrefs();
-            SettingsUpdated?.Invoke(Instance.settings);
+            SettingsUpdated?.Invoke( Instance.settings );
         }
 
         private void SaveSettingsToPlayerPrefs()
         {
-            string settingsJson = JsonUtility.ToJson(settings);
-            PlayerPrefs.SetString(k_SettingsPlayerPrefKey, settingsJson);
+            string settingsJson = JsonUtility.ToJson( settings );
+            PlayerPrefs.SetString( k_SettingsPlayerPrefKey, settingsJson );
         }
 
         /// <summary>
@@ -83,10 +83,10 @@ namespace LoveHina
         /// <returns>GameSettings or null if none found in PlayerPrefs.</returns>
         private GameSettings LoadSettingsFromPlayerPrefs()
         {
-            if (PlayerPrefs.HasKey(k_SettingsPlayerPrefKey))
+            if ( PlayerPrefs.HasKey( k_SettingsPlayerPrefKey ) )
             {
-                string settingsJson = PlayerPrefs.GetString(k_SettingsPlayerPrefKey);
-                GameSettings gameSettings = JsonUtility.FromJson<GameSettings>(settingsJson);
+                string settingsJson = PlayerPrefs.GetString( k_SettingsPlayerPrefKey );
+                GameSettings gameSettings = JsonUtility.FromJson<GameSettings>( settingsJson );
                 return gameSettings;
             }
 
