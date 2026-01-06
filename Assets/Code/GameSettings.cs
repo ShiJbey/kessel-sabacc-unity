@@ -1,24 +1,20 @@
 using System;
+using UnityEngine;
 
 namespace KesselSabacc
 {
 	[Serializable]
 	public class GameSettings
 	{
-		public int masterVolume;
-		public int sfxVolume;
-		public int musicVolume;
-		public DisplayMode displayMode;
-
-		public bool vSyncEnabled;
+		public int masterVolume = 100;
+		public int sfxVolume = 100;
+		public int musicVolume = 100;
+		public FullScreenMode fullScreenMode = FullScreenMode.FullScreenWindow;
+		public bool vSyncEnabled = true;
 
 		public GameSettings()
 		{
-			masterVolume = 100;
-			sfxVolume = 100;
-			musicVolume = 100;
-			displayMode = DisplayMode.FullScreen;
-			vSyncEnabled = true;
+
 		}
 
 		public GameSettings(GameSettings original)
@@ -26,14 +22,8 @@ namespace KesselSabacc
 			masterVolume = original.masterVolume;
 			sfxVolume = original.sfxVolume;
 			musicVolume = original.musicVolume;
-			displayMode = original.displayMode;
+			fullScreenMode = original.fullScreenMode;
 			vSyncEnabled = original.vSyncEnabled;
-		}
-
-		public enum DisplayMode
-		{
-			FullScreen = 0,
-			Windowed = 1,
 		}
 	}
 }

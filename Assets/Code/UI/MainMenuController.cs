@@ -1,78 +1,70 @@
-using System.Collections;
-using System.Collections.Generic;
+using KesselSabacc.UI.Screens;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-namespace KesselSabacc
+namespace KesselSabacc.UI
 {
-    public class MainMenuController : MonoBehaviour
-    {
-        [SerializeField]
-        private HomeScreenController m_HomeScreen;
+	public class MainMenuController : MonoBehaviour
+	{
+		[SerializeField]
+		private HomeScreen _homeScreen;
 
-        [SerializeField]
-        private CreditsScreenController m_CreditsScreen;
+		[SerializeField]
+		private CreditsScreen _creditsScreen;
 
-        [SerializeField]
-        private string m_NewGameScenePath;
+		[SerializeField]
+		private NewSoloGameScreen _newSoloGameScreen;
 
-        private UIComponent m_CurrentScreen;
+		[SerializeField]
+		private SettingsScreen _settingsScreen;
 
-        private Stack<UIComponent> m_ScreenStack = new();
+		private UIComponent _currentScreen = null;
 
-        private void Start()
-        {
-            InitializeScreens();
-            ShowScreen( m_HomeScreen );
-        }
+		private void Start()
+		{
+			Initialize();
+		}
 
-        private IEnumerator Initialize()
-        {
-            // yield return new WaitUntil
-            yield return null;
-        }
+		private void Initialize()
+		{
+			_homeScreen.Initialize( this );
+			_creditsScreen.Initialize( this );
+			_newSoloGameScreen.Initialize( this );
+			_settingsScreen.Initialize( this );
 
-        private void InitializeScreens()
-        {
-            m_HomeScreen.Initialize( this );
-            m_HomeScreen.Hide();
-            m_CreditsScreen.Initialize( this );
-            m_CreditsScreen.Hide();
-        }
+			_homeScreen.Hide();
+			_creditsScreen.Hide();
+			_newSoloGameScreen.Hide();
+			_settingsScreen.Hide();
 
-        public void StartNewGame()
-        {
-            SceneManager.LoadScene( m_NewGameScenePath );
-        }
+			ShowHomeScreen();
+		}
 
-        public void PushScreen(UIComponent screen)
-        {
-            if ( m_CurrentScreen != null )
-            {
-                m_CurrentScreen.Hide();
-                m_ScreenStack.Push( m_CurrentScreen );
-            }
+		public void ShowHomeScreen()
+		{
+			_currentScreen?.Hide();
+			_currentScreen = _homeScreen;
+			_currentScreen.Show();
+		}
 
-            m_CurrentScreen = screen;
-            m_CurrentScreen.Show();
-        }
+		public void ShowCreditsScreen()
+		{
+			_currentScreen?.Hide();
+			_currentScreen = _creditsScreen;
+			_currentScreen.Show();
+		}
 
-        public void PopScreen()
-        {
-            m_CurrentScreen.Hide();
-            if ( m_ScreenStack.Count > 0 )
-            {
-                m_CurrentScreen = m_ScreenStack.Pop();
-            }
-            m_CurrentScreen.Show();
-        }
+		public void ShowSoloGameScreen()
+		{
+			_currentScreen?.Hide();
+			_currentScreen = _newSoloGameScreen;
+			_currentScreen.Show();
+		}
 
-        public void ShowScreen(UIComponent screen)
-        {
-            m_ScreenStack.Clear();
-            m_CurrentScreen = screen;
-            screen.Show();
-        }
-    }
-
+		public void ShowSettingsScreen()
+		{
+			_currentScreen?.Hide();
+			_currentScreen = _settingsScreen;
+			_currentScreen.Show();
+		}
+	}
 }
