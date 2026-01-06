@@ -33,20 +33,30 @@ namespace KesselSabacc.Gameplay
 		{
 			var gameController = GameplayManager.Instance.GameController;
 
-			var cpu1 = new Model.Player( "CPU 1" );
-			var cpu2 = new Model.Player( "CPU 2" );
-			var cpu3 = new Model.Player( "CPU 3" );
-			var cpu4 = new Model.Player( "CPU 4" );
+			if ( NewGameManager.Instance.Data == null )
+			{
+				NewGameManager.Instance.CreateNewGame();
+			}
 
-			gameController.AddPlayer( cpu1 );
-			gameController.AddPlayer( cpu2 );
-			gameController.AddPlayer( cpu3 );
-			gameController.AddPlayer( cpu4 );
+			NewGameData newGameData = NewGameManager.Instance.Data;
 
-			gameController.AddPlayerController( new SimpleAIController( cpu1 ) );
-			gameController.AddPlayerController( new SimpleAIController( cpu2 ) );
-			gameController.AddPlayerController( new SimpleAIController( cpu3 ) );
-			gameController.AddPlayerController( new SimpleAIController( cpu4 ) );
+			Debug.Log(
+				$"Creating a new game with {newGameData.numPlayers} players and {newGameData.numChips} chips"
+			);
+
+			// Add human player
+			var player = new Model.Player( "Player 1" );
+			player.Chips = newGameData.numChips;
+			gameController.AddPlayer( player );
+
+			// Add CPU player(s)
+			for ( int i = 1; i <= newGameData.numPlayers - 1; i++ )
+			{
+				var cpu = new Model.Player( $"CPU {i}" );
+				cpu.Chips = newGameData.numChips;
+				gameController.AddPlayer( cpu );
+				gameController.AddPlayerController( new SimpleAIController( cpu ) );
+			}
 		}
 	}
 }
