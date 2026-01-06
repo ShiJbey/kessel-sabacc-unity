@@ -11,6 +11,14 @@ namespace KesselSabacc.Gameplay.GameStates
 		{
 			_gameController = GameplayManager.Instance.GameController;
 			_gameController.ResetDecksAndPiles();
+			Debug.Log( "Dealing Cards" );
+
+
+			var sandCard = _gameController.Model.SandDeck.Pop();
+			_gameController.Model.SandDiscardPile.Add( sandCard );
+			var bloodCard = _gameController.Model.BloodDeck.Pop();
+			_gameController.Model.BloodDiscardPile.Add( bloodCard );
+
 			return Task.CompletedTask;
 		}
 
@@ -26,25 +34,25 @@ namespace KesselSabacc.Gameplay.GameStates
 
 		public void OnUpdate()
 		{
-			Debug.Log( "Dealing Cards" );
 
-			foreach ( var player in _gameController.Players )
-			{
-				if ( player.Model.IsDisqualified ) continue;
 
-				player.Model.AddCardToHand( _gameController.Model.BloodDeck.Pop() );
-				player.Model.AddCardToHand( _gameController.Model.SandDeck.Pop() );
-			}
+			// foreach ( var player in _gameController.Players )
+			// {
+			// 	if ( player.Model.IsDisqualified ) continue;
 
-			_gameController.Model.BloodDiscardPile.Add(
-				_gameController.Model.BloodDeck.Pop()
-			);
+			// 	player.Model.AddCardToHand( _gameController.Model.BloodDeck.Pop() );
+			// 	player.Model.AddCardToHand( _gameController.Model.SandDeck.Pop() );
+			// }
 
-			_gameController.Model.SandDiscardPile.Add(
-				_gameController.Model.SandDeck.Pop()
-			);
+			// _gameController.Model.BloodDiscardPile.Add(
+			// 	_gameController.Model.BloodDeck.Pop()
+			// );
 
-			GameplayManager.Instance.GoToTurnTakingState();
+			// _gameController.Model.SandDiscardPile.Add(
+			// 	_gameController.Model.SandDeck.Pop()
+			// );
+
+			// GameplayManager.Instance.GoToTurnTakingState();
 		}
 	}
 }

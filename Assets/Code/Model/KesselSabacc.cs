@@ -32,6 +32,8 @@ namespace KesselSabacc.Model
 		public bool IsRoundOver { get; private set; }
 
 		public event Action<Player> OnPlayerAdded;
+		public event Action<int> OnRoundStart;
+		public event Action<int> OnRoundEnd;
 
 		public KesselSabacc()
 		{

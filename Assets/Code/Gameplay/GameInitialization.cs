@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
 using KesselSabacc.Gameplay.AI;
+using KesselSabacc.UI;
+using KesselSabacc.UI.Screens;
 using UnityEngine;
 
 namespace KesselSabacc.Gameplay
@@ -13,18 +16,31 @@ namespace KesselSabacc.Gameplay
 
 		private void Start()
 		{
-			InitializeGame();
+			StartCoroutine( InitializeGame() );
 		}
 
-		private void InitializeGame()
+		private IEnumerator InitializeGame()
 		{
+			yield return new WaitUntil( () => AutoLoadManager.Instance.isReady );
+
+			var loadingScreen = FindFirstObjectByType<LoadingScreen>( FindObjectsInactive.Include );
+			loadingScreen.Show();
+
+			yield return null;
+
 			GameplayManager.Instance.GameController = new KesselSabaccController(
 				new Model.KesselSabacc()
 			);
 
 			CreateTestGame();
+			yield return null;
+
+			GameUIManager.Instance.InitializeUI();
+			yield return null;
 
 			OnGameInitialized?.Invoke();
+			loadingScreen.Hide();
+			yield return null;
 
 			_gameplayManager.StartGame();
 		}

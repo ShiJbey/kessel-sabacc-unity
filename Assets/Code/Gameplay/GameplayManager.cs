@@ -96,12 +96,12 @@ namespace KesselSabacc.Gameplay
 			return cardView;
 		}
 
-		private Sprite GetCardBack(CardSuit suit)
+		public Sprite GetCardBack(CardSuit suit)
 		{
 			return (suit == CardSuit.BLOOD) ? _deckConfig.bloodCardBack : _deckConfig.sandCardBack;
 		}
 
-		private Sprite GetCardFront(CardSuit suit, CardType cardType)
+		public Sprite GetCardFront(CardSuit suit, CardType cardType)
 		{
 			switch ( cardType )
 			{

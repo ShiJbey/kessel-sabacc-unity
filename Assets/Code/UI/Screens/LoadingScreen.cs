@@ -30,10 +30,10 @@ namespace KesselSabacc.UI.Screens
 			set => backgroundImage.sprite = value;
 		}
 
-		public void Awake()
-		{
-			Hide();
-		}
+		// public void Awake()
+		// {
+		// 	Hide();
+		// }
 
 		public void Show()
 		{
