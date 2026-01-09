@@ -3,6 +3,7 @@ using System.Collections;
 using KesselSabacc.Gameplay.AI;
 using KesselSabacc.UI;
 using KesselSabacc.UI.Screens;
+using KesselSabacc.Views;
 using UnityEngine;
 
 namespace KesselSabacc.Gameplay
@@ -13,6 +14,8 @@ namespace KesselSabacc.Gameplay
 		private GameplayManager _gameplayManager;
 		[SerializeField]
 		private DeckConfiguration _deckConfig;
+		[SerializeField]
+		private TableView _tableView;
 
 		public static event Action OnGameInitialized;
 
@@ -38,6 +41,7 @@ namespace KesselSabacc.Gameplay
 			CreateTestGame();
 			yield return null;
 
+			_tableView.Initialize( GameplayManager.Instance.GameController.Model );
 			GameUIManager.Instance.InitializeUI();
 			yield return null;
 

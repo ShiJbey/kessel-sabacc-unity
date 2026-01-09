@@ -29,8 +29,6 @@ namespace KesselSabacc.UI
 		private DiceRollUI _diceRollUI;
 		[SerializeField]
 		private RoundEndUI _roundEndUI;
-		[SerializeField]
-		private TableView _tableView;
 
 		public static GameUIManager Instance { get; private set; }
 
@@ -63,7 +61,6 @@ namespace KesselSabacc.UI
 			Model.KesselSabacc game = GameplayManager.Instance.GameController.Model;
 
 			_hud.Initialize( game, 0 );
-			_tableView.Initialize( game );
 		}
 
 		public void HideAll()

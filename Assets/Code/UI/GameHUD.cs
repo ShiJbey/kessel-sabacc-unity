@@ -17,8 +17,6 @@ namespace KesselSabacc.UI
 		[SerializeField]
 		private ChipCounter _playerChipsInvested;
 		[SerializeField]
-		private Components.HandView _playerHand;
-		[SerializeField]
 		private OpponentUIRefs[] _opponentUI;
 
 		public void Initialize(Model.KesselSabacc game, int playerIndex)
@@ -43,7 +41,6 @@ namespace KesselSabacc.UI
 
 			for ( int i = opponentUIIndex; i < _opponentUI.Length; i++ )
 			{
-				_opponentUI[i].hand.Hide();
 				_opponentUI[i].infoPanel.Hide();
 			}
 		}
@@ -87,7 +84,6 @@ namespace KesselSabacc.UI
 		public class OpponentUIRefs
 		{
 			public OpponentInfoPanel infoPanel;
-			public Components.HandView hand;
 		}
 	}
 }

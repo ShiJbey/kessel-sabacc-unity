@@ -28,6 +28,13 @@ namespace KesselSabacc.Model
 		}
 		public Sprite FrontSprite => _frontSprite;
 		public Sprite BackSprite => _backSprite;
+		public Sprite VisibleSprite
+		{
+			get
+			{
+				return _isFaceUp ? _frontSprite : _backSprite;
+			}
+		}
 		public bool IsFaceUp
 		{
 			get => _isFaceUp;

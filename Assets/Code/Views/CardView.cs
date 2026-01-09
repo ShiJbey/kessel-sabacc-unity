@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using DG.Tweening;
 using KesselSabacc.Model;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
-namespace KesselSabacc.UI
+namespace KesselSabacc.Views
 {
 	/// <summary>
 	/// Manages the presentation of a single card on the screen.
@@ -13,25 +13,45 @@ namespace KesselSabacc.UI
 	public class CardView : MonoBehaviour, IPointerClickHandler
 	{
 		[SerializeField]
-		private Image _cardImage;
-
-		private RectTransform _rectTransform;
+		private Sprite _frontSprite;
+		[SerializeField]
+		private Sprite _backSprite;
+		[SerializeField]
+		private float _flipAnimationTime = 0.3f;
+		[SerializeField]
+		private bool _isFaceUp = true;
+		[SerializeField]
+		private SpriteRenderer _spriteRenderer;
 		private bool _isFlipping = false;
 
-		/// <summary>
-		/// The card this view visualizes.
-		/// </summary>
 		public Card Card { get; private set; }
-
-		private void Awake()
-		{
-			_rectTransform = GetComponent<RectTransform>();
-		}
 
 		public void Start()
 		{
-			ShowBack();
+			if ( _isFaceUp )
+			{
+				_spriteRenderer.sprite = _frontSprite;
+			}
+			else
+			{
+				_spriteRenderer.sprite = _backSprite;
+			}
 		}
+
+
+#if UNITY_EDITOR
+		public void OnValidate()
+		{
+			if ( _isFaceUp )
+			{
+				_spriteRenderer.sprite = _frontSprite;
+			}
+			else
+			{
+				_spriteRenderer.sprite = _backSprite;
+			}
+		}
+#endif
 
 
 		/// <summary>
@@ -41,39 +61,34 @@ namespace KesselSabacc.UI
 		public void Initialize(Card card)
 		{
 			Card = card;
-			if ( card.IsFaceUp )
-			{
-				ShowFront();
-			}
-			else
-			{
-				ShowBack();
-			}
+			_frontSprite = card.FrontSprite;
+			_backSprite = card.BackSprite;
+			_isFaceUp = card.IsFaceUp;
+			_spriteRenderer.sprite = card.VisibleSprite;
 		}
 
 		/// <summary>
 		/// Show the front of the card using a flip animation.
 		/// </summary>
-		/// <param name="duration"></param>
 		/// <returns></returns>
-		public Task ShowFrontAsync(float duration = 0.15f)
+		public Task ShowFrontAsync()
 		{
 			if ( _isFlipping ) return Task.CompletedTask;
 
 			_isFlipping = true;
 			var sequence = DOTween.Sequence();
-			var scaleDownTween = _rectTransform.DOScale( new Vector3( 0f, 1.1f, 1f ), duration );
+			var scaleDownTween = transform.DOScale( new Vector3( 0f, 1.2f, 1f ), _flipAnimationTime / 2 );
 			scaleDownTween.onComplete += () =>
 			{
-				_cardImage.sprite = Card.FrontSprite;
+				_spriteRenderer.sprite = _frontSprite;
 			};
 			sequence.Append( scaleDownTween );
-			var scaleUpTween = _rectTransform.DOScale( 1f, duration );
+			var scaleUpTween = transform.DOScale( 1f, _flipAnimationTime / 2 );
 			sequence.Append( scaleUpTween );
 			sequence.onComplete += () =>
 			{
 				_isFlipping = false;
-				Card.IsFaceUp = true;
+				_isFaceUp = true;
 			};
 
 			return sequence.AsyncWaitForCompletion();
@@ -82,26 +97,25 @@ namespace KesselSabacc.UI
 		/// <summary>
 		/// Show the back of the card using a flip animation.
 		/// </summary>
-		/// <param name="duration"></param>
 		/// <returns></returns>
-		public Task ShowBackAsync(float duration = 0.15f)
+		public Task ShowBackAsync()
 		{
 			if ( _isFlipping ) return Task.CompletedTask;
 
 			_isFlipping = true;
 			var sequence = DOTween.Sequence();
-			var scaleDownTween = _rectTransform.DOScale( new Vector3( 0f, 1.1f, 1f ), duration );
+			var scaleDownTween = transform.DOScale( new Vector3( 0f, 1.2f, 1f ), _flipAnimationTime / 2 );
 			scaleDownTween.onComplete += () =>
 			{
-				_cardImage.sprite = Card.BackSprite;
+				_spriteRenderer.sprite = _backSprite;
 			};
 			sequence.Append( scaleDownTween );
-			var scaleUpTween = _rectTransform.DOScale( 1f, duration );
+			var scaleUpTween = transform.DOScale( 1f, _flipAnimationTime / 2 );
 			sequence.Append( scaleUpTween );
 			sequence.onComplete += () =>
 			{
 				_isFlipping = false;
-				Card.IsFaceUp = false;
+				_isFaceUp = false;
 			};
 			return sequence.AsyncWaitForCompletion();
 		}
@@ -111,8 +125,8 @@ namespace KesselSabacc.UI
 		/// </summary>
 		public void ShowFront()
 		{
-			_cardImage.sprite = Card.FrontSprite;
-			Card.IsFaceUp = true;
+			_spriteRenderer.sprite = _frontSprite;
+			_isFaceUp = true;
 		}
 
 		/// <summary>
@@ -120,13 +134,29 @@ namespace KesselSabacc.UI
 		/// </summary>
 		public void ShowBack()
 		{
-			_cardImage.sprite = Card.BackSprite;
-			Card.IsFaceUp = false;
+			_spriteRenderer.sprite = _backSprite;
+			_isFaceUp = false;
 		}
 
-		public void OnPointerClick(PointerEventData eventData)
+		private void OnMouseUp()
 		{
-			if ( Card.IsFaceUp )
+			OnMouseUpAsButton();
+		}
+
+		private void OnMouseOver()
+		{
+			Debug.Log( "Mouse is hovering" );
+		}
+
+		private void OnMouseDown()
+		{
+			Debug.Log( "Mouse is down" );
+		}
+
+		private void OnMouseUpAsButton()
+		{
+			Debug.Log( "Card clicked" );
+			if ( _isFaceUp )
 			{
 				ShowBackAsync();
 			}
@@ -134,6 +164,11 @@ namespace KesselSabacc.UI
 			{
 				ShowFrontAsync();
 			}
+		}
+
+		public void OnPointerClick(PointerEventData eventData)
+		{
+			OnMouseUpAsButton();
 		}
 	}
 

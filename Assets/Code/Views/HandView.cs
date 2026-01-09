@@ -5,7 +5,7 @@ using KesselSabacc.Model;
 using UnityEngine;
 using UnityEngine.Splines;
 
-namespace KesselSabacc.UI
+namespace KesselSabacc.Views
 {
 	/// <summary>
 	/// Manages the presentation of the player's hand on the screen.

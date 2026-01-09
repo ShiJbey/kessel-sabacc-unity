@@ -14,7 +14,7 @@ namespace KesselSabacc.UI.Components
 		[SerializeField]
 		private GameObject _selectionHighlight;
 		[SerializeField]
-		private CardView _cardView;
+		private Image _cardView;
 		[SerializeField]
 		private float _arrowAnimationSpeed;
 
@@ -40,7 +40,7 @@ namespace KesselSabacc.UI.Components
 
 		public void Initialize(Card card)
 		{
-			_cardView.Initialize( card );
+			_cardView.sprite = card.VisibleSprite;
 		}
 
 		public void OnPointerEnter(PointerEventData eventData)

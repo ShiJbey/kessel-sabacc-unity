@@ -15,8 +15,10 @@ namespace KesselSabacc.Gameplay.GameStates
 
 
 			var sandCard = _gameController.Model.SandDeck.Pop();
+			sandCard.IsFaceUp = true;
 			_gameController.Model.SandDiscardPile.Add( sandCard );
 			var bloodCard = _gameController.Model.BloodDeck.Pop();
+			bloodCard.IsFaceUp = true;
 			_gameController.Model.BloodDiscardPile.Add( bloodCard );
 
 			return Task.CompletedTask;
