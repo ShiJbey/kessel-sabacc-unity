@@ -13,21 +13,27 @@ namespace KesselSabacc.Views
 	public class HandView : MonoBehaviour
 	{
 		/// <summary>
-		/// The spline responsible for dictating hand curviture.
+		/// The spline responsible for dictating hand curvature.
 		/// </summary>
 		[SerializeField]
-		private SplineContainer m_SplineContainer;
+		private SplineContainer _splineContainer;
 
 		/// <summary>
-		/// Does this hand belong to the player playing on this system.
+		/// Time it takes for cards to reposition in a player's hand.
 		/// </summary>
 		[SerializeField]
-		private bool m_IsPlayerHand;
+		private float _cardRepositionAnimTime = 0.15f;
 
 		/// <summary>
 		/// All the cards currently in the player's hand.
 		/// </summary>
-		private List<CardView> m_Cards = new List<CardView>();
+		[SerializeField]
+		private List<CardView> _cards = new();
+
+		private IEnumerator Start()
+		{
+			yield return UpdateCardPositions();
+		}
 
 		/// <summary>
 		/// Adds a card to the player's hand.
@@ -39,27 +45,22 @@ namespace KesselSabacc.Views
 			if ( cardView.Card.Suit == CardSuit.SAND )
 			{
 				// This card need to be appended to the front of the list
-				m_Cards.Insert( 0, cardView );
+				_cards.Insert( 0, cardView );
 			}
 			else
 			{
-				m_Cards.Add( cardView );
+				_cards.Add( cardView );
 			}
 
 			cardView.transform.SetParent( transform );
 
-			if ( m_IsPlayerHand )
-			{
-				yield return cardView.ShowFrontAsync();
-			}
-
-			yield return UpdateCardPositions( 0.15f );
+			yield return UpdateCardPositions();
 		}
 
 
-		private IEnumerator UpdateCardPositions(float duration)
+		private IEnumerator UpdateCardPositions()
 		{
-			if ( m_Cards.Count == 0 ) yield break;
+			if ( _cards.Count == 0 ) yield break;
 
 			// Spline is measured from 0 to 1. Players can have a maximum of
 			// 3 cards in their hand at once (drawing during sabacc). We space
@@ -70,12 +71,13 @@ namespace KesselSabacc.Views
 			// We then offset the position to the left by substracting the number of
 			// additional cards we have in the hand (handsize - 1) times the amount of
 			// spacing between the cards
-			float firstCardPosition = 0.5f - (m_Cards.Count - 1) * cardSpacing / 2;
+			float firstCardPosition = 0.5f - (_cards.Count - 1) * cardSpacing / 2;
 
 			Vector3 handUp = transform.up;
+			Spline spline = _splineContainer.Spline;
+			var sequence = DOTween.Sequence();
 
-			Spline spline = m_SplineContainer.Spline;
-			for ( int i = 0; i < m_Cards.Count; i++ )
+			for ( int i = 0; i < _cards.Count; i++ )
 			{
 				float p = firstCardPosition + i * cardSpacing;
 				Vector3 splinePosition = spline.EvaluatePosition( p );
@@ -86,17 +88,15 @@ namespace KesselSabacc.Views
 
 				Vector3 finalRotation = rotation.eulerAngles + transform.rotation.eulerAngles;
 
-				if ( !m_IsPlayerHand )
-				{
-					finalRotation += new Vector3( 0f, 180f, 0f );
-					finalRotation.Scale( new Vector3( 1f, 1f, -1f ) );
-				}
-
-				m_Cards[i].transform.DOMove( transform.TransformPoint( splinePosition ) + 0.01f * i * handUp, duration );
-				m_Cards[i].transform.DORotate( finalRotation, duration );
-
-				yield return new WaitForSeconds( duration );
+				sequence.Join(
+					_cards[i].transform.DOMove(
+						transform.TransformPoint( splinePosition ) + 0.01f * i * handUp, _cardRepositionAnimTime
+					)
+				);
+				sequence.Join( _cards[i].transform.DORotate( finalRotation, _cardRepositionAnimTime ) );
 			}
+
+			yield return sequence.WaitForCompletion();
 		}
 	}
 }
