@@ -1,3 +1,4 @@
+using System.Collections;
 using KesselSabacc.UI.Screens;
 using UnityEngine;
 
@@ -21,11 +22,16 @@ namespace KesselSabacc.UI
 
 		private void Start()
 		{
-			Initialize();
+			StartCoroutine( Initialize() );
 		}
 
-		private void Initialize()
+		private IEnumerator Initialize()
 		{
+			yield return new WaitUntil( () => AutoLoadManager.Instance.isReady );
+
+			var loadingScreen = FindFirstObjectByType<LoadingScreen>( FindObjectsInactive.Include );
+			loadingScreen.Show();
+
 			_homeScreen.Initialize( this );
 			_creditsScreen.Initialize( this );
 			_newSoloGameScreen.Initialize( this );
@@ -37,6 +43,7 @@ namespace KesselSabacc.UI
 			_settingsScreen.Hide();
 
 			ShowHomeScreen();
+			loadingScreen.Hide();
 		}
 
 		public void ShowHomeScreen()
