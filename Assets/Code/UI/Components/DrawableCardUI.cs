@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
 using System;
+using KesselSabacc.Model;
 
 namespace KesselSabacc.UI.Components
 {
@@ -13,7 +14,7 @@ namespace KesselSabacc.UI.Components
 		[SerializeField]
 		private GameObject _selectionHighlight;
 		[SerializeField]
-		private Image _cardImage;
+		private CardView _cardView;
 		[SerializeField]
 		private float _arrowAnimationSpeed;
 
@@ -37,10 +38,9 @@ namespace KesselSabacc.UI.Components
 			base.OnDestroy();
 		}
 
-		public void SetCardSprite(Sprite sprite)
+		public void Initialize(Card card)
 		{
-			_cardImage.sprite = sprite;
-			_cardImage.preserveAspect = true;
+			_cardView.Initialize( card );
 		}
 
 		public void OnPointerEnter(PointerEventData eventData)

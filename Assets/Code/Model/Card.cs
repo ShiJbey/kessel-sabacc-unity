@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace KesselSabacc.Model
 {
@@ -10,6 +11,9 @@ namespace KesselSabacc.Model
 		private CardSuit _suit;
 		private CardType _cardType;
 		private int _value;
+		private Sprite _frontSprite;
+		private Sprite _backSprite;
+		private bool _isFaceUp;
 
 		public CardSuit Suit => _suit;
 		public CardType CardType => _cardType;
@@ -22,14 +26,32 @@ namespace KesselSabacc.Model
 				OnValueChanged?.Invoke( _value );
 			}
 		}
+		public Sprite FrontSprite => _frontSprite;
+		public Sprite BackSprite => _backSprite;
+		public bool IsFaceUp
+		{
+			get => _isFaceUp;
+			set
+			{
+				if ( _isFaceUp != value )
+				{
+					_isFaceUp = value;
+					OnCardFlipped?.Invoke();
+				}
+			}
+		}
 
 		public event Action<int> OnValueChanged;
+		public event Action OnCardFlipped;
 
-		public Card(CardSuit suit, CardType cardType)
+		public Card(CardSuit suit, CardType cardType, Sprite cardFront, Sprite cardBack)
 		{
 			_suit = suit;
 			_cardType = cardType;
 			_value = (int)cardType;
+			_frontSprite = cardFront;
+			_backSprite = cardBack;
+			_isFaceUp = false;
 		}
 
 		public void ResetValue()

@@ -2831,10 +2831,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.Components.TableView
   m_HideOnAwake: 0
-  _sandDiscardPileImage: {fileID: 804128835}
-  _sandDeckImage: {fileID: 1681375635}
-  _bloodDeckImage: {fileID: 2130706239}
-  _bloodDiscardPileImage: {fileID: 458542124}
+  _sandDiscardPileImage: {fileID: 0}
+  _sandDeckImage: {fileID: 0}
+  _bloodDeckImage: {fileID: 0}
+  _bloodDiscardPileImage: {fileID: 0}
 --- !u!114 &317105165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3669,6 +3669,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Gameplay.GameInitialization
   _gameplayManager: {fileID: 372922631}
+  _deckConfig: {fileID: 11400000, guid: 8c803d76953d5fd4997848ada69b8b68, type: 2}
 --- !u!114 &372922631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3681,8 +3682,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0794033d92d9943dd8651ece2f425283, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Gameplay.GameplayManager
-  _cardViewPrefab: {fileID: 7493619047869546176, guid: e69042997300a4147916ec7217c63c57, type: 3}
-  _deckConfig: {fileID: 11400000, guid: 8c803d76953d5fd4997848ada69b8b68, type: 2}
+  _cardViewPrefab: {fileID: 1451615742088220472, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
 --- !u!1001 &380619833
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6587,6 +6587,7 @@ GameObject:
   - component: {fileID: 722581711}
   - component: {fileID: 722581710}
   - component: {fileID: 722581712}
+  - component: {fileID: 722581713}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -6665,6 +6666,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.Behaviors.HoverGrow
   _hoverScale: 1.05
   _tweenDuration: 0.1
+--- !u!114 &722581713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722581708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa1d349473e6e794483c3fceeb85961f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.CardView
+  _cardImage: {fileID: 722581710}
 --- !u!1 &747002525
 GameObject:
   m_ObjectHideFlags: 0
@@ -7450,7 +7464,7 @@ MonoBehaviour:
   m_HideOnAwake: 0
   _selectionArrow: {fileID: 507669185}
   _selectionHighlight: {fileID: 1942818249}
-  _cardImage: {fileID: 722581710}
+  _cardView: {fileID: 0}
   _arrowAnimationSpeed: 1
 --- !u!1 &866061766
 GameObject:
@@ -10715,109 +10729,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1235787321}
   m_CullTransparentMesh: 1
---- !u!1 &1236994160
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1236994161}
-  - component: {fileID: 1236994163}
-  - component: {fileID: 1236994162}
-  - component: {fileID: 1236994164}
-  - component: {fileID: 1236994165}
-  m_Layer: 5
-  m_Name: Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1236994161
+--- !u!224 &1236994161 stripped
 RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+  m_PrefabInstance: {fileID: 5437549452868099616}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1236994160}
-  m_LocalRotation: {x: 0, y: 0, z: 0.08715578, w: 0.9961947}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 946296145}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 10}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -32, y: 0}
-  m_SizeDelta: {x: 150, y: 200}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1236994162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1236994160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 1599729137, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 1
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1236994163
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1236994160}
-  m_CullTransparentMesh: 1
---- !u!114 &1236994164
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1236994160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa1d349473e6e794483c3fceeb85961f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.CardView
-  m_FrontSpriteRenderer: {fileID: 0}
-  m_BackSpriteRenderer: {fileID: 0}
---- !u!114 &1236994165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1236994160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2103a36b7ea6dd4487b313f7b1f2204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.Behaviors.HandItemHover
 --- !u!1 &1258333500
 GameObject:
   m_ObjectHideFlags: 0
@@ -14103,6 +14019,7 @@ GameObject:
   - component: {fileID: 1686684163}
   - component: {fileID: 1686684162}
   - component: {fileID: 1686684164}
+  - component: {fileID: 1686684165}
   m_Layer: 5
   m_Name: Image (1)
   m_TagString: Untagged
@@ -14179,6 +14096,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2103a36b7ea6dd4487b313f7b1f2204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.Behaviors.HandItemHover
+--- !u!114 &1686684165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1686684160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa1d349473e6e794483c3fceeb85961f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.CardView
+  _cardImage: {fileID: 1686684162}
 --- !u!1 &1691284597
 GameObject:
   m_ObjectHideFlags: 0
@@ -19171,6 +19101,103 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2130706237}
   m_CullTransparentMesh: 1
+--- !u!1001 &5437549452868099616
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 946296145}
+    m_Modifications:
+    - target: {fileID: 1290951826802671465, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_Name
+      value: Image
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9961947
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.08715578
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -32
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127746982120590997, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 10
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fac12f7f5bbfcfd44802a75fb96662ec, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

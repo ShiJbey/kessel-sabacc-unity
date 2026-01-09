@@ -1,42 +1,54 @@
-using System.Collections;
+using System.Threading.Tasks;
 using DG.Tweening;
 using KesselSabacc.Model;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace KesselSabacc.UI
 {
 	/// <summary>
 	/// Manages the presentation of a single card on the screen.
 	/// </summary>
-	public class CardView : MonoBehaviour
+	public class CardView : MonoBehaviour, IPointerClickHandler
 	{
-		/// <summary>
-		/// The SpriteRenderer for the front of the card.
-		/// </summary>
 		[SerializeField]
-		private SpriteRenderer m_FrontSpriteRenderer;
+		private Image _cardImage;
 
-		/// <summary>
-		/// The SpriteRenderer for the back of the card.
-		/// </summary>
-		[SerializeField]
-		private SpriteRenderer m_BackSpriteRenderer;
+		private RectTransform _rectTransform;
+		private bool _isFlipping = false;
 
 		/// <summary>
 		/// The card this view visualizes.
 		/// </summary>
 		public Card Card { get; private set; }
 
+		private void Awake()
+		{
+			_rectTransform = GetComponent<RectTransform>();
+		}
+
+		public void Start()
+		{
+			ShowBack();
+		}
+
 
 		/// <summary>
 		/// Initialize the card appearance using a Card Object
 		/// </summary>
 		/// <param name="card"></param>
-		public void Initialize(Card card, Sprite frontSprite, Sprite backSprite)
+		public void Initialize(Card card)
 		{
 			Card = card;
-			SetFrontSprite( frontSprite );
-			SetBackSprite( backSprite );
+			if ( card.IsFaceUp )
+			{
+				ShowFront();
+			}
+			else
+			{
+				ShowBack();
+			}
 		}
 
 		/// <summary>
@@ -44,10 +56,27 @@ namespace KesselSabacc.UI
 		/// </summary>
 		/// <param name="duration"></param>
 		/// <returns></returns>
-		public IEnumerator ShowFront(float duration = 0.15f)
+		public Task ShowFrontAsync(float duration = 0.15f)
 		{
-			transform.DOLocalRotate( new Vector3( 0, 0, 0 ), duration );
-			yield return new WaitForSeconds( duration );
+			if ( _isFlipping ) return Task.CompletedTask;
+
+			_isFlipping = true;
+			var sequence = DOTween.Sequence();
+			var scaleDownTween = _rectTransform.DOScale( new Vector3( 0f, 1.1f, 1f ), duration );
+			scaleDownTween.onComplete += () =>
+			{
+				_cardImage.sprite = Card.FrontSprite;
+			};
+			sequence.Append( scaleDownTween );
+			var scaleUpTween = _rectTransform.DOScale( 1f, duration );
+			sequence.Append( scaleUpTween );
+			sequence.onComplete += () =>
+			{
+				_isFlipping = false;
+				Card.IsFaceUp = true;
+			};
+
+			return sequence.AsyncWaitForCompletion();
 		}
 
 		/// <summary>
@@ -55,44 +84,56 @@ namespace KesselSabacc.UI
 		/// </summary>
 		/// <param name="duration"></param>
 		/// <returns></returns>
-		public IEnumerator ShowBack(float duration = 0.15f)
+		public Task ShowBackAsync(float duration = 0.15f)
 		{
-			transform.DOLocalRotate( new Vector3( 0, 180, 0 ), duration );
-			yield return new WaitForSeconds( duration );
+			if ( _isFlipping ) return Task.CompletedTask;
+
+			_isFlipping = true;
+			var sequence = DOTween.Sequence();
+			var scaleDownTween = _rectTransform.DOScale( new Vector3( 0f, 1.1f, 1f ), duration );
+			scaleDownTween.onComplete += () =>
+			{
+				_cardImage.sprite = Card.BackSprite;
+			};
+			sequence.Append( scaleDownTween );
+			var scaleUpTween = _rectTransform.DOScale( 1f, duration );
+			sequence.Append( scaleUpTween );
+			sequence.onComplete += () =>
+			{
+				_isFlipping = false;
+				Card.IsFaceUp = false;
+			};
+			return sequence.AsyncWaitForCompletion();
 		}
 
 		/// <summary>
 		/// Show the front of the card without any flip animation.
 		/// </summary>
-		public void ShowFrontImmediate()
+		public void ShowFront()
 		{
-			transform.localRotation = Quaternion.Euler( new Vector3( 0, 0, 0 ) );
+			_cardImage.sprite = Card.FrontSprite;
+			Card.IsFaceUp = true;
 		}
 
 		/// <summary>
 		/// Show the back of the card without any flip animation.
 		/// </summary>
-		public void ShowBackImmediate()
+		public void ShowBack()
 		{
-			transform.localRotation = Quaternion.Euler( new Vector3( 0, 180, 0 ) );
+			_cardImage.sprite = Card.BackSprite;
+			Card.IsFaceUp = false;
 		}
 
-		/// <summary>
-		/// Set the sprite for the front of the card.
-		/// </summary>
-		/// <param name="sprite"></param>
-		public void SetFrontSprite(Sprite sprite)
+		public void OnPointerClick(PointerEventData eventData)
 		{
-			m_FrontSpriteRenderer.sprite = sprite;
-		}
-
-		/// <summary>
-		/// Set the sprite for the back of the card.
-		/// </summary>
-		/// <param name="sprite"></param>
-		public void SetBackSprite(Sprite sprite)
-		{
-			m_BackSpriteRenderer.sprite = sprite;
+			if ( Card.IsFaceUp )
+			{
+				ShowBackAsync();
+			}
+			else
+			{
+				ShowFrontAsync();
+			}
 		}
 	}
 

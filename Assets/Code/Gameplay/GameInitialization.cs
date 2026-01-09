@@ -11,6 +11,8 @@ namespace KesselSabacc.Gameplay
 	{
 		[SerializeField]
 		private GameplayManager _gameplayManager;
+		[SerializeField]
+		private DeckConfiguration _deckConfig;
 
 		public static event Action OnGameInitialized;
 
@@ -29,7 +31,8 @@ namespace KesselSabacc.Gameplay
 			yield return null;
 
 			GameplayManager.Instance.GameController = new KesselSabaccController(
-				new Model.KesselSabacc()
+				new Model.KesselSabacc(),
+				_deckConfig
 			);
 
 			CreateTestGame();

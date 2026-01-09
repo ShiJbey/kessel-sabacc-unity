@@ -2,20 +2,19 @@ using KesselSabacc.Gameplay;
 using KesselSabacc.Model;
 using KesselSabacc.Utils;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace KesselSabacc.UI.Components
 {
 	public class TableView : UIComponent
 	{
 		[SerializeField]
-		private Image _sandDiscardPileImage;
+		private CardView _sandDiscardPileImage;
 		[SerializeField]
-		private Image _sandDeckImage;
+		private CardView _sandDeckImage;
 		[SerializeField]
-		private Image _bloodDeckImage;
+		private CardView _bloodDeckImage;
 		[SerializeField]
-		private Image _bloodDiscardPileImage;
+		private CardView _bloodDiscardPileImage;
 
 		public void Initialize(Model.KesselSabacc game)
 		{
@@ -37,25 +36,25 @@ namespace KesselSabacc.UI.Components
 		public void UpdateSandDiscardPile()
 		{
 			var game = GameplayManager.Instance.GameController.Model;
-			UpdateCardPileImage( _sandDiscardPileImage, game.SandDiscardPile.Peek(), false );
+			UpdateCardPileImage( _sandDiscardPileImage, game.SandDiscardPile.Peek() );
 		}
 
 		public void UpdateSandDeck()
 		{
 			var game = GameplayManager.Instance.GameController.Model;
-			UpdateCardPileImage( _sandDeckImage, game.SandDeck.Peek(), true );
+			UpdateCardPileImage( _sandDeckImage, game.SandDeck.Peek() );
 		}
 
 		public void UpdateBloodDeck()
 		{
 			var game = GameplayManager.Instance.GameController.Model;
-			UpdateCardPileImage( _bloodDeckImage, game.BloodDeck.Peek(), true );
+			UpdateCardPileImage( _bloodDeckImage, game.BloodDeck.Peek() );
 		}
 
 		public void UpdateBloodDiscardPile()
 		{
 			var game = GameplayManager.Instance.GameController.Model;
-			UpdateCardPileImage( _bloodDiscardPileImage, game.BloodDiscardPile.Peek(), false );
+			UpdateCardPileImage( _bloodDiscardPileImage, game.BloodDiscardPile.Peek() );
 		}
 
 		private void HandleSandDiscardPileChanged(Card card)
@@ -70,6 +69,9 @@ namespace KesselSabacc.UI.Components
 
 		private void HandleSandDeckChanged(Card card)
 		{
+			// Spawn a new card view using the card
+			// Fade it in and tween it to the deck position.
+
 			UpdateSandDeck();
 		}
 
@@ -79,19 +81,16 @@ namespace KesselSabacc.UI.Components
 		}
 
 
-		private void UpdateCardPileImage(Image image, Card card, bool showCardBack)
+		private void UpdateCardPileImage(CardView view, Card card)
 		{
-			if ( card != null )
-			{
-				image.sprite = showCardBack ?
-					GameplayManager.Instance.GetCardBack( card.Suit )
-					: GameplayManager.Instance.GetCardFront( card.Suit, card.CardType );
-				image.color = Color.white;
-			}
-			else
-			{
-				image.color = Color.white.WithAlpha( 0 );
-			}
+			// if ( card != null )
+			// {
+			// 	view.Initialize( card );
+			// }
+			// else
+			// {
+			// 	image.color = Color.white.WithAlpha( 0 );
+			// }
 		}
 	}
 }

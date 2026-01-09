@@ -50,7 +50,7 @@ namespace KesselSabacc.UI
 
 			if ( m_IsPlayerHand )
 			{
-				yield return cardView.ShowFront();
+				yield return cardView.ShowFrontAsync();
 			}
 
 			yield return UpdateCardPositions( 0.15f );

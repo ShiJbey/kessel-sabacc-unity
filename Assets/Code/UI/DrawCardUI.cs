@@ -53,34 +53,25 @@ namespace KesselSabacc.UI
 			}
 			_cardViews.Clear();
 
-			var cardView = InstantiateCardView( game.SandDiscardPile.Peek(), false );
+			var cardView = InstantiateCardView( game.SandDiscardPile.Peek() );
 			_cardViews.Add( cardView );
 
-			cardView = InstantiateCardView( game.SandDeck.Peek(), true );
+			cardView = InstantiateCardView( game.SandDeck.Peek() );
 			_cardViews.Add( cardView );
 
-			cardView = InstantiateCardView( game.BloodDeck.Peek(), true );
+			cardView = InstantiateCardView( game.BloodDeck.Peek() );
 			_cardViews.Add( cardView );
 
-			cardView = InstantiateCardView( game.BloodDiscardPile.Peek(), false );
+			cardView = InstantiateCardView( game.BloodDiscardPile.Peek() );
 			_cardViews.Add( cardView );
 		}
 
-		public DrawableCardUI InstantiateCardView(Card card, bool isFaceDown)
+		public DrawableCardUI InstantiateCardView(Card card)
 		{
-			var cardView = Instantiate( _cardPrefab, _drawableCardContainer );
-			cardView.gameObject.SetActive( true );
-
-			if ( isFaceDown )
-			{
-				cardView.SetCardSprite( GameplayManager.Instance.GetCardBack( card.Suit ) );
-			}
-			else
-			{
-				cardView.SetCardSprite( GameplayManager.Instance.GetCardFront( card.Suit, card.CardType ) );
-			}
-
-			return cardView;
+			var drawableCardView = Instantiate( _cardPrefab, _drawableCardContainer );
+			drawableCardView.gameObject.SetActive( true );
+			drawableCardView.Initialize( card );
+			return drawableCardView;
 		}
 
 		public void SetDeckName(string value)
