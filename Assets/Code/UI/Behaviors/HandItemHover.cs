@@ -17,6 +17,11 @@ namespace KesselSabacc.UI.Behaviors
 			_originalPosition = _rectTransform.anchoredPosition;
 		}
 
+		private void OnDestroy()
+		{
+			_rectTransform?.DOKill();
+		}
+
 		public void OnPointerEnter(PointerEventData eventData)
 		{
 			var _hoverPosition = _originalPosition + _rectTransform.up.normalized * 24f;

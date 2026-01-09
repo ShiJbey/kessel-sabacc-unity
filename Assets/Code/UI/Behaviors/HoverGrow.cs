@@ -26,6 +26,11 @@ namespace KesselSabacc.UI.Behaviors
 			_hoverScaleVector = _originalScaleVector * _hoverScale;
 		}
 
+		private void OnDestroy()
+		{
+			_rectTransform?.DOKill();
+		}
+
 		public void Select()
 		{
 			_rectTransform.DOKill();
