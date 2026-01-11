@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 964852055378710348}
   - component: {fileID: 1989226599082992097}
+  - component: {fileID: -5639541549039624099}
   m_Layer: 0
   m_Name: CardStackView
   m_TagString: Untagged
@@ -47,6 +48,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Views.CardStackView
   _cardView: {fileID: 2528441448103395970}
+--- !u!210 &-5639541549039624099
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383643221011915875}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!1 &7158204739050922817
 GameObject:
   m_ObjectHideFlags: 0

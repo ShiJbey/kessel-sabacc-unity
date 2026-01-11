@@ -5198,6 +5198,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 458651930}
+  - component: {fileID: 458651931}
   m_Layer: 0
   m_Name: CardStacks
   m_TagString: Untagged
@@ -5224,6 +5225,19 @@ Transform:
   - {fileID: 1791630221}
   m_Father: {fileID: 477663660}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &458651931
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 458651929}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!1 &463283847
 GameObject:
   m_ObjectHideFlags: 0
