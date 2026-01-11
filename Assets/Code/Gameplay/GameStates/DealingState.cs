@@ -5,20 +5,24 @@ namespace KesselSabacc.Gameplay.GameStates
 {
 	public class DealingState : IGameState
 	{
-		private KesselSabaccController _gameController;
+		private KesselSabaccGameController _gameController;
+
+		public DealingState(KesselSabaccGameController gameController)
+		{
+			_gameController = gameController;
+		}
 
 		public Task OnEnter()
 		{
-			_gameController = GameplayManager.Instance.GameController;
 			_gameController.ResetDecksAndPiles();
 			Debug.Log( "Dealing Cards" );
 
 
 			var sandCard = _gameController.Model.SandDeck.Pop();
-			sandCard.IsFaceUp = true;
+			// sandCard.IsFaceUp = true;
 			_gameController.Model.SandDiscardPile.Add( sandCard );
 			var bloodCard = _gameController.Model.BloodDeck.Pop();
-			bloodCard.IsFaceUp = true;
+			// bloodCard.IsFaceUp = true;
 			_gameController.Model.BloodDiscardPile.Add( bloodCard );
 
 			return Task.CompletedTask;

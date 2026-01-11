@@ -1,3 +1,4 @@
+using KesselSabacc.Model;
 using UnityEngine;
 
 namespace KesselSabacc.Views
@@ -18,7 +19,7 @@ namespace KesselSabacc.Views
 		public CardStackView BloodDeckView => _bloodDeckView;
 		public CardStackView BloodDiscardPileView => _bloodDiscardPileView;
 
-		public void Initialize(Model.KesselSabacc game)
+		public void Initialize(KesselSabaccGameModel game)
 		{
 			_sandDiscardPileView.Initialize( game.SandDiscardPile );
 			_sandDeckView.Initialize( game.SandDeck );

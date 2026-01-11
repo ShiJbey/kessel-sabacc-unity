@@ -1,3 +1,4 @@
+using KesselSabacc.Model;
 using TMPro;
 using UnityEngine;
 
@@ -8,10 +9,10 @@ namespace KesselSabacc.UI.Components
 		[SerializeField]
 		private TMP_Text _turnLabel;
 
-		public void Initialize(Model.KesselSabacc game)
+		public void Initialize(KesselSabaccGameModel model)
 		{
-			SetTurn( game.CurrentTurn );
-			game.OnRoundStart += SetTurn;
+			SetTurn( model.CurrentTurn );
+			model.OnRoundStart += SetTurn;
 		}
 
 		public void SetTurn(int value)

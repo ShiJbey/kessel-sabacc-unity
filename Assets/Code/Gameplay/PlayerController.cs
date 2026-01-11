@@ -22,6 +22,6 @@ namespace KesselSabacc.Gameplay
 		/// <returns></returns>
 		public abstract Task<PlayerAction> SelectAction(IReadOnlyList<PlayerAction> actions);
 
-		public abstract Task TakeTurn(Model.KesselSabacc game);
+		public abstract Task TakeTurn(KesselSabaccGameModel game);
 	}
 }

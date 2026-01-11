@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using DG.Tweening;
 using KesselSabacc.Model;
 using UnityEngine;
@@ -25,6 +24,7 @@ namespace KesselSabacc.Views
 		private bool _isFlipping = false;
 
 		public Card Card { get; private set; }
+		public Sprite Sprite => _spriteRenderer.sprite;
 
 		public void Start()
 		{
@@ -58,13 +58,13 @@ namespace KesselSabacc.Views
 		/// Initialize the card appearance using a Card Object
 		/// </summary>
 		/// <param name="card"></param>
-		public void Initialize(Card card)
+		public void Initialize(Card card, Sprite frontSprite, Sprite backSprite, bool isFaceUp = false)
 		{
 			Card = card;
-			_frontSprite = card.FrontSprite;
-			_backSprite = card.BackSprite;
-			_isFaceUp = card.IsFaceUp;
-			_spriteRenderer.sprite = card.VisibleSprite;
+			_frontSprite = frontSprite;
+			_backSprite = backSprite;
+			_isFaceUp = isFaceUp;
+			_spriteRenderer.sprite = isFaceUp ? frontSprite : backSprite;
 		}
 
 		/// <summary>

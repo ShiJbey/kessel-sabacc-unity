@@ -1,29 +1,114 @@
+using System.Collections;
 using System.Collections.Generic;
+using KesselSabacc.Gameplay.AI;
+using KesselSabacc.Gameplay.GameStates;
 using KesselSabacc.Model;
+using KesselSabacc.UI.Screens;
+using KesselSabacc.Views;
 using UnityEngine;
 
 namespace KesselSabacc.Gameplay
 {
-	public class KesselSabaccController
+	public class KesselSabaccGameController : MonoBehaviour
 	{
-		private Model.KesselSabacc _model;
-		private List<PlayerController> _players;
-		private DeckConfiguration _deckConfig;
+		[Header( "References" )]
+		public KesselSabaccGameView uiView;
+		private GameObject cardViewPrefab;
 
-		public Model.KesselSabacc Model => _model;
+		[Header( "Game Settings" )]
+		public DeckConfiguration deckConfig;
+
+		[Header( "Animation Settings" )]
+		public float cardDealSpeed = 0.5f;
+		public float delayBetweenCards = 0.3f;
+		public float deckSpawnDuration = 1f;
+		public float roundPanelDisplayTime = 2f;
+
+		private IGameState _currentGameState = null;
+		private bool _isSwitchingState = false;
+		private List<PlayerController> _players = new();
+		private KesselSabaccGameModel _model;
+		private List<CardView> _spawnedCards = new();
+
+		public KesselSabaccGameModel Model => _model;
 		public IReadOnlyList<PlayerController> Players => _players;
 
-
-		public KesselSabaccController(Model.KesselSabacc model, DeckConfiguration deckConfig)
+		private void Start()
 		{
-			_model = model;
-			_players = new List<PlayerController>();
-			_deckConfig = deckConfig;
+			_model = new KesselSabaccGameModel();
+			StartCoroutine( InitializeGame() );
+		}
+
+		private void Update()
+		{
+			if ( _isSwitchingState ) return;
+			_currentGameState?.OnInput();
+			_currentGameState?.OnUpdate();
+		}
+
+		private IEnumerator InitializeGame()
+		{
+			yield return new WaitUntil( () => AutoLoadManager.Instance.isReady );
+
+			var loadingScreen = FindFirstObjectByType<LoadingScreen>( FindObjectsInactive.Include );
+			loadingScreen.Show();
+			yield return null;
+
+			CreateTestGame();
+			yield return null;
+
+			loadingScreen.Hide();
+			yield return null;
+
+			StartGame();
 		}
 
 		public void StartGame()
 		{
+			GoToDealingState();
+		}
 
+		public void GoToDealingState()
+		{
+			SetGameState( new DealingState( this ) );
+		}
+
+		public void GoToTurnTakingState()
+		{
+			SetGameState( new TurnTakingState( this ) );
+		}
+
+		public void GoToRoundOverState()
+		{
+			SetGameState( new RoundOverState( this ) );
+		}
+
+		public void GoToGameOverState()
+		{
+			SetGameState( new GameOverState( this ) );
+		}
+
+		private async void SetGameState(IGameState newState)
+		{
+			_isSwitchingState = true;
+
+			if ( _currentGameState != null )
+			{
+				await _currentGameState.OnExit();
+			}
+
+			_currentGameState = newState;
+
+			await _currentGameState.OnEnter();
+
+			_isSwitchingState = false;
+		}
+
+		public CardView CreateCardView(Card card, Vector3 position, Quaternion rotation)
+		{
+			CardView cardView = Instantiate( cardViewPrefab, position, rotation ).GetComponent<CardView>();
+			cardView.Initialize( card, GetCardFront( card.Suit, card.CardType ), GetCardBack( card.Suit ) );
+			return cardView;
 		}
 
 		public void IncrementTurnTaker()
@@ -130,15 +215,13 @@ namespace KesselSabacc.Gameplay
 		{
 			return new Card(
 				suit,
-				cardType,
-				GetCardFront( suit, cardType ),
-				GetCardBack( suit )
+				cardType
 			);
 		}
 
 		public Sprite GetCardBack(CardSuit suit)
 		{
-			return (suit == CardSuit.BLOOD) ? _deckConfig.bloodCardBack : _deckConfig.sandCardBack;
+			return (suit == CardSuit.BLOOD) ? deckConfig.bloodCardBack : deckConfig.sandCardBack;
 		}
 
 		public Sprite GetCardFront(CardSuit suit, CardType cardType)
@@ -147,38 +230,66 @@ namespace KesselSabacc.Gameplay
 			{
 				case CardType.SYLOP:
 					return (suit == CardSuit.BLOOD) ?
-						_deckConfig.sylopCards.bloodFront
-						: _deckConfig.sylopCards.sandFront;
+						deckConfig.sylopCards.bloodFront
+						: deckConfig.sylopCards.sandFront;
 				case CardType.ONE:
 					return (suit == CardSuit.BLOOD) ?
-						_deckConfig.oneCards.bloodFront
-						: _deckConfig.oneCards.sandFront;
+						deckConfig.oneCards.bloodFront
+						: deckConfig.oneCards.sandFront;
 				case CardType.TWO:
 					return (suit == CardSuit.BLOOD) ?
-						_deckConfig.twoCards.bloodFront
-						: _deckConfig.twoCards.sandFront;
+						deckConfig.twoCards.bloodFront
+						: deckConfig.twoCards.sandFront;
 				case CardType.THREE:
 					return (suit == CardSuit.BLOOD) ?
-						_deckConfig.threeCards.bloodFront
-						: _deckConfig.threeCards.sandFront;
+						deckConfig.threeCards.bloodFront
+						: deckConfig.threeCards.sandFront;
 				case CardType.FOUR:
 					return (suit == CardSuit.BLOOD) ?
-						_deckConfig.fourCards.bloodFront
-						: _deckConfig.fourCards.sandFront;
+						deckConfig.fourCards.bloodFront
+						: deckConfig.fourCards.sandFront;
 				case CardType.FIVE:
 					return (suit == CardSuit.BLOOD) ?
-						_deckConfig.fiveCards.bloodFront
-						: _deckConfig.fiveCards.sandFront;
+						deckConfig.fiveCards.bloodFront
+						: deckConfig.fiveCards.sandFront;
 				case CardType.SIX:
 					return (suit == CardSuit.BLOOD) ?
-						_deckConfig.sixCards.bloodFront
-						: _deckConfig.sixCards.sandFront;
+						deckConfig.sixCards.bloodFront
+						: deckConfig.sixCards.sandFront;
 				case CardType.IMPOSTER:
 					return (suit == CardSuit.BLOOD) ?
-						_deckConfig.imposterCards.bloodFront
-						: _deckConfig.imposterCards.sandFront;
+						deckConfig.imposterCards.bloodFront
+						: deckConfig.imposterCards.sandFront;
 				default:
 					throw new System.ArgumentException( "Unsupported suit or card type" );
+			}
+		}
+
+		private void CreateTestGame()
+		{
+			if ( NewGameManager.Instance.Data == null )
+			{
+				NewGameManager.Instance.CreateNewGame();
+			}
+
+			NewGameData newGameData = NewGameManager.Instance.Data;
+
+			Debug.Log(
+				$"Creating a new game with {newGameData.numPlayers} players and {newGameData.numChips} chips"
+			);
+
+			// Add human player
+			var player = new Model.Player( "Player 1" );
+			player.Chips = newGameData.numChips;
+			AddPlayer( player );
+
+			// Add CPU player(s)
+			for ( int i = 1; i <= newGameData.numPlayers - 1; i++ )
+			{
+				var cpu = new Model.Player( $"CPU {i}" );
+				cpu.Chips = newGameData.numChips;
+				AddPlayer( cpu );
+				AddPlayerController( new SimpleAIController( cpu ) );
 			}
 		}
 	}

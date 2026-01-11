@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 namespace KesselSabacc.Model
 {
@@ -8,57 +7,23 @@ namespace KesselSabacc.Model
 	/// </summary>
 	public class Card
 	{
-		private CardSuit _suit;
-		private CardType _cardType;
-		private int _value;
-		private Sprite _frontSprite;
-		private Sprite _backSprite;
-		private bool _isFaceUp;
-
-		public CardSuit Suit => _suit;
-		public CardType CardType => _cardType;
-		public int Value
-		{
-			get => _value;
-			set
-			{
-				_value = value;
-				OnValueChanged?.Invoke( _value );
-			}
-		}
-		public Sprite FrontSprite => _frontSprite;
-		public Sprite BackSprite => _backSprite;
-		public Sprite VisibleSprite
-		{
-			get
-			{
-				return _isFaceUp ? _frontSprite : _backSprite;
-			}
-		}
-		public bool IsFaceUp
-		{
-			get => _isFaceUp;
-			set
-			{
-				if ( _isFaceUp != value )
-				{
-					_isFaceUp = value;
-					OnCardFlipped?.Invoke();
-				}
-			}
-		}
+		public CardSuit Suit { get; }
+		public CardType CardType { get; }
+		public int Value { get; private set; }
 
 		public event Action<int> OnValueChanged;
-		public event Action OnCardFlipped;
 
-		public Card(CardSuit suit, CardType cardType, Sprite cardFront, Sprite cardBack)
+		public Card(CardSuit suit, CardType cardType)
 		{
-			_suit = suit;
-			_cardType = cardType;
-			_value = (int)cardType;
-			_frontSprite = cardFront;
-			_backSprite = cardBack;
-			_isFaceUp = false;
+			Suit = suit;
+			CardType = cardType;
+			Value = (int)cardType;
+		}
+
+		public void SetValue(int value)
+		{
+			Value = value;
+			OnValueChanged?.Invoke( Value );
 		}
 
 		public void ResetValue()
@@ -68,12 +33,12 @@ namespace KesselSabacc.Model
 
 		public bool IsValueModified()
 		{
-			return _value != (int)_cardType;
+			return Value != (int)CardType;
 		}
 
 		public override string ToString()
 		{
-			return $"Card(suit={_suit}, type={_cardType}, value={_value})";
+			return $"Card(suit={Suit}, type={CardType}, value={Value})";
 		}
 	}
 }

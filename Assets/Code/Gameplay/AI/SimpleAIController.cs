@@ -15,7 +15,7 @@ namespace KesselSabacc.Gameplay.AI
 			throw new System.NotImplementedException();
 		}
 
-		public override Task TakeTurn(Model.KesselSabacc game)
+		public override Task TakeTurn(KesselSabaccGameModel game)
 		{
 			throw new System.NotImplementedException();
 		}

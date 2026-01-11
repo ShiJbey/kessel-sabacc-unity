@@ -1,4 +1,6 @@
+using KesselSabacc.Model;
 using KesselSabacc.UI.Components;
+using KesselSabacc.Views;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,8 +21,11 @@ namespace KesselSabacc.UI
 		[SerializeField]
 		private OpponentUIRefs[] _opponentUI;
 
-		public void Initialize(Model.KesselSabacc game, int playerIndex)
+		private KesselSabaccGameView _gameView;
+
+		public void Initialize(KesselSabaccGameModel game, KesselSabaccGameView gameView, int playerIndex)
 		{
+			_gameView = gameView;
 			_turnCounter.Initialize( game );
 
 			var player = game.Players[playerIndex];
@@ -71,7 +76,7 @@ namespace KesselSabacc.UI
 
 		private void OnDrawButtonClicked()
 		{
-			GameUIManager.Instance.ShowDrawCardUI();
+			_gameView.drawCardUI.Show();
 		}
 
 		private void OnStandButtonClicked()

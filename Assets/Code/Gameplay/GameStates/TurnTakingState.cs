@@ -1,17 +1,20 @@
 using System.Threading.Tasks;
+using KesselSabacc.Model;
 using UnityEngine;
 
 namespace KesselSabacc.Gameplay.GameStates
 {
 	public class TurnTakingState : IGameState
 	{
-		private KesselSabaccController _gameController;
+		private KesselSabaccGameController _gameController;
+
+		public TurnTakingState(KesselSabaccGameController gameController)
+		{
+			_gameController = gameController;
+		}
 
 		public Task OnEnter()
 		{
-			_gameController = GameplayManager.Instance.GameController;
-			// _gameController.Model.CurrentTurn = 0;
-
 			Debug.Log( $"Staring Round {_gameController.Model.CurrentRound}" );
 			return Task.CompletedTask;
 		}
@@ -36,9 +39,9 @@ namespace KesselSabacc.Gameplay.GameStates
 			_gameController.Model.IncrementTurnTaker();
 
 
-			if ( _gameController.Model.CurrentTurn >= Model.KesselSabacc.TURNS_PER_ROUND )
+			if ( _gameController.Model.CurrentTurn >= KesselSabaccGameModel.TURNS_PER_ROUND )
 			{
-				GameplayManager.Instance.GoToRoundOverState();
+				_gameController.GoToRoundOverState();
 			}
 		}
 	}

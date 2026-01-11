@@ -3966,9 +3966,8 @@ GameObject:
   m_Component:
   - component: {fileID: 372922629}
   - component: {fileID: 372922630}
-  - component: {fileID: 372922631}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: GameController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3998,25 +3997,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 372922628}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87ebb55a22f2a4c4881f7584a06c2aa7, type: 3}
+  m_Script: {fileID: 11500000, guid: 10e0493d295db7541886d5188ee32299, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Gameplay.GameInitialization
-  _gameplayManager: {fileID: 372922631}
-  _deckConfig: {fileID: 11400000, guid: 8c803d76953d5fd4997848ada69b8b68, type: 2}
-  _tableView: {fileID: 477663661}
---- !u!114 &372922631
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 372922628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0794033d92d9943dd8651ece2f425283, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Gameplay.GameplayManager
-  _cardViewPrefab: {fileID: 83316977861157430, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Gameplay.KesselSabaccGameController
+  uiView: {fileID: 2065205190}
+  deckConfig: {fileID: 11400000, guid: 8c803d76953d5fd4997848ada69b8b68, type: 2}
+  cardDealSpeed: 0.5
+  delayBetweenCards: 0.3
+  deckSpawnDuration: 1
+  roundPanelDisplayTime: 2
 --- !u!1001 &380619833
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5438,7 +5427,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 477663659}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5446,7 +5435,7 @@ Transform:
   - {fileID: 94575153}
   - {fileID: 458651930}
   - {fileID: 878986613}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2065205189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &477663661
 MonoBehaviour:
@@ -17009,7 +16998,6 @@ GameObject:
   - component: {fileID: 1988864621}
   - component: {fileID: 1988864620}
   - component: {fileID: 1988864619}
-  - component: {fileID: 1988864623}
   m_Layer: 5
   m_Name: GameUI
   m_TagString: Untagged
@@ -17102,35 +17090,13 @@ RectTransform:
   - {fileID: 273245475}
   - {fileID: 245501664}
   - {fileID: 1724962883}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2065205189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1988864623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1988864618}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b353046df9a6064cb0e004137f47cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.GameUIManager
-  _hud: {fileID: 1826687903}
-  _drawCardUI: {fileID: 587667179}
-  _shiftTokenTargetSelectionUI: {fileID: 360798614}
-  _discardCardUI: {fileID: 699521732}
-  _roundNotificationUI: {fileID: 234322505}
-  _shiftTokenNotificationUI: {fileID: 1234606047}
-  _disqualifiedNotificationUI: {fileID: 2041522947}
-  _gameOverNotificationUI: {fileID: 273245479}
-  _diceRollUI: {fileID: 245501668}
-  _roundEndUI: {fileID: 1724962887}
 --- !u!1 &1989045222
 GameObject:
   m_ObjectHideFlags: 0
@@ -17987,6 +17953,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2064058622}
   m_CullTransparentMesh: 1
+--- !u!1 &2065205188
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2065205189}
+  - component: {fileID: 2065205190}
+  m_Layer: 0
+  m_Name: GameView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2065205189
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065205188}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1988864622}
+  - {fileID: 477663660}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2065205190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065205188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b11ddf7f7d6c1ea42bfb299483c13b29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Views.KesselSabaccGameView
+  hud: {fileID: 1826687903}
+  drawCardUI: {fileID: 587667179}
+  shiftTokenTargetSelectionUI: {fileID: 360798614}
+  discardCardUI: {fileID: 699521732}
+  roundNotificationUI: {fileID: 234322505}
+  shiftTokenNotificationUI: {fileID: 1234606047}
+  disqualifiedNotificationUI: {fileID: 2041522947}
+  gameOverNotificationUI: {fileID: 273245479}
+  diceRollUI: {fileID: 245501668}
+  roundEndUI: {fileID: 1724962887}
+  tableView: {fileID: 477663661}
 --- !u!1001 &2074698990
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19074,10 +19097,9 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 977899941}
   - {fileID: 2123711066}
   - {fileID: 1378718965}
   - {fileID: 2084774558}
   - {fileID: 372922629}
-  - {fileID: 1988864622}
-  - {fileID: 977899941}
-  - {fileID: 477663660}
+  - {fileID: 2065205189}
