@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading.Tasks;
 
 namespace KesselSabacc.Gameplay
@@ -7,12 +8,12 @@ namespace KesselSabacc.Gameplay
 		/// <summary>
 		/// Called when entering this state
 		/// </summary>
-		public Task OnEnter();
+		public IEnumerator OnEnter();
 
 		/// <summary>
 		/// Called when exiting this state
 		/// </summary>
-		public Task OnExit();
+		public IEnumerator OnExit();
 
 		/// <summary>
 		/// Handle updates.

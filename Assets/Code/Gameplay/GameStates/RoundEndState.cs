@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading.Tasks;
 
 namespace KesselSabacc.Gameplay.GameStates
@@ -11,14 +12,14 @@ namespace KesselSabacc.Gameplay.GameStates
 			_gameController = gameController;
 		}
 
-		public Task OnEnter()
+		public IEnumerator OnEnter()
 		{
-			return Task.CompletedTask;
+			yield return null;
 		}
 
-		public Task OnExit()
+		public IEnumerator OnExit()
 		{
-			return Task.CompletedTask;
+			yield return null;
 		}
 
 		public void OnInput()

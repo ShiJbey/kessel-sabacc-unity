@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading.Tasks;
 using DG.Tweening;
 using KesselSabacc.Model;
@@ -120,6 +121,18 @@ namespace KesselSabacc.Views
 			return sequence.AsyncWaitForCompletion();
 		}
 
+		public IEnumerator Flip()
+		{
+			if ( _isFaceUp )
+			{
+				yield return ShowBackAsync();
+			}
+			else
+			{
+				yield return ShowFrontAsync();
+			}
+		}
+
 		/// <summary>
 		/// Show the front of the card without any flip animation.
 		/// </summary>
@@ -156,19 +169,12 @@ namespace KesselSabacc.Views
 		private void OnMouseUpAsButton()
 		{
 			Debug.Log( "Card clicked" );
-			if ( _isFaceUp )
-			{
-				ShowBackAsync();
-			}
-			else
-			{
-				ShowFrontAsync();
-			}
+			StartCoroutine( Flip() );
 		}
 
 		public void OnPointerClick(PointerEventData eventData)
 		{
-			OnMouseUpAsButton();
+			// OnMouseUpAsButton();
 		}
 	}
 

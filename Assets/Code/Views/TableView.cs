@@ -1,3 +1,4 @@
+using KesselSabacc.Gameplay;
 using KesselSabacc.Model;
 using UnityEngine;
 
@@ -14,17 +15,19 @@ namespace KesselSabacc.Views
 		[SerializeField]
 		private CardStackView _bloodDiscardPileView;
 
+		public HandView[] playerHands;
+
 		public CardStackView SandDiscardPileView => _sandDiscardPileView;
 		public CardStackView SandDeckView => _sandDeckView;
 		public CardStackView BloodDeckView => _bloodDeckView;
 		public CardStackView BloodDiscardPileView => _bloodDiscardPileView;
 
-		public void Initialize(KesselSabaccGameModel game)
+		public void Initialize(KesselSabaccGameController gameController)
 		{
-			_sandDiscardPileView.Initialize( game.SandDiscardPile );
-			_sandDeckView.Initialize( game.SandDeck );
-			_bloodDeckView.Initialize( game.BloodDeck );
-			_bloodDiscardPileView.Initialize( game.BloodDiscardPile );
+			_sandDiscardPileView.Initialize( gameController, gameController.Model.SandDiscardPile );
+			_sandDeckView.Initialize( gameController, gameController.Model.SandDeck );
+			_bloodDeckView.Initialize( gameController, gameController.Model.BloodDeck );
+			_bloodDiscardPileView.Initialize( gameController, gameController.Model.BloodDiscardPile );
 		}
 	}
 }

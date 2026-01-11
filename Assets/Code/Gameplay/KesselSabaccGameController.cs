@@ -13,10 +13,7 @@ namespace KesselSabacc.Gameplay
 	{
 		[Header( "References" )]
 		public KesselSabaccGameView uiView;
-		private GameObject cardViewPrefab;
 
-		[Header( "Game Settings" )]
-		public DeckConfiguration deckConfig;
 
 		[Header( "Animation Settings" )]
 		public float cardDealSpeed = 0.5f;
@@ -28,7 +25,6 @@ namespace KesselSabacc.Gameplay
 		private bool _isSwitchingState = false;
 		private List<PlayerController> _players = new();
 		private KesselSabaccGameModel _model;
-		private List<CardView> _spawnedCards = new();
 
 		public KesselSabaccGameModel Model => _model;
 		public IReadOnlyList<PlayerController> Players => _players;
@@ -57,6 +53,9 @@ namespace KesselSabacc.Gameplay
 			CreateTestGame();
 			yield return null;
 
+			uiView.Initialize( this );
+			yield return null;
+
 			loadingScreen.Hide();
 			yield return null;
 
@@ -70,46 +69,41 @@ namespace KesselSabacc.Gameplay
 
 		public void GoToDealingState()
 		{
-			SetGameState( new DealingState( this ) );
+			StartCoroutine( SetGameState( new DealingState( this ) ) );
 		}
 
 		public void GoToTurnTakingState()
 		{
-			SetGameState( new TurnTakingState( this ) );
+			StartCoroutine( SetGameState( new TurnTakingState( this ) ) );
 		}
 
 		public void GoToRoundOverState()
 		{
-			SetGameState( new RoundOverState( this ) );
+			StartCoroutine( SetGameState( new RoundOverState( this ) ) );
 		}
 
 		public void GoToGameOverState()
 		{
-			SetGameState( new GameOverState( this ) );
+			StartCoroutine( SetGameState( new GameOverState( this ) ) );
 		}
 
-		private async void SetGameState(IGameState newState)
+		private IEnumerator SetGameState(IGameState newState)
 		{
 			_isSwitchingState = true;
 
 			if ( _currentGameState != null )
 			{
-				await _currentGameState.OnExit();
+				yield return _currentGameState.OnExit();
 			}
 
 			_currentGameState = newState;
 
-			await _currentGameState.OnEnter();
+			yield return _currentGameState.OnEnter();
 
 			_isSwitchingState = false;
 		}
 
-		public CardView CreateCardView(Card card, Vector3 position, Quaternion rotation)
-		{
-			CardView cardView = Instantiate( cardViewPrefab, position, rotation ).GetComponent<CardView>();
-			cardView.Initialize( card, GetCardFront( card.Suit, card.CardType ), GetCardBack( card.Suit ) );
-			return cardView;
-		}
+
 
 		public void IncrementTurnTaker()
 		{
@@ -218,53 +212,6 @@ namespace KesselSabacc.Gameplay
 				cardType
 			);
 		}
-
-		public Sprite GetCardBack(CardSuit suit)
-		{
-			return (suit == CardSuit.BLOOD) ? deckConfig.bloodCardBack : deckConfig.sandCardBack;
-		}
-
-		public Sprite GetCardFront(CardSuit suit, CardType cardType)
-		{
-			switch ( cardType )
-			{
-				case CardType.SYLOP:
-					return (suit == CardSuit.BLOOD) ?
-						deckConfig.sylopCards.bloodFront
-						: deckConfig.sylopCards.sandFront;
-				case CardType.ONE:
-					return (suit == CardSuit.BLOOD) ?
-						deckConfig.oneCards.bloodFront
-						: deckConfig.oneCards.sandFront;
-				case CardType.TWO:
-					return (suit == CardSuit.BLOOD) ?
-						deckConfig.twoCards.bloodFront
-						: deckConfig.twoCards.sandFront;
-				case CardType.THREE:
-					return (suit == CardSuit.BLOOD) ?
-						deckConfig.threeCards.bloodFront
-						: deckConfig.threeCards.sandFront;
-				case CardType.FOUR:
-					return (suit == CardSuit.BLOOD) ?
-						deckConfig.fourCards.bloodFront
-						: deckConfig.fourCards.sandFront;
-				case CardType.FIVE:
-					return (suit == CardSuit.BLOOD) ?
-						deckConfig.fiveCards.bloodFront
-						: deckConfig.fiveCards.sandFront;
-				case CardType.SIX:
-					return (suit == CardSuit.BLOOD) ?
-						deckConfig.sixCards.bloodFront
-						: deckConfig.sixCards.sandFront;
-				case CardType.IMPOSTER:
-					return (suit == CardSuit.BLOOD) ?
-						deckConfig.imposterCards.bloodFront
-						: deckConfig.imposterCards.sandFront;
-				default:
-					throw new System.ArgumentException( "Unsupported suit or card type" );
-			}
-		}
-
 		private void CreateTestGame()
 		{
 			if ( NewGameManager.Instance.Data == null )
@@ -284,7 +231,7 @@ namespace KesselSabacc.Gameplay
 			AddPlayer( player );
 
 			// Add CPU player(s)
-			for ( int i = 1; i <= newGameData.numPlayers - 1; i++ )
+			for ( int i = 1; i < newGameData.numPlayers; i++ )
 			{
 				var cpu = new Model.Player( $"CPU {i}" );
 				cpu.Chips = newGameData.numChips;

@@ -726,6 +726,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -1821309033, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    - target: {fileID: 5881781534983626954, guid: ca147e233bfdb1f4caf8fb42f8bf67ab, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -736,17 +740,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7611004944639926824, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
   m_PrefabInstance: {fileID: 385908102}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &60132647 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 83316977861157430, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
-  m_PrefabInstance: {fileID: 385908102}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa1d349473e6e794483c3fceeb85961f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.CardView
 --- !u!1 &67703311
 GameObject:
   m_ObjectHideFlags: 0
@@ -1395,6 +1388,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardView (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1405,17 +1402,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7611004944639926824, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
   m_PrefabInstance: {fileID: 129625050}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &129625052 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 83316977861157430, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
-  m_PrefabInstance: {fileID: 129625050}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa1d349473e6e794483c3fceeb85961f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.CardView
 --- !u!1 &148642142
 GameObject:
   m_ObjectHideFlags: 0
@@ -2220,6 +2206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.RoundNotificationUI
   m_HideOnAwake: 0
+  _roundLabel: {fileID: 1954425515}
 --- !u!1 &236123722
 GameObject:
   m_ObjectHideFlags: 0
@@ -4001,7 +3988,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Gameplay.KesselSabaccGameController
   uiView: {fileID: 2065205190}
-  deckConfig: {fileID: 11400000, guid: 8c803d76953d5fd4997848ada69b8b68, type: 2}
   cardDealSpeed: 0.5
   delayBetweenCards: 0.3
   deckSpawnDuration: 1
@@ -4546,6 +4532,10 @@ PrefabInstance:
     - target: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
       propertyPath: m_Name
       value: CardView
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5453,6 +5443,11 @@ MonoBehaviour:
   _sandDeckView: {fileID: 219677667}
   _bloodDeckView: {fileID: 2046391770}
   _bloodDiscardPileView: {fileID: 1791630222}
+  playerHands:
+  - {fileID: 645176885}
+  - {fileID: 2117123429}
+  - {fileID: 1200402959}
+  - {fileID: 503708898}
 --- !u!1001 &488369497
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5521,6 +5516,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 1852652304, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    - target: {fileID: 5881781534983626954, guid: ca147e233bfdb1f4caf8fb42f8bf67ab, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5803,9 +5802,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Views.HandView
   _splineContainer: {fileID: 1455429317}
   _cardRepositionAnimTime: 0.15
-  _cards:
-  - {fileID: 2074698992}
-  - {fileID: 129625052}
+  _cards: []
 --- !u!1 &507669185
 GameObject:
   m_ObjectHideFlags: 0
@@ -6334,9 +6331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Views.HandView
   _splineContainer: {fileID: 1129454079}
   _cardRepositionAnimTime: 0.15
-  _cards:
-  - {fileID: 60132647}
-  - {fileID: 740337834}
+  _cards: []
 --- !u!1 &665685743
 GameObject:
   m_ObjectHideFlags: 0
@@ -6886,17 +6881,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7611004944639926824, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
   m_PrefabInstance: {fileID: 1373734536}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &740337834 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 83316977861157430, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
-  m_PrefabInstance: {fileID: 1373734536}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa1d349473e6e794483c3fceeb85961f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.CardView
 --- !u!1001 &740372207
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6957,6 +6941,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardView (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6967,17 +6955,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7611004944639926824, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
   m_PrefabInstance: {fileID: 740372207}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &740372209 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 83316977861157430, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
-  m_PrefabInstance: {fileID: 740372207}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa1d349473e6e794483c3fceeb85961f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.CardView
 --- !u!1 &747002525
 GameObject:
   m_ObjectHideFlags: 0
@@ -10020,9 +9997,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Views.HandView
   _splineContainer: {fileID: 92160729}
   _cardRepositionAnimTime: 0.15
-  _cards:
-  - {fileID: 1979102140}
-  - {fileID: 740372209}
+  _cards: []
 --- !u!1 &1201445991
 GameObject:
   m_ObjectHideFlags: 0
@@ -11662,6 +11637,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardView (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13047,6 +13026,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardView (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13057,17 +13040,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7611004944639926824, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
   m_PrefabInstance: {fileID: 1492984628}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1492984630 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 83316977861157430, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
-  m_PrefabInstance: {fileID: 1492984628}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa1d349473e6e794483c3fceeb85961f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.CardView
 --- !u!1 &1513937724
 GameObject:
   m_ObjectHideFlags: 0
@@ -14314,6 +14286,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardView
       objectReference: {fileID: 0}
+    - target: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14324,17 +14300,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7611004944639926824, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
   m_PrefabInstance: {fileID: 1705298056}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1705298058 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 83316977861157430, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
-  m_PrefabInstance: {fileID: 1705298056}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa1d349473e6e794483c3fceeb85961f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.CardView
 --- !u!1 &1714096591
 GameObject:
   m_ObjectHideFlags: 0
@@ -16965,6 +16930,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardView
       objectReference: {fileID: 0}
+    - target: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16975,17 +16944,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7611004944639926824, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
   m_PrefabInstance: {fileID: 1979102138}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1979102140 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 83316977861157430, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
-  m_PrefabInstance: {fileID: 1979102138}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa1d349473e6e794483c3fceeb85961f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.CardView
 --- !u!1 &1988864618
 GameObject:
   m_ObjectHideFlags: 0
@@ -18010,6 +17968,8 @@ MonoBehaviour:
   diceRollUI: {fileID: 245501668}
   roundEndUI: {fileID: 1724962887}
   tableView: {fileID: 477663661}
+  cardViewPrefab: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
+  deckConfig: {fileID: 11400000, guid: 8c803d76953d5fd4997848ada69b8b68, type: 2}
 --- !u!1001 &2074698990
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18078,6 +18038,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardView
       objectReference: {fileID: 0}
+    - target: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18088,17 +18052,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7611004944639926824, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
   m_PrefabInstance: {fileID: 2074698990}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2074698992 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 83316977861157430, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
-  m_PrefabInstance: {fileID: 2074698990}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa1d349473e6e794483c3fceeb85961f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.CardView
 --- !u!1 &2075957292
 GameObject:
   m_ObjectHideFlags: 0
@@ -18688,6 +18641,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -1966503233, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    - target: {fileID: 5881781534983626954, guid: ca147e233bfdb1f4caf8fb42f8bf67ab, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18742,9 +18699,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Views.HandView
   _splineContainer: {fileID: 1351644861}
   _cardRepositionAnimTime: 0.15
-  _cards:
-  - {fileID: 1705298058}
-  - {fileID: 1492984630}
+  _cards: []
 --- !u!1 &2123711063
 GameObject:
   m_ObjectHideFlags: 0
@@ -19087,6 +19042,10 @@ PrefabInstance:
     - target: {fileID: 1383643221011915875, guid: ca147e233bfdb1f4caf8fb42f8bf67ab, type: 3}
       propertyPath: m_Name
       value: SandDiscardPileView
+      objectReference: {fileID: 0}
+    - target: {fileID: 5881781534983626954, guid: ca147e233bfdb1f4caf8fb42f8bf67ab, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading.Tasks;
 using KesselSabacc.Model;
 using UnityEngine;
@@ -13,15 +14,15 @@ namespace KesselSabacc.Gameplay.GameStates
 			_gameController = gameController;
 		}
 
-		public Task OnEnter()
+		public IEnumerator OnEnter()
 		{
 			Debug.Log( $"Staring Round {_gameController.Model.CurrentRound}" );
-			return Task.CompletedTask;
+			yield return null;
 		}
 
-		public Task OnExit()
+		public IEnumerator OnExit()
 		{
-			return Task.CompletedTask;
+			yield return null;
 		}
 
 		public void OnInput()

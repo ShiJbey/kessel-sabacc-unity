@@ -17,6 +17,8 @@ namespace KesselSabacc.Model
 		public event Action<Card> OnCardRemoved;
 		public event Action OnCardsCleared;
 
+		public IReadOnlyList<Card> Cards => _cards;
+
 		public CardStack(bool isFaceDown)
 		{
 			IsFaceDown = isFaceDown;
