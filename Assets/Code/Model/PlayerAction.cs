@@ -1,3 +1,6 @@
+using System.Collections;
+using KesselSabacc.Gameplay;
+
 namespace KesselSabacc.Model
 {
 	/// <summary>
@@ -12,11 +15,8 @@ namespace KesselSabacc.Model
 			_performer = performer;
 		}
 
-		/// <summary>
-		/// Execute the action by updating the provided game state.
-		/// </summary>
-		/// <param name="sabacc"></param>
-		/// <returns></returns>
-		public abstract KesselSabacc Execute(KesselSabacc sabacc);
+		public abstract void ApplyToModel(KesselSabaccGameModel model);
+
+		public abstract IEnumerator Execute(KesselSabaccGameController gameController);
 	}
 }

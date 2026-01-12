@@ -28,14 +28,23 @@ namespace KesselSabacc.Gameplay.GameStates
 			yield return new WaitUntil( () => !_tableView.SandDeckView.IsAnimating && !_tableView.BloodDeckView.IsAnimating );
 			yield return new WaitForSeconds( .500f );
 
-			CardView sandCard = _tableView.SandDeckView.Pop();
-			CardView bloodCard = _tableView.BloodDeckView.Pop();
+			CardView sandCardView = _tableView.SandDeckView.Pop();
+			Card sandCard = _gameController.Model.SandDeck.Pop();
 
-			yield return sandCard.Flip();
-			yield return bloodCard.Flip();
+			CardView bloodCardView = _tableView.BloodDeckView.Pop();
+			Card bloodCard = _gameController.Model.BloodDeck.Pop();
 
-			_gameController.StartCoroutine( _tableView.SandDiscardPileView.AddCard( sandCard ) );
-			_gameController.StartCoroutine( _tableView.BloodDiscardPileView.AddCard( bloodCard ) );
+			yield return sandCardView.Flip();
+			yield return bloodCardView.Flip();
+
+			_gameController.Model.SandDiscardPile.Add( sandCard );
+			_gameController.Model.BloodDiscardPile.Add( bloodCard );
+
+			yield return sandCardView.MoveToPosition( _tableView.SandDiscardPileView.transform.position );
+			yield return bloodCardView.MoveToPosition( _tableView.BloodDiscardPileView.transform.position );
+
+			yield return _tableView.SandDiscardPileView.AddCard( sandCardView );
+			yield return _tableView.BloodDiscardPileView.AddCard( bloodCardView );
 			yield return null; // Give the above coroutines a chance to start
 
 			yield return new WaitUntil( () => !_tableView.SandDiscardPileView.IsAnimating && !_tableView.BloodDiscardPileView.IsAnimating );
@@ -50,12 +59,7 @@ namespace KesselSabacc.Gameplay.GameStates
 				yield return new WaitForSeconds( .500f );
 			}
 
-			_gameController.uiView.roundNotificationUI.SetRound( _gameController.Model.CurrentRound );
-			_gameController.uiView.roundNotificationUI.Show();
-
-			yield return new WaitForSeconds( 2f );
-
-			_gameController.uiView.roundNotificationUI.Hide();
+			_gameController.GoToTurnTakingState();
 		}
 
 		public IEnumerator OnExit()

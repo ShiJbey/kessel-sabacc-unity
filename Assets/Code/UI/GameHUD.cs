@@ -1,3 +1,4 @@
+using System;
 using KesselSabacc.Model;
 using KesselSabacc.UI.Components;
 using KesselSabacc.Views;
@@ -22,6 +23,9 @@ namespace KesselSabacc.UI
 		private OpponentUIRefs[] _opponentUI;
 
 		private KesselSabaccGameView _gameView;
+
+		public event Action OnDrawCardButtonClicked;
+		public event Action OnStandButtonClicked;
 
 		public void Initialize(KesselSabaccGameModel game, KesselSabaccGameView gameView, int playerIndex)
 		{
@@ -48,18 +52,20 @@ namespace KesselSabacc.UI
 			{
 				_opponentUI[i].infoPanel.Hide();
 			}
+
+			HideActionButtons();
 		}
 
 		protected override void SubscribeToEvents()
 		{
-			_drawButton.onClick.AddListener( OnDrawButtonClicked );
-			_standButton.onClick.AddListener( OnStandButtonClicked );
+			_drawButton.onClick.AddListener( HandleDrawButtonClicked );
+			_standButton.onClick.AddListener( HandleStandButtonClicked );
 		}
 
 		protected override void UnsubscribeFromEvents()
 		{
-			_drawButton.onClick.RemoveListener( OnDrawButtonClicked );
-			_standButton.onClick.RemoveListener( OnStandButtonClicked );
+			_drawButton.onClick.RemoveListener( HandleDrawButtonClicked );
+			_standButton.onClick.RemoveListener( HandleStandButtonClicked );
 		}
 
 		public void HideActionButtons()
@@ -74,16 +80,15 @@ namespace KesselSabacc.UI
 			_standButton.gameObject.SetActive( true );
 		}
 
-		private void OnDrawButtonClicked()
+		private void HandleDrawButtonClicked()
 		{
-			_gameView.drawCardUI.Show();
+			OnDrawCardButtonClicked?.Invoke();
 		}
 
-		private void OnStandButtonClicked()
+		private void HandleStandButtonClicked()
 		{
-
+			OnStandButtonClicked?.Invoke();
 		}
-
 
 		[System.Serializable]
 		public class OpponentUIRefs

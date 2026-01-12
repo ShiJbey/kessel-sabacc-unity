@@ -42,11 +42,25 @@ namespace KesselSabacc.Views
 			// }
 		}
 
+		public CardView Peek()
+		{
+			if ( _cards.Count > 0 )
+			{
+				CardView cardView = _cards[_cards.Count - 1];
+				return cardView;
+			}
+			return null;
+		}
+
 		public CardView Pop()
 		{
-			CardView cardView = _cards[_cards.Count - 1];
-			_cards.RemoveAt( _cards.Count - 1 );
-			return cardView;
+			if ( _cards.Count > 0 )
+			{
+				CardView cardView = _cards[_cards.Count - 1];
+				_cards.RemoveAt( _cards.Count - 1 );
+				return cardView;
+			}
+			return null;
 		}
 
 		public IEnumerator AnimateDeckSpawn()
@@ -76,51 +90,6 @@ namespace KesselSabacc.Views
 			IsAnimating = false;
 		}
 
-		// private void CardStack_OnCardAdded(Card card)
-		// {
-		// 	// TODO: Animate card moving to this stack
-		// 	Card topCard = _model.Peek();
-		// 	if ( topCard != null )
-		// 	{
-		// 		_cardView.Initialize( topCard );
-		// 		_cardView.gameObject.SetActive( true );
-		// 	}
-		// 	else
-		// 	{
-		// 		_cardView.gameObject.SetActive( false );
-		// 	}
-		// }
-
-		// private void CardStack_OnCardRemoved(Card card)
-		// {
-		// 	// TODO: Animate care leaving the stack
-		// 	Card topCard = _model.Peek();
-		// 	if ( topCard != null )
-		// 	{
-		// 		_cardView.Initialize( topCard );
-		// 		_cardView.gameObject.SetActive( true );
-		// 	}
-		// 	else
-		// 	{
-		// 		_cardView.gameObject.SetActive( false );
-		// 	}
-		// }
-
-		// private void CardStack_OnCardsCleared()
-		// {
-		// 	// TODO: Play animation of the cards disappearing
-		// 	Card topCard = _model.Peek();
-		// 	if ( topCard != null )
-		// 	{
-		// 		_cardView.Initialize( topCard );
-		// 		_cardView.gameObject.SetActive( true );
-		// 	}
-		// 	else
-		// 	{
-		// 		_cardView.gameObject.SetActive( false );
-		// 	}
-		// }
-
 		public IEnumerator AddCard(CardView cardView)
 		{
 			// TODO: Tween the card view from its current position to the stack.
@@ -128,6 +97,8 @@ namespace KesselSabacc.Views
 			//       should create the effect of adding a card to the top of the
 			//		 stack.
 			IsAnimating = true;
+			_cards.Add( cardView );
+
 			var sequence = DOTween.Sequence();
 
 			sequence.Append(

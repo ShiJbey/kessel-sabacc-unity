@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using KesselSabacc.Gameplay;
 using KesselSabacc.Model;
@@ -25,6 +26,8 @@ namespace KesselSabacc.UI
 
 		private List<DrawableCardUI> _cardViews = new();
 
+		public event Action<int> OnCardDrawn;
+
 		private void Start()
 		{
 			_cardPrefab.gameObject.SetActive( false );
@@ -40,26 +43,31 @@ namespace KesselSabacc.UI
 			_backButton.onClick.RemoveListener( OnBackButtonClicked );
 		}
 
-		// public void UpdateView(KesselSabaccGameModel game)
-		// {
-		// 	foreach ( var view in _cardViews )
-		// 	{
-		// 		Destroy( view.gameObject );
-		// 	}
-		// 	_cardViews.Clear();
+		public void UpdateView(KesselSabaccGameView gameView)
+		{
+			foreach ( var view in _cardViews )
+			{
+				Destroy( view.gameObject );
+			}
+			_cardViews.Clear();
 
-		// 	var cardView = InstantiateCardView( game.SandDiscardPile.Peek() );
-		// 	_cardViews.Add( cardView );
+			var cardView = InstantiateCardView( gameView.tableView.SandDiscardPileView.Peek() );
+			cardView.OnClick += () => { OnCardDrawn?.Invoke( 0 ); };
+			_cardViews.Add( cardView );
 
-		// 	cardView = InstantiateCardView( game.SandDeck.Peek() );
-		// 	_cardViews.Add( cardView );
 
-		// 	cardView = InstantiateCardView( game.BloodDeck.Peek() );
-		// 	_cardViews.Add( cardView );
+			cardView = InstantiateCardView( gameView.tableView.SandDeckView.Peek() );
+			cardView.OnClick += () => { OnCardDrawn?.Invoke( 1 ); };
+			_cardViews.Add( cardView );
 
-		// 	cardView = InstantiateCardView( game.BloodDiscardPile.Peek() );
-		// 	_cardViews.Add( cardView );
-		// }
+			cardView = InstantiateCardView( gameView.tableView.BloodDeckView.Peek() );
+			cardView.OnClick += () => { OnCardDrawn?.Invoke( 2 ); };
+			_cardViews.Add( cardView );
+
+			cardView = InstantiateCardView( gameView.tableView.BloodDiscardPileView.Peek() );
+			cardView.OnClick += () => { OnCardDrawn?.Invoke( 3 ); };
+			_cardViews.Add( cardView );
+		}
 
 		public DrawableCardUI InstantiateCardView(CardView cardView)
 		{

@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Collections;
 using KesselSabacc.Model;
 
 namespace KesselSabacc.Gameplay
@@ -15,13 +14,15 @@ namespace KesselSabacc.Gameplay
 			_model = model;
 		}
 
-		/// <summary>
-		/// Select an action to perform from among those given.
-		/// </summary>
-		/// <param name="actions"></param>
-		/// <returns></returns>
-		public abstract Task<PlayerAction> SelectAction(IReadOnlyList<PlayerAction> actions);
+		public virtual void Initialize(KesselSabaccGameController gameController) { }
 
-		public abstract Task TakeTurn(KesselSabaccGameModel game);
+		// /// <summary>
+		// /// Select an action to perform from among those given.
+		// /// </summary>
+		// /// <param name="actions"></param>
+		// /// <returns></returns>
+		// public abstract Task<PlayerAction> SelectAction(IReadOnlyList<PlayerAction> actions);
+
+		public abstract IEnumerator TakeTurn(KesselSabaccGameController gameController);
 	}
 }

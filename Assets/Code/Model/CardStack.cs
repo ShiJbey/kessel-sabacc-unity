@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace KesselSabacc.Model
@@ -7,10 +6,11 @@ namespace KesselSabacc.Model
 	/// <summary>
 	/// A collection of cards that is treated like a stack data structure.
 	/// </summary>
-	public class CardStack : IEnumerable<Card>
+	public class CardStack
 	{
 		private List<Card> _cards;
 
+		public string Name { get; }
 		public bool IsFaceDown { get; }
 
 		public event Action<Card> OnCardAdded;
@@ -19,8 +19,9 @@ namespace KesselSabacc.Model
 
 		public IReadOnlyList<Card> Cards => _cards;
 
-		public CardStack(bool isFaceDown)
+		public CardStack(string name, bool isFaceDown)
 		{
+			Name = name;
 			IsFaceDown = isFaceDown;
 			_cards = new List<Card>();
 		}
@@ -69,16 +70,6 @@ namespace KesselSabacc.Model
 				_cards[r] = _cards[i];
 				_cards[i] = temp;
 			}
-		}
-
-		public IEnumerator<Card> GetEnumerator()
-		{
-			return _cards.GetEnumerator();
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
 		}
 	}
 }

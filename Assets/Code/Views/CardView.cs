@@ -133,6 +133,17 @@ namespace KesselSabacc.Views
 			}
 		}
 
+		public IEnumerator MoveToPosition(Vector3 newPosition)
+		{
+			var sequence = DOTween.Sequence();
+
+			sequence.Append(
+				transform.DOMove( newPosition, 0.4f ).SetEase( Ease.OutQuad )
+			);
+
+			yield return sequence.WaitForCompletion();
+		}
+
 		/// <summary>
 		/// Show the front of the card without any flip animation.
 		/// </summary>

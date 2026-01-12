@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Threading.Tasks;
-using KesselSabacc.Model;
 using UnityEngine;
 
 namespace KesselSabacc.Gameplay.GameStates
@@ -16,8 +14,32 @@ namespace KesselSabacc.Gameplay.GameStates
 
 		public IEnumerator OnEnter()
 		{
+			_gameController.AdvanceRound();
+
 			Debug.Log( $"Staring Round {_gameController.Model.CurrentRound}" );
+			_gameController.uiView.roundNotificationUI.SetRound( _gameController.Model.CurrentRound );
+			_gameController.uiView.roundNotificationUI.Show();
+
+			yield return new WaitForSeconds( 2f );
+
+			_gameController.uiView.roundNotificationUI.Hide();
+
 			yield return null;
+
+			while ( !_gameController.Model.IsRoundOver )
+			{
+				while ( !_gameController.Model.IsTurnOver )
+				{
+					int playerIndex = _gameController.Model.CurrentTurnTaker;
+					PlayerController playerController = _gameController.Players[playerIndex];
+					yield return playerController.TakeTurn( _gameController );
+					_gameController.AdvanceTurnTaker();
+				}
+
+				_gameController.AdvanceTurn();
+			}
+
+			_gameController.GoToRoundOverState();
 		}
 
 		public IEnumerator OnExit()
@@ -32,18 +54,7 @@ namespace KesselSabacc.Gameplay.GameStates
 
 		public void OnUpdate()
 		{
-			if ( !_gameController.Model.Players[_gameController.Model.CurrentTurnTaker].IsDisqualified )
-			{
-				_gameController.Players[_gameController.Model.CurrentTurnTaker].TakeTurn( _gameController.Model );
-			}
 
-			_gameController.Model.IncrementTurnTaker();
-
-
-			if ( _gameController.Model.CurrentTurn >= KesselSabaccGameModel.TURNS_PER_ROUND )
-			{
-				_gameController.GoToRoundOverState();
-			}
 		}
 	}
 }

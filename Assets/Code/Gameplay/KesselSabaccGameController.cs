@@ -103,11 +103,19 @@ namespace KesselSabacc.Gameplay
 			_isSwitchingState = false;
 		}
 
-
-
-		public void IncrementTurnTaker()
+		public void AdvanceTurnTaker()
 		{
+			Model.AdvanceTurnTaker();
+		}
 
+		public void AdvanceRound()
+		{
+			Model.AdvanceRound();
+		}
+
+		public void AdvanceTurn()
+		{
+			Model.AdvanceTurn();
 		}
 
 		public void ResetBloodDeck()
@@ -184,6 +192,7 @@ namespace KesselSabacc.Gameplay
 		public void AddPlayerController(PlayerController playerController)
 		{
 			_players.Add( playerController );
+			playerController.Initialize( this );
 		}
 
 		/// <summary>
@@ -229,6 +238,7 @@ namespace KesselSabacc.Gameplay
 			var player = new Model.Player( "Player 1" );
 			player.Chips = newGameData.numChips;
 			AddPlayer( player );
+			AddPlayerController( new HumanController( player ) );
 
 			// Add CPU player(s)
 			for ( int i = 1; i < newGameData.numPlayers; i++ )

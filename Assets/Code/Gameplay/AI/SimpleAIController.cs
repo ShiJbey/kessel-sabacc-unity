@@ -1,6 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using KesselSabacc.Model;
+using UnityEngine;
 
 namespace KesselSabacc.Gameplay.AI
 {
@@ -10,14 +11,26 @@ namespace KesselSabacc.Gameplay.AI
 		{
 		}
 
-		public override Task<PlayerAction> SelectAction(IReadOnlyList<PlayerAction> actions)
+		public List<PlayerAction> GetActions()
 		{
-			throw new System.NotImplementedException();
+			return new List<PlayerAction>();
 		}
 
-		public override Task TakeTurn(KesselSabaccGameModel game)
+		public PlayerAction SelectAction(IReadOnlyList<PlayerAction> actions)
 		{
-			throw new System.NotImplementedException();
+			return actions[Random.Range( 0, actions.Count )];
+		}
+
+		public override IEnumerator TakeTurn(KesselSabaccGameController gameController)
+		{
+			List<PlayerAction> availableActionList = GetActions();
+
+			while ( availableActionList.Count > 0 )
+			{
+				PlayerAction selectedAction = SelectAction( availableActionList );
+				yield return selectedAction.Execute( gameController );
+				availableActionList = GetActions();
+			}
 		}
 	}
 }
