@@ -57,7 +57,7 @@ namespace KesselSabacc.Model
 
 		public void AdvanceTurn()
 		{
-			if ( CurrentTurn <= TURNS_PER_ROUND )
+			if ( CurrentTurn < TURNS_PER_ROUND )
 			{
 				CurrentTurn++;
 				CurrentTurnTaker = 0;
