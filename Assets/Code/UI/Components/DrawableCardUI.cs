@@ -67,6 +67,7 @@ namespace KesselSabacc.UI.Components
 
 			// Loop the sequence indefinitely
 			hoverSequence.SetLoops( -1 );
+			hoverSequence.SetLink( _selectionArrow );
 		}
 
 		public void OnPointerExit(PointerEventData eventData)
@@ -79,6 +80,7 @@ namespace KesselSabacc.UI.Components
 
 		public void OnPointerClick(PointerEventData eventData)
 		{
+			_selectionArrow.GetComponent<RectTransform>().DOKill();
 			OnClick?.Invoke();
 		}
 	}
