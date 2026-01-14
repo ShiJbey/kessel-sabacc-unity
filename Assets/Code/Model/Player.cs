@@ -10,7 +10,6 @@ namespace KesselSabacc.Model
 		private int _chips;
 		private int _chipsInvested;
 		private List<Card> _hand;
-		private bool _hasStoodThisTurn;
 		private bool _isDisqualified;
 
 		public string Name
@@ -44,7 +43,8 @@ namespace KesselSabacc.Model
 		}
 
 		public IReadOnlyList<Card> Hand => _hand;
-		public bool HasStoodThisTurn => _hasStoodThisTurn;
+		public bool HasStoodThisTurn { get; set; }
+		public bool DrewCardThisTurn { get; set; }
 		public bool IsDisqualified => _isDisqualified;
 
 		public event Action<string> OnNameChanged;
@@ -58,7 +58,7 @@ namespace KesselSabacc.Model
 			_chips = 0;
 			_chipsInvested = 0;
 			_hand = new List<Card>();
-			_hasStoodThisTurn = false;
+			HasStoodThisTurn = false;
 			_isDisqualified = false;
 		}
 
@@ -66,7 +66,7 @@ namespace KesselSabacc.Model
 		{
 			_chipsInvested = 0;
 			_hand.Clear();
-			_hasStoodThisTurn = false;
+			HasStoodThisTurn = false;
 		}
 
 		public void AddCardToHand(Card card)

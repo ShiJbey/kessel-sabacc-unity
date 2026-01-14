@@ -9,7 +9,6 @@ namespace KesselSabacc.Gameplay.AI
 	{
 		private KesselSabaccGameView _gameView;
 		private KesselSabaccGameController _gameController;
-		private bool _isTakingTurn = false;
 
 		public HumanController(int playerIndex, Player model) : base( playerIndex, model ) { }
 
@@ -26,11 +25,11 @@ namespace KesselSabacc.Gameplay.AI
 
 		public override IEnumerator TakeTurn(KesselSabaccGameController gameController)
 		{
-			_isTakingTurn = true;
+			IsTakingTurn = true;
 			_gameView.hud.ShowActionButtons();
 
 
-			yield return new WaitUntil( () => !_isTakingTurn );
+			yield return new WaitUntil( () => !IsTakingTurn );
 			_gameView.hud.HideActionButtons();
 		}
 
@@ -42,7 +41,7 @@ namespace KesselSabacc.Gameplay.AI
 
 		private void GameView_OnStandButtonClicked()
 		{
-			_isTakingTurn = false;
+			IsTakingTurn = false;
 		}
 
 		private void GameView_OnCardDrawn(int choiceIndex)
@@ -101,7 +100,7 @@ namespace KesselSabacc.Gameplay.AI
 			_gameController.StartCoroutine(
 				_gameController.DiscardCardFromPlayer( 0, card, () =>
 					{
-						_isTakingTurn = false;
+						IsTakingTurn = false;
 					}
 				)
 			);

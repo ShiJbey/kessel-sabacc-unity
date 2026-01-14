@@ -62,6 +62,11 @@ namespace KesselSabacc.Model
 				CurrentTurn++;
 				CurrentTurnTaker = 0;
 				IsTurnOver = false;
+				foreach ( var p in _players )
+				{
+					p.HasStoodThisTurn = false;
+					p.DrewCardThisTurn = false;
+				}
 				OnTurnStart?.Invoke( CurrentTurn );
 			}
 			else

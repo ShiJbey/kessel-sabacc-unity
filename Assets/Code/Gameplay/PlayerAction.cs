@@ -1,18 +1,18 @@
 using System.Collections;
-using KesselSabacc.Gameplay;
+using KesselSabacc.Model;
 
-namespace KesselSabacc.Model
+namespace KesselSabacc.Gameplay
 {
 	/// <summary>
 	/// An action performed by the player that updates the state of the game.
 	/// </summary>
 	public abstract class PlayerAction
 	{
-		private Player _performer;
+		public PlayerController Performer { get; }
 
-		public PlayerAction(Player performer)
+		public PlayerAction(PlayerController performer)
 		{
-			_performer = performer;
+			Performer = performer;
 		}
 
 		public abstract void ApplyToModel(KesselSabaccGameModel model);

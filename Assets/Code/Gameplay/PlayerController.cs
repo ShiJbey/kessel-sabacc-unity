@@ -7,6 +7,7 @@ namespace KesselSabacc.Gameplay
 	{
 		public Player Model { get; }
 		public int PlayerIndex { get; }
+		public bool IsTakingTurn { get; set; }
 
 		public PlayerController(int playerIndex, Player model)
 		{

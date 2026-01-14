@@ -26,6 +26,11 @@ namespace KesselSabacc.Model
 			_cards = new List<Card>();
 		}
 
+		public bool IsEmpty()
+		{
+			return _cards.Count == 0;
+		}
+
 		public Card Peek()
 		{
 			if ( _cards.Count > 0 )
