@@ -5,13 +5,13 @@ namespace KesselSabacc.Gameplay
 {
 	public abstract class PlayerController
 	{
-		private Player _model;
+		public Player Model { get; }
+		public int PlayerIndex { get; }
 
-		public Player Model => _model;
-
-		public PlayerController(Player model)
+		public PlayerController(int playerIndex, Player model)
 		{
-			_model = model;
+			PlayerIndex = playerIndex;
+			Model = model;
 		}
 
 		public virtual void Initialize(KesselSabaccGameController gameController) { }

@@ -17,7 +17,7 @@ namespace KesselSabacc.Views
 		public float deckSpawnDuration = 1f;
 
 		private KesselSabaccGameController _gameController;
-		private CardStack _stack;
+		public CardStack Model { get; private set; }
 		private List<CardView> _cards = new();
 
 		public bool IsAnimating { get; private set; } = false;
@@ -25,7 +25,7 @@ namespace KesselSabacc.Views
 		public void Initialize(KesselSabaccGameController gameController, CardStack stack)
 		{
 			_gameController = gameController;
-			_stack = stack;
+			Model = stack;
 			// model.OnCardAdded += CardStack_OnCardAdded;
 			// model.OnCardRemoved += CardStack_OnCardRemoved;
 			// model.OnCardsCleared += CardStack_OnCardsCleared;
@@ -66,13 +66,13 @@ namespace KesselSabacc.Views
 		public IEnumerator AnimateDeckSpawn()
 		{
 			IsAnimating = true;
-			int totalCards = _stack.Cards.Count;
+			int totalCards = Model.Cards.Count;
 			for ( int i = 0; i < totalCards; i++ )
 			{
-				Card card = _stack.Cards[i];
+				Card card = Model.Cards[i];
 				CardView cardView = _gameController.uiView.SpawnCard( card, transform.position, transform.rotation );
 				_cards.Add( cardView );
-				if ( _stack.IsFaceDown )
+				if ( Model.IsFaceDown )
 				{
 					cardView.ShowBack();
 				}

@@ -12,7 +12,7 @@ namespace KesselSabacc.UI.Components
 		public void Initialize(KesselSabaccGameModel model)
 		{
 			SetTurn( model.CurrentTurn );
-			model.OnRoundStart += SetTurn;
+			model.OnTurnStart += SetTurn;
 		}
 
 		public void SetTurn(int value)

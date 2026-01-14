@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace KesselSabacc.Model
 {
@@ -7,7 +9,7 @@ namespace KesselSabacc.Model
 		private string _name;
 		private int _chips;
 		private int _chipsInvested;
-		private Hand _hand;
+		private List<Card> _hand;
 		private bool _hasStoodThisTurn;
 		private bool _isDisqualified;
 
@@ -41,31 +43,21 @@ namespace KesselSabacc.Model
 			}
 		}
 
-		public Hand Hand
-		{
-			get => _hand;
-		}
-
-		public bool HasStoodThisTurn
-		{
-			get => _hasStoodThisTurn;
-		}
-
+		public IReadOnlyList<Card> Hand => _hand;
+		public bool HasStoodThisTurn => _hasStoodThisTurn;
 		public bool IsDisqualified => _isDisqualified;
 
 		public event Action<string> OnNameChanged;
 		public event Action<int> OnChipsChanged;
 		public event Action<int> OnChipsInvestedChanged;
-		public event Action<Hand> OnHandChanged;
 		public event Action OnDisqualified;
-
 
 		public Player(string name = "")
 		{
 			_name = name;
 			_chips = 0;
 			_chipsInvested = 0;
-			_hand = new Hand();
+			_hand = new List<Card>();
 			_hasStoodThisTurn = false;
 			_isDisqualified = false;
 		}
@@ -73,7 +65,7 @@ namespace KesselSabacc.Model
 		public void ResetForNewRound()
 		{
 			_chipsInvested = 0;
-			_hand = new Hand();
+			_hand.Clear();
 			_hasStoodThisTurn = false;
 		}
 
@@ -83,54 +75,39 @@ namespace KesselSabacc.Model
 			{
 				throw new NullReferenceException( "Card cannot be null" );
 			}
-
-			if ( card.Suit == CardSuit.BLOOD )
-			{
-				if ( _hand.bloodCard == null )
-				{
-					_hand.bloodCard = card;
-				}
-				else
-				{
-					_hand.drawnCard = card;
-				}
-			}
-			else
-			{
-				if ( _hand.sandCard == null )
-				{
-					_hand.sandCard = card;
-				}
-				else
-				{
-					_hand.drawnCard = card;
-				}
-			}
-			OnHandChanged?.Invoke( _hand );
+			_hand.Add( card );
 		}
 
-		public void DiscardCardFromHand(Card card)
+		public bool DiscardCardFromHand(Card card)
 		{
-			if ( card == null )
+			return _hand.Remove( card );
+		}
+
+		public Card[] GetCardsOfSuit(CardSuit suit)
+		{
+			List<Card> cards = new();
+
+			foreach ( var card in _hand )
 			{
-				throw new NullReferenceException( "Card cannot be null" );
+				if ( card.Suit == suit )
+				{
+					cards.Add( card );
+				}
 			}
 
-			if ( _hand.bloodCard == card )
+			return cards.ToArray();
+		}
+
+		public Card GetFirstCardOfSuit(CardSuit suit)
+		{
+			foreach ( var card in _hand )
 			{
-				_hand.bloodCard = null;
-				OnHandChanged?.Invoke( _hand );
+				if ( card.Suit == suit )
+				{
+					return card;
+				}
 			}
-			else if ( _hand.sandCard == card )
-			{
-				_hand.sandCard = null;
-				OnHandChanged?.Invoke( _hand );
-			}
-			else if ( _hand.drawnCard == card )
-			{
-				_hand.drawnCard = null;
-				OnHandChanged?.Invoke( _hand );
-			}
+			return null;
 		}
 
 		public void DisqualifyPlayer()

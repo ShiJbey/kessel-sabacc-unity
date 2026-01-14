@@ -30,6 +30,8 @@ namespace KesselSabacc.Views
 		[SerializeField]
 		private List<CardView> _cards = new();
 
+		public IReadOnlyList<CardView> Cards => _cards;
+
 		private IEnumerator Start()
 		{
 			yield return UpdateCardPositions();
@@ -57,6 +59,29 @@ namespace KesselSabacc.Views
 			yield return UpdateCardPositions();
 		}
 
+		public CardView GetCard(Card card)
+		{
+			foreach ( CardView view in _cards )
+			{
+				if ( view.Card == card )
+				{
+					return view;
+				}
+			}
+			return null;
+		}
+
+		public IEnumerator RemoveCard(Card card)
+		{
+			for ( int i = _cards.Count - 1; i >= 0; i-- )
+			{
+				if ( _cards[i].Card == card )
+				{
+					_cards.RemoveAt( i );
+				}
+			}
+			yield return UpdateCardPositions();
+		}
 
 		private IEnumerator UpdateCardPositions()
 		{

@@ -73,7 +73,7 @@ namespace KesselSabacc.UI
 		{
 			var drawableCardView = Instantiate( _cardPrefab, _drawableCardContainer );
 			drawableCardView.gameObject.SetActive( true );
-			drawableCardView.Initialize( cardView );
+			drawableCardView.Initialize( cardView.Sprite );
 			return drawableCardView;
 		}
 

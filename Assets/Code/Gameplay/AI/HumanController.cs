@@ -9,11 +9,9 @@ namespace KesselSabacc.Gameplay.AI
 	{
 		private KesselSabaccGameView _gameView;
 		private KesselSabaccGameController _gameController;
-		private bool _isTakingTurn;
+		private bool _isTakingTurn = false;
 
-		public HumanController(Player model) : base( model )
-		{
-		}
+		public HumanController(int playerIndex, Player model) : base( playerIndex, model ) { }
 
 		public override void Initialize(KesselSabaccGameController gameController)
 		{
@@ -23,7 +21,7 @@ namespace KesselSabacc.Gameplay.AI
 			_gameView.hud.OnDrawCardButtonClicked += GameView_OnDrawCardButtonClicked;
 			_gameView.hud.OnStandButtonClicked += GameView_OnStandButtonClicked;
 			_gameView.drawCardUI.OnCardDrawn += GameView_OnCardDrawn;
-			_gameView.discardCardUI.OnCardDiscarded += GameView_OnCardDiscarded;
+			_gameView.discardCardUI.OnCardSelected += GameView_OnCardDiscarded;
 		}
 
 		public override IEnumerator TakeTurn(KesselSabaccGameController gameController)
@@ -49,54 +47,64 @@ namespace KesselSabacc.Gameplay.AI
 
 		private void GameView_OnCardDrawn(int choiceIndex)
 		{
-			_gameView.diceRollUI.Hide();
+			_gameView.drawCardUI.Hide();
+			Model.Chips -= 1;
+			Model.ChipsInvested += 1;
 
-			CardView selectedCardView = null;
+			CardStackView selectedCardStack = null;
 
 			switch ( choiceIndex )
 			{
 				case 0:
-					selectedCardView = _gameView.tableView.SandDiscardPileView.Pop();
+					selectedCardStack = _gameView.tableView.SandDiscardPileView;
 					break;
 				case 1:
-					selectedCardView = _gameView.tableView.SandDeckView.Pop();
+					selectedCardStack = _gameView.tableView.SandDeckView;
 					break;
 				case 2:
-					selectedCardView = _gameView.tableView.BloodDeckView.Pop();
+					selectedCardStack = _gameView.tableView.BloodDeckView;
 					break;
 				case 3:
-					selectedCardView = _gameView.tableView.BloodDiscardPileView.Pop();
+					selectedCardStack = _gameView.tableView.BloodDiscardPileView;
 					break;
 			}
 
-			if ( selectedCardView == null ) return;
+			if ( selectedCardStack == null ) return;
 
-			_gameView.tableView.playerHands[0].AddCard( selectedCardView );
+			_gameController.StartCoroutine(
+				_gameController.DealCardToPlayer( selectedCardStack, 0, (cardView) =>
+				{
+					if ( cardView.Card.Suit == CardSuit.BLOOD )
+					{
+						var bloodCards = Model.GetCardsOfSuit( CardSuit.BLOOD );
+						var sandCard = Model.GetFirstCardOfSuit( CardSuit.SAND );
+						_gameView.discardCardUI.UpdateView( bloodCards, sandCard );
+					}
+					else
+					{
+						var sandCards = Model.GetCardsOfSuit( CardSuit.SAND );
+						var bloodCard = Model.GetFirstCardOfSuit( CardSuit.BLOOD );
+						_gameView.discardCardUI.UpdateView( sandCards, bloodCard );
+					}
 
-			var playerHand = _gameController.Model.Players[0].Hand;
-			playerHand.drawnCard = selectedCardView.Card;
-
-			if ( playerHand.drawnCard.Suit == CardSuit.BLOOD )
-			{
-				var cards = new Card[2] { playerHand.sandCard, playerHand.drawnCard };
-				_gameView.discardCardUI.UpdateView( cards );
-			}
-			else
-			{
-				var cards = new Card[2] { playerHand.sandCard, playerHand.drawnCard };
-				_gameView.discardCardUI.UpdateView( cards );
-			}
-
-			_gameView.discardCardUI.Show();
-
+					_gameView.discardCardUI.Show();
+				} )
+			);
 
 
 		}
 
-		private void GameView_OnCardDiscarded(int choiceIndex)
+		private void GameView_OnCardDiscarded(Card card)
 		{
 			_gameView.discardCardUI.Hide();
-			_isTakingTurn = false;
+
+			_gameController.StartCoroutine(
+				_gameController.DiscardCardFromPlayer( 0, card, () =>
+					{
+						_isTakingTurn = false;
+					}
+				)
+			);
 		}
 	}
 }

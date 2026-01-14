@@ -7,7 +7,7 @@ namespace KesselSabacc.Gameplay.AI
 {
 	public class SimpleAIController : PlayerController
 	{
-		public SimpleAIController(Player model) : base( model )
+		public SimpleAIController(int playerIndex, Player model) : base( playerIndex, model )
 		{
 		}
 

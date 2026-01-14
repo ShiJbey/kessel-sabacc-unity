@@ -1,5 +1,6 @@
 using System.Collections;
-using System.Threading.Tasks;
+using KesselSabacc.Views;
+using UnityEngine;
 
 namespace KesselSabacc.Gameplay.GameStates
 {
@@ -14,7 +15,7 @@ namespace KesselSabacc.Gameplay.GameStates
 
 		public IEnumerator OnEnter()
 		{
-			yield return null;
+			yield return RevealHandsAnimation();
 		}
 
 		public IEnumerator OnExit()
@@ -29,6 +30,19 @@ namespace KesselSabacc.Gameplay.GameStates
 
 		public void OnUpdate()
 		{
+
+		}
+
+		private IEnumerator RevealHandsAnimation()
+		{
+			foreach ( HandView handView in _gameController.uiView.tableView.playerHands )
+			{
+				foreach ( CardView cardView in handView.Cards )
+				{
+					yield return cardView.ShowFrontAsync();
+				}
+				yield return new WaitForSeconds( 1f );
+			}
 
 		}
 	}

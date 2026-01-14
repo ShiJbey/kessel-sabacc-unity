@@ -22,13 +22,13 @@ namespace KesselSabacc.Model
 		public bool IsRoundOver { get; private set; }
 		public bool IsTurnOver { get; private set; }
 
-		public event Action<int> OnRoundStart;
+		public event Action<int> OnTurnStart;
 
 		public KesselSabaccGameModel()
 		{
 			_players = new List<Player>();
 			CurrentRound = 0;
-			CurrentTurn = 0;
+			CurrentTurn = 1;
 			PlayerWhoStartedTurn = 0;
 			CurrentTurnTaker = 0;
 			IsGameOver = false;
@@ -52,6 +52,7 @@ namespace KesselSabacc.Model
 			CurrentTurnTaker = 0;
 			IsRoundOver = false;
 			IsTurnOver = false;
+			OnTurnStart?.Invoke( CurrentTurn );
 		}
 
 		public void AdvanceTurn()
@@ -61,6 +62,7 @@ namespace KesselSabacc.Model
 				CurrentTurn++;
 				CurrentTurnTaker = 0;
 				IsTurnOver = false;
+				OnTurnStart?.Invoke( CurrentTurn );
 			}
 			else
 			{

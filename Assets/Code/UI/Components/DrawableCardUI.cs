@@ -1,10 +1,10 @@
+using System;
+using DG.Tweening;
+using KesselSabacc.Model;
+using KesselSabacc.Views;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using DG.Tweening;
-using System;
-using KesselSabacc.Model;
-using KesselSabacc.Views;
 
 namespace KesselSabacc.UI.Components
 {
@@ -39,9 +39,9 @@ namespace KesselSabacc.UI.Components
 			base.OnDestroy();
 		}
 
-		public void Initialize(CardView cardView)
+		public void Initialize(Sprite sprite)
 		{
-			_cardView.sprite = cardView.Sprite;
+			_cardView.sprite = sprite;
 		}
 
 		public void OnPointerEnter(PointerEventData eventData)

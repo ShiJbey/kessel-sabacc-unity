@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using KesselSabacc.Gameplay.AI;
 using KesselSabacc.Gameplay.GameStates;
 using KesselSabacc.Model;
@@ -198,12 +201,21 @@ namespace KesselSabacc.Gameplay
 		/// <summary>
 		/// Reset the cards within the blood and sand decks, clear swap stacks.
 		/// </summary>
-		public void ResetDecksAndPiles()
+		public IEnumerator ResetDecksAndPiles()
 		{
 			Debug.Log( "Resetting Blood and Sand decks." );
 			ResetBloodDeck();
 			ResetSandDeck();
 			ResetDiscardPiles();
+
+			var sandDeckCoroutine = StartCoroutine( uiView.tableView.SandDeckView.AnimateDeckSpawn() );
+			var bloodDeckCoroutine = StartCoroutine( uiView.tableView.BloodDeckView.AnimateDeckSpawn() );
+			yield return null; // Give the above coroutines a chance to start
+
+			yield return new WaitUntil( () =>
+				!uiView.tableView.SandDeckView.IsAnimating
+				&& !uiView.tableView.BloodDeckView.IsAnimating
+			);
 		}
 
 		/// <summary>
@@ -238,7 +250,7 @@ namespace KesselSabacc.Gameplay
 			var player = new Model.Player( "Player 1" );
 			player.Chips = newGameData.numChips;
 			AddPlayer( player );
-			AddPlayerController( new HumanController( player ) );
+			AddPlayerController( new HumanController( 0, player ) );
 
 			// Add CPU player(s)
 			for ( int i = 1; i < newGameData.numPlayers; i++ )
@@ -246,8 +258,81 @@ namespace KesselSabacc.Gameplay
 				var cpu = new Model.Player( $"CPU {i}" );
 				cpu.Chips = newGameData.numChips;
 				AddPlayer( cpu );
-				AddPlayerController( new SimpleAIController( cpu ) );
+				AddPlayerController( new SimpleAIController( i, cpu ) );
 			}
+		}
+
+		public IEnumerator ResetCardStacks()
+		{
+			yield return null;
+		}
+
+		public IEnumerator DealCardToPlayer(CardStackView deck, int playerIndex, Action<CardView> onEnd = null)
+		{
+			CardView cardView = deck.Pop();
+			Card card = deck.Model.Pop();
+
+			Model.Players[playerIndex].AddCardToHand( card );
+
+			HandView playerHand = uiView.tableView.playerHands[playerIndex];
+
+			yield return MoveCardToPosition( cardView, playerHand.transform.position );
+
+			yield return playerHand.AddCard( cardView );
+
+			if ( playerIndex == 0 )
+			{
+				yield return cardView.ShowFrontAsync();
+			}
+
+			onEnd?.Invoke( cardView );
+		}
+
+		public IEnumerator DiscardCardFromPlayer(int playerIndex, Card card, Action onEnd = null)
+		{
+
+			CardView cardView = uiView.tableView.playerHands[playerIndex].GetCard( card );
+
+			CardStackView discardPile = card.Suit == CardSuit.SAND ?
+				uiView.tableView.SandDiscardPileView
+				: uiView.tableView.BloodDiscardPileView;
+
+			Model.Players[playerIndex].DiscardCardFromHand( card );
+
+			yield return uiView.tableView.playerHands[playerIndex].RemoveCard( card );
+
+			yield return MoveCardToPosition( cardView, discardPile.transform.position );
+
+			discardPile.Model.Add( card );
+
+			yield return discardPile.AddCard( cardView );
+
+			onEnd?.Invoke();
+		}
+
+		public IEnumerator DiscardTopCardOfDeck(CardStackView deck, CardStackView discardPile)
+		{
+			CardView cardView = deck.Pop();
+			Card card = deck.Model.Pop();
+
+			yield return cardView.Flip();
+
+			yield return MoveCardToPosition( cardView, discardPile.transform.position );
+
+			discardPile.Model.Add( card );
+
+			yield return discardPile.AddCard( cardView );
+		}
+
+		public IEnumerator MoveCardToPosition(CardView card, Vector3 position)
+		{
+			var sequence = DOTween.Sequence();
+
+			sequence.Append(
+				card.transform.DOMove( position, 0.4f ).SetEase( Ease.OutQuad )
+			);
+
+			yield return sequence.WaitForCompletion();
 		}
 	}
 }
