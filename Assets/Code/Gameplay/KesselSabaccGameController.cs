@@ -123,6 +123,7 @@ namespace KesselSabacc.Gameplay
 
 		public void ResetBloodDeck()
 		{
+			uiView.tableView.BloodDeckView.Clear();
 			_model.BloodDeck.Clear();
 
 			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.SYLOP ) );
@@ -153,6 +154,7 @@ namespace KesselSabacc.Gameplay
 
 		public void ResetSandDeck()
 		{
+			uiView.tableView.SandDeckView.Clear();
 			_model.SandDeck.Clear();
 
 			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.SYLOP ) );
@@ -183,7 +185,10 @@ namespace KesselSabacc.Gameplay
 
 		public void ResetDiscardPiles()
 		{
+			uiView.tableView.SandDiscardPileView.Clear();
 			_model.SandDiscardPile.Clear();
+
+			uiView.tableView.BloodDiscardPileView.Clear();
 			_model.BloodDiscardPile.Clear();
 		}
 
@@ -216,6 +221,15 @@ namespace KesselSabacc.Gameplay
 				!uiView.tableView.SandDeckView.IsAnimating
 				&& !uiView.tableView.BloodDeckView.IsAnimating
 			);
+		}
+
+		public void ClearHands()
+		{
+			foreach ( PlayerController playerController in _players )
+			{
+				playerController.Model.ClearHand();
+				uiView.tableView.playerHands[playerController.PlayerIndex].Clear();
+			}
 		}
 
 		/// <summary>

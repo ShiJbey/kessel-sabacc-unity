@@ -19,6 +19,7 @@ namespace KesselSabacc.Gameplay.GameStates
 		{
 			Debug.Log( "Dealing Cards" );
 
+			_gameController.ClearHands();
 			yield return _gameController.ResetDecksAndPiles();
 			yield return new WaitForSeconds( .500f );
 

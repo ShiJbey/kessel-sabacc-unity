@@ -17,7 +17,7 @@ namespace KesselSabacc.Gameplay.GameStates
 			_gameController.AdvanceRound();
 
 			Debug.Log( $"Staring Round {_gameController.Model.CurrentRound}" );
-			_gameController.uiView.roundNotificationUI.SetRound( _gameController.Model.CurrentRound );
+			_gameController.uiView.roundNotificationUI.ShowRoundStartMessage( _gameController.Model.CurrentRound );
 			_gameController.uiView.roundNotificationUI.Show();
 
 			yield return new WaitForSeconds( 2f );
@@ -32,7 +32,10 @@ namespace KesselSabacc.Gameplay.GameStates
 				{
 					int playerIndex = _gameController.Model.CurrentTurnTaker;
 					PlayerController playerController = _gameController.Players[playerIndex];
-					yield return playerController.TakeTurn( _gameController );
+					if ( !playerController.Model.IsDisqualified )
+					{
+						yield return playerController.TakeTurn( _gameController );
+					}
 					_gameController.AdvanceTurnTaker();
 				}
 

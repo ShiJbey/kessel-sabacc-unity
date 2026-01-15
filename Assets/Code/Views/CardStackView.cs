@@ -42,6 +42,15 @@ namespace KesselSabacc.Views
 			// }
 		}
 
+		public void Clear()
+		{
+			foreach ( CardView cardView in _cards )
+			{
+				Destroy( cardView.gameObject );
+			}
+			_cards.Clear();
+		}
+
 		public CardView Peek()
 		{
 			if ( _cards.Count > 0 )

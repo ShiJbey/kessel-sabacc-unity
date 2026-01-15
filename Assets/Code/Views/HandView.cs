@@ -83,6 +83,15 @@ namespace KesselSabacc.Views
 			yield return UpdateCardPositions();
 		}
 
+		public void Clear()
+		{
+			foreach ( CardView cardView in _cards )
+			{
+				Destroy( cardView.gameObject );
+			}
+			_cards.Clear();
+		}
+
 		private IEnumerator UpdateCardPositions()
 		{
 			if ( _cards.Count == 0 ) yield break;

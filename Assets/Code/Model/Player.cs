@@ -98,6 +98,11 @@ namespace KesselSabacc.Model
 			return cards.ToArray();
 		}
 
+		public void ClearHand()
+		{
+			_hand.Clear();
+		}
+
 		public Card GetFirstCardOfSuit(CardSuit suit)
 		{
 			foreach ( var card in _hand )

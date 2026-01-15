@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using KesselSabacc.Views;
 using UnityEngine;
 
@@ -15,11 +17,62 @@ namespace KesselSabacc.Gameplay.GameStates
 
 		public IEnumerator OnEnter()
 		{
+			_gameController.uiView.roundEndUI.OnNextButtonClicked += OnNextButtonClicked;
+			Debug.Log( $"Ending Round {_gameController.Model.CurrentRound}" );
+			_gameController.uiView.roundNotificationUI.ShowRoundEndMessage( _gameController.Model.CurrentRound );
+			_gameController.uiView.roundNotificationUI.Show();
+			yield return new WaitForSeconds( 2f );
+
+			_gameController.uiView.roundNotificationUI.Hide();
+
 			yield return RevealHandsAnimation();
+
+			_gameController.uiView.roundEndUI.ClearScores();
+			_gameController.uiView.roundEndUI.HideContinueButton();
+			_gameController.uiView.roundEndUI.Show();
+			yield return null;
+
+			for ( int i = 0; i < _gameController.Players.Count; i++ )
+			{
+				PlayerController playerController = _gameController.Players[i];
+				if ( playerController.Model.IsDisqualified ) continue;
+
+				var bloodCard = playerController.Model.GetFirstCardOfSuit( Model.CardSuit.BLOOD );
+				var sandCard = playerController.Model.GetFirstCardOfSuit( Model.CardSuit.SAND );
+				int score = Math.Abs( bloodCard.Value - sandCard.Value );
+				yield return _gameController.uiView.roundEndUI.AddScore( playerController, score );
+				yield return new WaitForSeconds( 0.5f );
+			}
+
+			_gameController.uiView.roundEndUI.ShowContinueButton();
+
+
+			for ( int i = 0; i < _gameController.Players.Count; i++ )
+			{
+				PlayerController playerController = _gameController.Players[i];
+				if ( playerController.Model.IsDisqualified ) continue;
+
+				var bloodCard = playerController.Model.GetFirstCardOfSuit( Model.CardSuit.BLOOD );
+				var sandCard = playerController.Model.GetFirstCardOfSuit( Model.CardSuit.SAND );
+				int score = Math.Abs( bloodCard.Value - sandCard.Value );
+
+				playerController.Model.Chips = Math.Max(
+					0,
+					playerController.Model.Chips + (playerController.Model.ChipsInvested - score)
+				);
+
+				playerController.Model.ChipsInvested = 0;
+
+				if ( playerController.Model.Chips == 0 )
+				{
+					playerController.Model.DisqualifyPlayer();
+				}
+			}
 		}
 
 		public IEnumerator OnExit()
 		{
+			_gameController.uiView.roundEndUI.OnNextButtonClicked -= OnNextButtonClicked;
 			yield return null;
 		}
 
@@ -31,6 +84,19 @@ namespace KesselSabacc.Gameplay.GameStates
 		public void OnUpdate()
 		{
 
+		}
+
+		private void OnNextButtonClicked()
+		{
+			_gameController.uiView.roundEndUI.Hide();
+			if ( _gameController.Model.IsGameOver )
+			{
+				_gameController.GoToRoundOverState();
+			}
+			else
+			{
+				_gameController.GoToDealingState();
+			}
 		}
 
 		private IEnumerator RevealHandsAnimation()
