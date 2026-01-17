@@ -4174,7 +4174,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3157940270499190821, guid: d481c613ea6f840b384df9fcd7dfa962, type: 3}
       propertyPath: m_Name
-      value: OpponentInfoPanelUI_3
+      value: OpponentInfoPanelUI_1
       objectReference: {fileID: 0}
     - target: {fileID: 3478769037010366571, guid: d481c613ea6f840b384df9fcd7dfa962, type: 3}
       propertyPath: m_AnchorMax.y
@@ -5317,9 +5317,9 @@ MonoBehaviour:
   _bloodDiscardPileView: {fileID: 1791630222}
   playerHands:
   - {fileID: 645176885}
+  - {fileID: 503708898}
   - {fileID: 2117123429}
   - {fileID: 1200402959}
-  - {fileID: 503708898}
 --- !u!1001 &488369497
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5550,7 +5550,7 @@ GameObject:
   - component: {fileID: 503708897}
   - component: {fileID: 503708898}
   m_Layer: 0
-  m_Name: OpponentHandView (2)
+  m_Name: OpponentHandView_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8095,9 +8095,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 645176883}
+  - {fileID: 503708897}
   - {fileID: 2117123428}
   - {fileID: 1200402958}
-  - {fileID: 503708897}
   m_Father: {fileID: 477663660}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &922155394
@@ -10206,7 +10206,7 @@ GameObject:
   - component: {fileID: 1200402958}
   - component: {fileID: 1200402959}
   m_Layer: 0
-  m_Name: OpponentHandView (1)
+  m_Name: OpponentHandView_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12404,7 +12404,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3157940270499190821, guid: d481c613ea6f840b384df9fcd7dfa962, type: 3}
       propertyPath: m_Name
-      value: OpponentInfoPanelUI_1
+      value: OpponentInfoPanelUI_2
       objectReference: {fileID: 0}
     - target: {fileID: 3478769037010366571, guid: d481c613ea6f840b384df9fcd7dfa962, type: 3}
       propertyPath: m_AnchorMax.y
@@ -14708,6 +14708,30 @@ MonoBehaviour:
   _nextButton: {fileID: 1226466052}
   _scoreRowPrefab: {fileID: 1395419239}
   _scoreRowContainer: {fileID: 696143383}
+  _tweenCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &1737907340
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15492,9 +15516,9 @@ RectTransform:
   - {fileID: 1139490630}
   - {fileID: 877973359}
   - {fileID: 1737907341}
+  - {fileID: 380619834}
   - {fileID: 1394514102}
   - {fileID: 1934394952}
-  - {fileID: 380619834}
   - {fileID: 148642143}
   m_Father: {fileID: 1988864622}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -16442,7 +16466,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3157940270499190821, guid: d481c613ea6f840b384df9fcd7dfa962, type: 3}
       propertyPath: m_Name
-      value: OpponentInfoPanelUI_2
+      value: OpponentInfoPanelUI_3
       objectReference: {fileID: 0}
     - target: {fileID: 3478769037010366571, guid: d481c613ea6f840b384df9fcd7dfa962, type: 3}
       propertyPath: m_AnchorMax.y
@@ -18472,7 +18496,7 @@ GameObject:
   - component: {fileID: 2117123428}
   - component: {fileID: 2117123429}
   m_Layer: 0
-  m_Name: OpponentHandView
+  m_Name: OpponentHandView_T
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
