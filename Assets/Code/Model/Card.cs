@@ -20,6 +20,13 @@ namespace KesselSabacc.Model
 			Value = (int)cardType;
 		}
 
+		public Card(CardSuit suit, CardType cardType, int value)
+		{
+			Suit = suit;
+			CardType = cardType;
+			Value = value;
+		}
+
 		public void SetValue(int value)
 		{
 			Value = value;

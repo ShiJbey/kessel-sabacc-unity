@@ -1,29 +1,26 @@
 using System;
+using KesselSabacc.Model;
 
-namespace KesselSabacc.Model
+namespace KesselSabacc.Gameplay
 {
-	/// <summary>
-	/// The cards in a player's hand.
-	/// </summary>
-	public class Hand
+	public static class HandScoreUtils
 	{
-		public Card sandCard;
-		public Card bloodCard;
-		public Card drawnCard;
-
-		public bool IsSabaccHand()
+		public static bool HasSabaccHand(Player player)
 		{
+			var sandCard = player.GetFirstCardOfSuit( CardSuit.SAND );
+			var bloodCard = player.GetFirstCardOfSuit( CardSuit.BLOOD );
+
 			if ( sandCard != null && bloodCard != null )
 			{
-				// Do not consider this hand a sabacc hand if it has imposter cards
-				// without set values.
-				if (
-					(sandCard.CardType == CardType.IMPOSTER && !sandCard.IsValueModified())
-					|| (bloodCard.CardType == CardType.IMPOSTER && !bloodCard.IsValueModified())
-				)
-				{
-					return false;
-				}
+				// // Do not consider this hand a sabacc hand if it has imposter cards
+				// // without set values.
+				// if (
+				// 	(sandCard.CardType == CardType.IMPOSTER && !sandCard.IsValueModified())
+				// 	|| (bloodCard.CardType == CardType.IMPOSTER && !bloodCard.IsValueModified())
+				// )
+				// {
+				// 	return false;
+				// }
 
 				// The card values must match.
 				return sandCard.Value == bloodCard.Value;
@@ -31,13 +28,17 @@ namespace KesselSabacc.Model
 			return false;
 		}
 
-		public bool IsPrimeSabaccHand()
+		public static bool HasPrimeSabaccHand(Player player)
 		{
+			var sandCard = player.GetFirstCardOfSuit( CardSuit.SAND );
+			var bloodCard = player.GetFirstCardOfSuit( CardSuit.BLOOD );
+
 			if ( sandCard != null && bloodCard != null )
 			{
 				// This is only possible with two sylop cards.
 				return sandCard.CardType == CardType.SYLOP && bloodCard.CardType == CardType.SYLOP;
 			}
+
 			return false;
 		}
 
@@ -47,13 +48,13 @@ namespace KesselSabacc.Model
 		/// are properly ranked.
 		/// </summary>
 		/// <returns></returns>
-		public int GetPerformanceScore()
+		public static int GetPerformanceScore(Player player)
 		{
 			int score = 0;
 
-			if ( IsSabaccHand() ) score += 100;
+			if ( HasSabaccHand( player ) ) score += 100;
 
-			if ( IsPrimeSabaccHand() ) score += 100;
+			if ( HasPrimeSabaccHand( player ) ) score += 100;
 
 			return score;
 		}
@@ -62,8 +63,11 @@ namespace KesselSabacc.Model
 		/// Return the difference in value between the two cards.
 		/// </summary>
 		/// <returns></returns>
-		public int GetDifferenceScore()
+		public static int GetCardDifference(Player player)
 		{
+			var sandCard = player.GetFirstCardOfSuit( CardSuit.SAND );
+			var bloodCard = player.GetFirstCardOfSuit( CardSuit.BLOOD );
+
 			if ( sandCard != null && bloodCard != null )
 			{
 				if ( bloodCard.CardType == CardType.SYLOP && !bloodCard.IsValueModified() )
@@ -79,12 +83,9 @@ namespace KesselSabacc.Model
 				// This is only possible with two sylop cards.
 				return Math.Abs( bloodCard.Value - sandCard.Value );
 			}
+
 			return 999_999;
 		}
 
-		public override string ToString()
-		{
-			return $"Hand(sandCard={sandCard}, bloodCard={bloodCard}, drawnCard={drawnCard})";
-		}
 	}
 }
