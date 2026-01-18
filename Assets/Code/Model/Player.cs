@@ -22,6 +22,8 @@ namespace KesselSabacc.Model
 			}
 		}
 
+		public int StartingChips { get; }
+
 		public int Chips
 		{
 			get => _chips;
@@ -52,11 +54,12 @@ namespace KesselSabacc.Model
 		public event Action<int> OnChipsInvestedChanged;
 		public event Action OnDisqualified;
 
-		public Player(string name = "")
+		public Player(string name, int startingChips)
 		{
 			_name = name;
-			_chips = 0;
+			_chips = startingChips;
 			_chipsInvested = 0;
+			StartingChips = startingChips;
 			_hand = new List<Card>();
 			HasStoodThisTurn = false;
 			_isDisqualified = false;

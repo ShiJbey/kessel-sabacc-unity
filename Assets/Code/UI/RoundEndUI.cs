@@ -50,7 +50,7 @@ namespace KesselSabacc.UI
 
 			newRow.gameObject.SetActive( true );
 
-			newRow.Initialize( playerController );
+			newRow.Initialize( playerController.Model );
 			newRow.score = score;
 
 			_scoreRows.Add( newRow );

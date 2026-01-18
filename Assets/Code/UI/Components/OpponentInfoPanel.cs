@@ -18,29 +18,14 @@ namespace KesselSabacc.UI.Components
 
 		public void Initialize(Player player)
 		{
-			_chipsView.Initialize( player.Chips, player.Chips, true );
-			_investedChipsView.Initialize( player.ChipsInvested, player.ChipsInvested, false );
+			_chipsView.Initialize( player );
+			_investedChipsView.Initialize( player );
 			SetPlayerName( player.Name );
-
-			player.OnChipsChanged += SetChips;
-			player.OnChipsInvestedChanged += SetChipsInvested;
 		}
 
 		public void UpdateView(Player player)
 		{
-			SetChips( player.Chips );
-			SetChipsInvested( player.ChipsInvested );
 			SetPlayerName( player.Name );
-		}
-
-		public void SetChips(int value)
-		{
-			_chipsView.SetChips( value );
-		}
-
-		public void SetChipsInvested(int value)
-		{
-			_investedChipsView.SetChips( value );
 		}
 
 		public void SetPlayerName(string value)

@@ -261,16 +261,14 @@ namespace KesselSabacc.Gameplay
 			);
 
 			// Add human player
-			var player = new Model.Player( "Player 1" );
-			player.Chips = newGameData.numChips;
+			var player = new Model.Player( "Player 1", newGameData.numChips );
 			AddPlayer( player );
 			AddPlayerController( new HumanController( 0, player ) );
 
 			// Add CPU player(s)
 			for ( int i = 1; i < newGameData.numPlayers; i++ )
 			{
-				var cpu = new Model.Player( $"CPU {i}" );
-				cpu.Chips = newGameData.numChips;
+				var cpu = new Model.Player( $"CPU {i}", newGameData.numChips );
 				AddPlayer( cpu );
 				AddPlayerController( new SimpleAIController( i, cpu ) );
 			}

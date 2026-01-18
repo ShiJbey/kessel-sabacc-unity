@@ -886,6 +886,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChipsCounterUI
       objectReference: {fileID: 0}
+    - target: {fileID: 2586997601443408790, guid: cef328f8891135848b98d8e76baa786e, type: 3}
+      propertyPath: _showChipsInvested
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4519453890692771071, guid: cef328f8891135848b98d8e76baa786e, type: 3}
       propertyPath: m_Pivot.x
       value: 0

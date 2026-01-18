@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using KesselSabacc.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,16 +14,21 @@ namespace KesselSabacc.UI.Components
 		private RectTransform _chipsContainer;
 		[SerializeField]
 		private TMP_Text _valueLabel;
+		[SerializeField]
+		private bool _showChipsInvested;
 
+		private Player _player;
 		private List<Image> _chips = new();
 
-		public void Initialize(int currentValue, int maxChips, bool showMultipleChips)
+		public void Initialize(Player player)
 		{
-			if ( showMultipleChips )
+			_player = player;
+
+			if ( !_showChipsInvested )
 			{
 				_chipPrefab.gameObject.SetActive( false );
 
-				for ( int i = 0; i < maxChips; i++ )
+				for ( int i = 0; i < player.StartingChips; i++ )
 				{
 					var chip = Instantiate( _chipPrefab, _chipsContainer );
 					chip.gameObject.SetActive( true );
@@ -30,7 +36,15 @@ namespace KesselSabacc.UI.Components
 				}
 			}
 
-			SetChips( currentValue );
+			SetChips( player.Chips );
+			if ( _showChipsInvested )
+			{
+				_player.OnChipsInvestedChanged += SetChips;
+			}
+			else
+			{
+				_player.OnChipsChanged += SetChips;
+			}
 		}
 
 		public void SetChips(int value)

@@ -33,8 +33,8 @@ namespace KesselSabacc.UI
 			_turnCounter.Initialize( game );
 
 			var player = game.Players[playerIndex];
-			_playerChips.Initialize( player.Chips, player.Chips, true );
-			_playerChipsInvested.Initialize( player.ChipsInvested, player.ChipsInvested, false );
+			_playerChips.Initialize( player );
+			_playerChipsInvested.Initialize( player );
 
 			player.OnChipsChanged += _playerChips.SetChips;
 			player.OnChipsInvestedChanged += _playerChipsInvested.SetChips;
