@@ -12,17 +12,11 @@ namespace KesselSabacc.Gameplay
 
 			if ( sandCard != null && bloodCard != null )
 			{
-				// // Do not consider this hand a sabacc hand if it has imposter cards
-				// // without set values.
-				// if (
-				// 	(sandCard.CardType == CardType.IMPOSTER && !sandCard.IsValueModified())
-				// 	|| (bloodCard.CardType == CardType.IMPOSTER && !bloodCard.IsValueModified())
-				// )
-				// {
-				// 	return false;
-				// }
+				if ( sandCard.CardType == CardType.SYLOP || bloodCard.CardType == CardType.SYLOP )
+				{
+					return true;
+				}
 
-				// The card values must match.
 				return sandCard.Value == bloodCard.Value;
 			}
 			return false;
