@@ -25,5 +25,7 @@ namespace KesselSabacc.Gameplay
 		// public abstract Task<PlayerAction> SelectAction(IReadOnlyList<PlayerAction> actions);
 
 		public abstract IEnumerator TakeTurn(KesselSabaccGameController gameController);
+
+		public abstract IEnumerator AssignImposterValue(KesselSabaccGameController gameController, Card card);
 	}
 }

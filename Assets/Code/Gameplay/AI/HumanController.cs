@@ -105,5 +105,11 @@ namespace KesselSabacc.Gameplay.AI
 				)
 			);
 		}
+
+		public override IEnumerator AssignImposterValue(KesselSabaccGameController gameController, Card card)
+		{
+			_gameView.diceRollUI.Show();
+			yield return null;
+		}
 	}
 }

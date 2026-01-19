@@ -12,6 +12,12 @@ namespace KesselSabacc.Gameplay.AI
 		{
 		}
 
+		public override IEnumerator AssignImposterValue(KesselSabaccGameController gameController, Card card)
+		{
+			card.SetValue( UnityEngine.Random.Range( 1, 6 ) );
+			yield return new WaitForSeconds( 1f );
+		}
+
 		public List<PlayerAction> GetActions(KesselSabaccGameController gameController)
 		{
 			List<PlayerAction> availableActions = new();

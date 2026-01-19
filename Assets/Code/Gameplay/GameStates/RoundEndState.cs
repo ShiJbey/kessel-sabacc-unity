@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using KesselSabacc.Model;
 using KesselSabacc.Views;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ namespace KesselSabacc.Gameplay.GameStates
 	public class RoundOverState : IGameState
 	{
 		private KesselSabaccGameController _gameController;
+
+		private List<PlayerRoundResult> _playerResults;
 
 		public RoundOverState(KesselSabaccGameController gameController)
 		{
@@ -67,6 +70,21 @@ namespace KesselSabacc.Gameplay.GameStates
 				{
 					playerController.Model.DisqualifyPlayer();
 				}
+			}
+		}
+
+		public IEnumerator RollImposterCards(PlayerController playerController)
+		{
+			var sandCard = playerController.Model.GetFirstCardOfSuit( CardSuit.SAND );
+			if ( sandCard.CardType == CardType.IMPOSTER && !sandCard.IsValueModified() )
+			{
+				yield return playerController.AssignImposterValue( _gameController, sandCard );
+			}
+
+			var bloodCard = playerController.Model.GetFirstCardOfSuit( CardSuit.BLOOD );
+			if ( bloodCard.CardType == CardType.IMPOSTER && !bloodCard.IsValueModified() )
+			{
+				yield return playerController.AssignImposterValue( _gameController, bloodCard );
 			}
 		}
 
