@@ -43,7 +43,7 @@ namespace KesselSabacc.Gameplay.AI
 			}
 			else
 			{
-				if ( !gameController.Model.SandDiscardPile.IsEmpty() )
+				if ( !gameController.Model.SandDiscardPile.IsEmpty() && Model.Chips > 0 )
 				{
 					availableActions.Add(
 						new DrawCardAction(
@@ -54,7 +54,7 @@ namespace KesselSabacc.Gameplay.AI
 					);
 				}
 
-				if ( !gameController.Model.SandDeck.IsEmpty() )
+				if ( !gameController.Model.SandDeck.IsEmpty() && Model.Chips > 0 )
 				{
 					availableActions.Add(
 						new DrawCardAction(
@@ -65,7 +65,7 @@ namespace KesselSabacc.Gameplay.AI
 					);
 				}
 
-				if ( !gameController.Model.BloodDiscardPile.IsEmpty() )
+				if ( !gameController.Model.BloodDiscardPile.IsEmpty() && Model.Chips > 0 )
 				{
 					availableActions.Add(
 						new DrawCardAction(
@@ -76,7 +76,7 @@ namespace KesselSabacc.Gameplay.AI
 					);
 				}
 
-				if ( !gameController.Model.BloodDeck.IsEmpty() )
+				if ( !gameController.Model.BloodDeck.IsEmpty() && Model.Chips > 0 )
 				{
 					availableActions.Add(
 						new DrawCardAction(

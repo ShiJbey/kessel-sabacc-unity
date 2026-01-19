@@ -53,7 +53,8 @@ namespace KesselSabacc.UI
 				_opponentUI[i].infoPanel.Hide();
 			}
 
-			HideActionButtons();
+			HideDrawButton();
+			HideStandButton();
 		}
 
 		protected override void SubscribeToEvents()
@@ -68,15 +69,23 @@ namespace KesselSabacc.UI
 			_standButton.onClick.RemoveListener( HandleStandButtonClicked );
 		}
 
-		public void HideActionButtons()
+		public void HideDrawButton()
 		{
 			_drawButton.gameObject.SetActive( false );
+		}
+
+		public void ShowDrawButton()
+		{
+			_drawButton.gameObject.SetActive( true );
+		}
+
+		public void HideStandButton()
+		{
 			_standButton.gameObject.SetActive( false );
 		}
 
-		public void ShowActionButtons()
+		public void ShowStandButton()
 		{
-			_drawButton.gameObject.SetActive( true );
 			_standButton.gameObject.SetActive( true );
 		}
 

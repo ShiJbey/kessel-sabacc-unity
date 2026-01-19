@@ -27,11 +27,16 @@ namespace KesselSabacc.Gameplay.AI
 		public override IEnumerator TakeTurn(KesselSabaccGameController gameController)
 		{
 			IsTakingTurn = true;
-			_gameView.hud.ShowActionButtons();
+			if ( Model.Chips > 0 )
+			{
+				_gameView.hud.ShowDrawButton();
+			}
+			_gameView.hud.ShowStandButton();
 
 
 			yield return new WaitUntil( () => !IsTakingTurn );
-			_gameView.hud.HideActionButtons();
+			_gameView.hud.HideStandButton();
+			_gameView.hud.HideDrawButton();
 		}
 
 		private void GameView_OnDrawCardButtonClicked()
