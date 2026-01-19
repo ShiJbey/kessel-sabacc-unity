@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using KesselSabacc.Gameplay;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,7 @@ namespace KesselSabacc.UI
 	public class DiceRollUI : UIComponent
 	{
 		[SerializeField]
-		private DieSprite _dieSprites;
+		private DieImage[] _dice;
 		[SerializeField]
 		private Button _rollButton;
 
@@ -21,21 +22,37 @@ namespace KesselSabacc.UI
 		/// </summary>
 		public event Action<int> OnDieResult;
 
-		[System.Serializable]
-		public struct DieSprite
-		{
-			public int value;
-			public Sprite sprite;
-		}
-
 		protected override void SubscribeToEvents()
 		{
+			foreach ( DieImage dieImage in _dice )
+			{
+				dieImage.OnClick += SelectDieValue;
+			}
 			_rollButton.onClick.AddListener( HandleRollButtonClicked );
 		}
 
 		protected override void UnsubscribeFromEvents()
 		{
+			foreach ( DieImage dieImage in _dice )
+			{
+				dieImage.OnClick -= SelectDieValue;
+			}
 			_rollButton.onClick.RemoveListener( HandleRollButtonClicked );
+		}
+
+		public override void Show()
+		{
+			base.Show();
+			Reset();
+		}
+
+		public void Reset()
+		{
+			foreach ( DieImage dieImage in _dice )
+			{
+				dieImage.Reset();
+			}
+			_rollButton.gameObject.SetActive( true );
 		}
 
 		public void SelectDieValue(int value)
@@ -45,13 +62,11 @@ namespace KesselSabacc.UI
 
 		private void HandleRollButtonClicked()
 		{
-			StartCoroutine( DiceRollCoroutine() );
-		}
-
-		private IEnumerator DiceRollCoroutine()
-		{
-			yield return new WaitForSeconds( 1f );
-			SelectDieValue( UnityEngine.Random.Range( 1, 6 ) );
+			foreach ( DieImage dieImage in _dice )
+			{
+				dieImage.RollDie();
+			}
+			_rollButton.gameObject.SetActive( false );
 		}
 	}
 }

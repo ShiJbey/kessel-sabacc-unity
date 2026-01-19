@@ -11,7 +11,7 @@ namespace KesselSabacc.Gameplay.GameStates
 	{
 		private KesselSabaccGameController _gameController;
 
-		private List<PlayerRoundResult> _playerResults;
+		private List<PlayerRoundResult> _playerResults = new();
 
 		public RoundOverState(KesselSabaccGameController gameController)
 		{
@@ -20,6 +20,8 @@ namespace KesselSabacc.Gameplay.GameStates
 
 		public IEnumerator OnEnter()
 		{
+			_playerResults.Clear();
+
 			_gameController.uiView.roundEndUI.OnNextButtonClicked += OnNextButtonClicked;
 			Debug.Log( $"Ending Round {_gameController.Model.CurrentRound}" );
 			_gameController.uiView.roundNotificationUI.ShowRoundEndMessage( _gameController.Model.CurrentRound );
@@ -40,10 +42,31 @@ namespace KesselSabacc.Gameplay.GameStates
 				PlayerController playerController = _gameController.Players[i];
 				if ( playerController.Model.IsDisqualified ) continue;
 
+				yield return RollImposterCards( playerController );
+
 				var bloodCard = playerController.Model.GetFirstCardOfSuit( Model.CardSuit.BLOOD );
 				var sandCard = playerController.Model.GetFirstCardOfSuit( Model.CardSuit.SAND );
-				int score = Math.Abs( bloodCard.Value - sandCard.Value );
-				yield return _gameController.uiView.roundEndUI.AddScore( playerController, score );
+
+				// Assign Sylop Card values
+				if ( bloodCard.CardType == CardType.SYLOP ) bloodCard.SetValue( sandCard.Value );
+				if ( sandCard.CardType == CardType.SYLOP ) sandCard.SetValue( bloodCard.Value );
+
+				PlayerRoundResult roundResult = new PlayerRoundResult()
+				{
+					Player = playerController.Model,
+					PlayerIndex = playerController.PlayerIndex,
+					HandDifference = Math.Abs( bloodCard.Value - sandCard.Value ),
+					HandSize = Math.Abs( bloodCard.Value + sandCard.Value ),
+					HasPrimeSabacc = HandScoreUtils.HasPrimeSabaccHand( playerController.Model ),
+					HasSabacc = HandScoreUtils.HasSabaccHand( playerController.Model ),
+					PerformanceScore = HandScoreUtils.GetPerformanceScore( playerController.Model ),
+				};
+
+				_playerResults.Add( roundResult );
+
+				yield return _gameController.uiView.roundEndUI.AddScore(
+					playerController, roundResult.HandDifference );
+
 				yield return new WaitForSeconds( 0.5f );
 			}
 

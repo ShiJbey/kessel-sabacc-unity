@@ -9,6 +9,7 @@ namespace KesselSabacc.Gameplay.AI
 	{
 		private KesselSabaccGameView _gameView;
 		private KesselSabaccGameController _gameController;
+		private int _dieValue;
 
 		public HumanController(int playerIndex, Player model) : base( playerIndex, model ) { }
 
@@ -106,10 +107,28 @@ namespace KesselSabacc.Gameplay.AI
 			);
 		}
 
+		private void HandleDieSelected(int value)
+		{
+			_dieValue = value;
+			IsTakingTurn = false;
+		}
+
 		public override IEnumerator AssignImposterValue(KesselSabaccGameController gameController, Card card)
 		{
+			IsTakingTurn = true;
+
 			_gameView.diceRollUI.Show();
-			yield return null;
+			_gameView.diceRollUI.OnDieResult += HandleDieSelected;
+
+			yield return new WaitUntil( () => _dieValue > 0 );
+
+			_gameView.diceRollUI.OnDieResult -= HandleDieSelected;
+
+			yield return new WaitUntil( () => !IsTakingTurn );
+
+			card.SetValue( _dieValue );
+			_gameView.diceRollUI.Hide();
+			_dieValue = -1;
 		}
 	}
 }
