@@ -96,5 +96,19 @@ namespace KesselSabacc.Model
 			}
 			return remainingPlayerCount == 1;
 		}
+
+		public Player GetWinner()
+		{
+			List<Player> remainingPlayers = new();
+
+			foreach ( Player player in _players )
+			{
+				if ( !player.IsDisqualified ) remainingPlayers.Add( player );
+			}
+
+			if ( remainingPlayers.Count == 1 ) return remainingPlayers[0];
+
+			return null;
+		}
 	}
 }

@@ -140,7 +140,7 @@ namespace KesselSabacc.Gameplay.GameStates
 			_gameController.uiView.roundEndUI.Hide();
 			if ( _gameController.Model.IsGameOver() )
 			{
-				_gameController.GoToRoundOverState();
+				_gameController.GoToGameOverState();
 			}
 			else
 			{

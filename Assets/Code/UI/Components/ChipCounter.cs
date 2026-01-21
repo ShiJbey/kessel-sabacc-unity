@@ -47,16 +47,33 @@ namespace KesselSabacc.UI.Components
 			}
 		}
 
+		protected override void OnDestroy()
+		{
+			base.OnDestroy();
+
+			if ( _showChipsInvested && _player != null )
+			{
+				_player.OnChipsInvestedChanged -= SetChips;
+			}
+			else
+			{
+				_player.OnChipsChanged -= SetChips;
+			}
+		}
+
 		public void SetChips(int value)
 		{
 			_valueLabel.SetText( value.ToString() );
 
-			for ( int i = 0; i < _chips.Count; i++ )
+			if ( !_showChipsInvested )
 			{
-				if ( i >= value )
+				for ( int i = 0; i < _chips.Count; i++ )
 				{
-					var chip = _chips[i];
-					chip.color = new Color( chip.color.r, chip.color.b, chip.color.g, 0.5f );
+					if ( i >= value )
+					{
+						var chip = _chips[i];
+						chip.color = new Color( chip.color.r, chip.color.b, chip.color.g, 0.5f );
+					}
 				}
 			}
 		}
