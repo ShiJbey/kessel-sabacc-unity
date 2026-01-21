@@ -44,7 +44,9 @@ namespace KesselSabacc.Gameplay
 		/// <returns></returns>
 		public static int GetPerformanceScore(Player player)
 		{
-			int score = 0;
+			int score = 5 - GetCardDifference( player );
+
+			score += 12 - GetHandSize( player );
 
 			if ( HasSabaccHand( player ) ) score += 100;
 
@@ -79,6 +81,36 @@ namespace KesselSabacc.Gameplay
 			}
 
 			return 999_999;
+		}
+
+		public static int GetHandSize(Player player)
+		{
+			var sandCard = player.GetFirstCardOfSuit( CardSuit.SAND );
+			var bloodCard = player.GetFirstCardOfSuit( CardSuit.BLOOD );
+
+			if ( sandCard == null || bloodCard == null ) throw new NullReferenceException(
+				"Blood or Sand card is null"
+			);
+
+			return bloodCard.Value + sandCard.Value;
+		}
+
+		public static PlayerRoundResult CreateRoundResult(Player player, int playerIndex)
+		{
+			PlayerRoundResult roundResult = new PlayerRoundResult()
+			{
+				Player = player,
+				PlayerIndex = playerIndex,
+				HandDifference = GetCardDifference( player ),
+				HandSize = GetHandSize( player ),
+				HasPrimeSabacc = HasPrimeSabaccHand( player ),
+				HasSabacc = HasSabaccHand( player ),
+				PerformanceScore = GetPerformanceScore( player ),
+				SandCard = player.GetFirstCardOfSuit( CardSuit.SAND ),
+				BloodCard = player.GetFirstCardOfSuit( CardSuit.BLOOD ),
+			};
+
+			return roundResult;
 		}
 
 	}

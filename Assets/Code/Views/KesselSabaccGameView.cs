@@ -63,6 +63,7 @@ namespace KesselSabacc.Views
 		{
 			hud.Initialize( gameController.Model, this, 0 );
 			tableView.Initialize( gameController );
+			roundEndUI.Initialize( gameController.Model );
 		}
 
 		public CardView SpawnCard(Card card, Vector3 position, Quaternion rotation)

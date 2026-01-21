@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using KesselSabacc.Gameplay;
+using KesselSabacc.Model;
 using KesselSabacc.UI.Components;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,6 +33,12 @@ namespace KesselSabacc.UI
 			_scoreRowPrefab.SetActive( false );
 		}
 
+		public void Initialize(KesselSabaccGameModel game)
+		{
+			game.RoundResults.OnResultAdded += OnRoundResultAdded;
+			game.RoundResults.OnResultsCleared += OnRoundResultsCleared;
+		}
+
 		protected override void SubscribeToEvents()
 		{
 			_nextButton.onClick.AddListener( HandleNextButtonClicked );
@@ -42,7 +49,17 @@ namespace KesselSabacc.UI
 			_nextButton.onClick.AddListener( HandleNextButtonClicked );
 		}
 
-		public IEnumerator AddScore(PlayerController playerController, int score)
+		private void OnRoundResultAdded(PlayerRoundResult result)
+		{
+			StartCoroutine( AddScore( result ) );
+		}
+
+		private void OnRoundResultsCleared()
+		{
+			ClearScores();
+		}
+
+		public IEnumerator AddScore(PlayerRoundResult result)
 		{
 			// Create new row
 			ScoreRow newRow = Instantiate( _scoreRowPrefab, _scoreRowContainer )
@@ -50,13 +67,12 @@ namespace KesselSabacc.UI
 
 			newRow.gameObject.SetActive( true );
 
-			newRow.Initialize( playerController.Model );
-			newRow.score = score;
+			newRow.Initialize( result );
 
 			_scoreRows.Add( newRow );
 
 			// Sort by score (descending)
-			_scoreRows.Sort( (a, b) => a.score.CompareTo( b.score ) );
+			_scoreRows.Sort( (a, b) => b.Result.CompareTo( a.Result ) );
 
 			// Update ranks and reorder
 			yield return ReorderRows();

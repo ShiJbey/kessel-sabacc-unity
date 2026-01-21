@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using KesselSabacc.Model;
 using KesselSabacc.Views;
 using UnityEngine;
@@ -11,8 +10,6 @@ namespace KesselSabacc.Gameplay.GameStates
 	{
 		private KesselSabaccGameController _gameController;
 
-		private List<PlayerRoundResult> _playerResults = new();
-
 		public RoundOverState(KesselSabaccGameController gameController)
 		{
 			_gameController = gameController;
@@ -20,7 +17,7 @@ namespace KesselSabacc.Gameplay.GameStates
 
 		public IEnumerator OnEnter()
 		{
-			_playerResults.Clear();
+			_gameController.Model.RoundResults.Clear();
 
 			_gameController.uiView.roundEndUI.OnNextButtonClicked += OnNextButtonClicked;
 			Debug.Log( $"Ending Round {_gameController.Model.CurrentRound}" );
@@ -51,49 +48,60 @@ namespace KesselSabacc.Gameplay.GameStates
 				if ( bloodCard.CardType == CardType.SYLOP ) bloodCard.SetValue( sandCard.Value );
 				if ( sandCard.CardType == CardType.SYLOP ) sandCard.SetValue( bloodCard.Value );
 
-				PlayerRoundResult roundResult = new PlayerRoundResult()
-				{
-					Player = playerController.Model,
-					PlayerIndex = playerController.PlayerIndex,
-					HandDifference = Math.Abs( bloodCard.Value - sandCard.Value ),
-					HandSize = Math.Abs( bloodCard.Value + sandCard.Value ),
-					HasPrimeSabacc = HandScoreUtils.HasPrimeSabaccHand( playerController.Model ),
-					HasSabacc = HandScoreUtils.HasSabaccHand( playerController.Model ),
-					PerformanceScore = HandScoreUtils.GetPerformanceScore( playerController.Model ),
-				};
+				PlayerRoundResult roundResult = HandScoreUtils.CreateRoundResult(
+					playerController.Model, playerController.PlayerIndex
+				);
 
-				_playerResults.Add( roundResult );
-
-				yield return _gameController.uiView.roundEndUI.AddScore(
-					playerController, roundResult.HandDifference );
+				_gameController.Model.RoundResults.Add( roundResult );
 
 				yield return new WaitForSeconds( 0.5f );
 			}
 
-			_gameController.uiView.roundEndUI.ShowContinueButton();
+			_gameController.Model.RoundResults.Sort();
+			var bestResult = _gameController.Model.RoundResults.Results[0];
 
-
-			for ( int i = 0; i < _gameController.Players.Count; i++ )
+			foreach ( PlayerRoundResult roundResult in _gameController.Model.RoundResults.Results )
 			{
-				PlayerController playerController = _gameController.Players[i];
-				if ( playerController.Model.IsDisqualified ) continue;
+				roundResult.WonRound = roundResult == bestResult
+					|| roundResult.CompareTo( bestResult ) == 0;
 
-				var bloodCard = playerController.Model.GetFirstCardOfSuit( Model.CardSuit.BLOOD );
-				var sandCard = playerController.Model.GetFirstCardOfSuit( Model.CardSuit.SAND );
-				int score = Math.Abs( bloodCard.Value - sandCard.Value );
-
-				playerController.Model.Chips = Math.Max(
-					0,
-					playerController.Model.Chips + (playerController.Model.ChipsInvested - score)
-				);
-
-				playerController.Model.ChipsInvested = 0;
-
-				if ( playerController.Model.Chips == 0 )
+				if ( roundResult.WonRound )
 				{
-					playerController.Model.DisqualifyPlayer();
+					// Winner is not taxed.
+					roundResult.Player.Chips = Math.Max(
+						0,
+						roundResult.Player.Chips
+						+ roundResult.Player.ChipsInvested
+					);
+				}
+				else if ( roundResult.HasSabacc )
+				{
+					// Players that lose, but have sabacc are taxed one chip.
+					roundResult.Player.Chips = Math.Max(
+						0,
+						roundResult.Player.Chips
+						+ (roundResult.Player.ChipsInvested - 1)
+					);
+				}
+				else
+				{
+					// Losers without sabacc are taxed the difference of their cards.
+					roundResult.Player.Chips = Math.Max(
+						0,
+						roundResult.Player.Chips
+						+ (roundResult.Player.ChipsInvested - roundResult.HandDifference)
+					);
+				}
+
+				roundResult.Player.ChipsInvested = 0;
+
+				if ( roundResult.Player.Chips == 0 )
+				{
+					roundResult.Player.DisqualifyPlayer();
 				}
 			}
+
+			_gameController.uiView.roundEndUI.ShowContinueButton();
 		}
 
 		public IEnumerator RollImposterCards(PlayerController playerController)
@@ -130,7 +138,7 @@ namespace KesselSabacc.Gameplay.GameStates
 		private void OnNextButtonClicked()
 		{
 			_gameController.uiView.roundEndUI.Hide();
-			if ( _gameController.Model.IsGameOver )
+			if ( _gameController.Model.IsGameOver() )
 			{
 				_gameController.GoToRoundOverState();
 			}

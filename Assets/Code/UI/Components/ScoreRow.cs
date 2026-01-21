@@ -1,4 +1,3 @@
-using KesselSabacc.Gameplay;
 using KesselSabacc.Model;
 using TMPro;
 using UnityEngine;
@@ -24,10 +23,10 @@ namespace KesselSabacc.UI.Components
 		[SerializeField]
 		private GameObject _rollingDiceOverlay;
 
-		private Player _player;
+		private PlayerRoundResult _result;
 
 		public RectTransform rectTransform { get; private set; }
-		public int score { get; set; }
+		public PlayerRoundResult Result => _result;
 
 		protected override void Awake()
 		{
@@ -35,18 +34,18 @@ namespace KesselSabacc.UI.Components
 			rectTransform = GetComponent<RectTransform>();
 		}
 
-		public void Initialize(Player player)
+		public void Initialize(PlayerRoundResult result)
 		{
-			_player = player;
+			_result = result;
 			HideRank();
 			HideRollingDiceOverlay();
 			_overlay.SetActive( false );
-			SetName( player.Name );
-			SetSandCardValue( player.GetFirstCardOfSuit( Model.CardSuit.SAND ).Value );
-			SetBloodCardValue( player.GetFirstCardOfSuit( Model.CardSuit.BLOOD ).Value );
-			_chipsCounter.Initialize( player );
-			_chipsInvestedCounter.Initialize( player );
-			player.OnDisqualified += OnPlayerDisqualified;
+			SetName( result.Player.Name );
+			SetSandCardValue( result.SandCard.Value );
+			SetBloodCardValue( result.BloodCard.Value );
+			_chipsCounter.Initialize( result.Player );
+			_chipsInvestedCounter.Initialize( result.Player );
+			result.Player.OnDisqualified += OnPlayerDisqualified;
 		}
 
 		public void ShowRollingDiceOverlay()
@@ -97,9 +96,9 @@ namespace KesselSabacc.UI.Components
 		protected override void OnDestroy()
 		{
 			base.OnDestroy();
-			if ( _player != null )
+			if ( _result != null && _result.Player != null )
 			{
-				_player.OnDisqualified -= OnPlayerDisqualified;
+				_result.Player.OnDisqualified -= OnPlayerDisqualified;
 			}
 		}
 	}

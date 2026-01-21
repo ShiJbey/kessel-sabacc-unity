@@ -18,9 +18,9 @@ namespace KesselSabacc.Model
 		public CardStack BloodDeck { get; }
 		public CardStack SandDiscardPile { get; }
 		public CardStack BloodDiscardPile { get; }
-		public bool IsGameOver { get; private set; }
 		public bool IsRoundOver { get; private set; }
 		public bool IsTurnOver { get; private set; }
+		public RoundResultList RoundResults { get; private set; }
 
 		public event Action<int> OnTurnStart;
 
@@ -31,13 +31,13 @@ namespace KesselSabacc.Model
 			CurrentTurn = 1;
 			PlayerWhoStartedTurn = 0;
 			CurrentTurnTaker = 0;
-			IsGameOver = false;
 			IsRoundOver = false;
 			IsTurnOver = false;
 			SandDeck = new CardStack( "Sand Deck", true );
 			BloodDeck = new CardStack( "Blood Deck", true );
 			SandDiscardPile = new CardStack( "Sand Discard Pile", false );
 			BloodDiscardPile = new CardStack( "Blood Discard Pile", false );
+			RoundResults = new RoundResultList();
 		}
 
 		public void AddPlayer(Player player)
@@ -85,6 +85,16 @@ namespace KesselSabacc.Model
 			{
 				IsTurnOver = true;
 			}
+		}
+
+		public bool IsGameOver()
+		{
+			int remainingPlayerCount = 0;
+			foreach ( Player player in _players )
+			{
+				if ( !player.IsDisqualified ) remainingPlayerCount++;
+			}
+			return remainingPlayerCount == 1;
 		}
 	}
 }
