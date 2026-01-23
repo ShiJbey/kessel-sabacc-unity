@@ -296,6 +296,10 @@ namespace KesselSabacc.Gameplay
 			{
 				yield return cardView.ShowFrontAsync();
 			}
+			else
+			{
+				yield return cardView.ShowBackAsync();
+			}
 
 			onEnd?.Invoke( cardView );
 		}
@@ -314,6 +318,8 @@ namespace KesselSabacc.Gameplay
 			yield return uiView.tableView.playerHands[playerIndex].RemoveCard( card );
 
 			yield return MoveCardToPosition( cardView, discardPile.transform.position );
+
+			yield return cardView.ShowFrontAsync();
 
 			discardPile.Model.Add( card );
 

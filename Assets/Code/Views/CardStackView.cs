@@ -114,6 +114,10 @@ namespace KesselSabacc.Views
 				cardView.transform.DOMove( transform.position, 0.35f ).SetEase( Ease.OutQuad )
 			);
 
+			sequence.Join(
+				cardView.transform.DORotate( transform.rotation.eulerAngles, .035f ).SetEase( Ease.OutQuad )
+			);
+
 			sequence.onComplete += () =>
 			{
 				IsAnimating = false;

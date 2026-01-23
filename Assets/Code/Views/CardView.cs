@@ -74,6 +74,8 @@ namespace KesselSabacc.Views
 		/// <returns></returns>
 		public Task ShowFrontAsync()
 		{
+			if ( _isFaceUp ) return Task.CompletedTask;
+
 			if ( _isFlipping ) return Task.CompletedTask;
 
 			_isFlipping = true;
@@ -101,6 +103,8 @@ namespace KesselSabacc.Views
 		/// <returns></returns>
 		public Task ShowBackAsync()
 		{
+			if ( !_isFaceUp ) return Task.CompletedTask;
+
 			if ( _isFlipping ) return Task.CompletedTask;
 
 			_isFlipping = true;
