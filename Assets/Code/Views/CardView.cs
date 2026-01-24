@@ -23,6 +23,7 @@ namespace KesselSabacc.Views
 		[SerializeField]
 		private SpriteRenderer _spriteRenderer;
 		private bool _isFlipping = false;
+		private CardZone _currentZone;
 
 		public Card Card { get; private set; }
 		public Sprite Sprite => _spriteRenderer.sprite;
@@ -179,6 +180,38 @@ namespace KesselSabacc.Views
 		public void OnPointerClick(PointerEventData eventData)
 		{
 			// OnMouseUpAsButton();
+		}
+
+		/// <summary>
+		/// Moves this card to a new zone
+		/// </summary>
+		public void MoveToZone(CardZone newZone)
+		{
+			_currentZone = newZone;
+			CardSortingSystem.Instance.SetCardSorting( this, newZone );
+		}
+
+		/// <summary>
+		/// Sets the sorting layer and order
+		/// </summary>
+		public void SetSortingLayer(string layerName, int orderInLayer)
+		{
+			_spriteRenderer.sortingLayerName = layerName;
+			_spriteRenderer.sortingOrder = orderInLayer;
+		}
+
+		/// <summary>
+		/// Sets only the sorting order (keeps current layer)
+		/// </summary>
+		public void SetSortingOrder(int orderInLayer)
+		{
+			_spriteRenderer.sortingOrder = orderInLayer;
+		}
+
+
+		public CardZone GetCurrentZone()
+		{
+			return _currentZone;
 		}
 	}
 

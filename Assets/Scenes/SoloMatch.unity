@@ -17475,6 +17475,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2065205189}
   - component: {fileID: 2065205190}
+  - component: {fileID: 2065205191}
   m_Layer: 0
   m_Name: GameView
   m_TagString: Untagged
@@ -17524,6 +17525,27 @@ MonoBehaviour:
   tableView: {fileID: 477663661}
   cardViewPrefab: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
   deckConfig: {fileID: 11400000, guid: 8c803d76953d5fd4997848ada69b8b68, type: 2}
+--- !u!114 &2065205191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065205188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a932741f65ab846a591f922fae1cefbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: KesselSabacc::KesselSabacc.Views.CardSortingSystem
+  handLayer: Hand
+  playAreaLayer: PlayArea
+  discardLayer: Discard
+  deckLayer: Deck
+  handBaseOrder: 100
+  playAreaBaseOrder: 200
+  discardBaseOrder: 50
+  deckBaseOrder: 0
+  draggedCardOrder: 1000
 --- !u!1001 &2074698990
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -288,6 +288,8 @@ namespace KesselSabacc.Gameplay
 
 			HandView playerHand = uiView.tableView.playerHands[playerIndex];
 
+			CardSortingSystem.Instance.AddCardToZone( cardView, CardZone.Hand );
+
 			yield return MoveCardToPosition( cardView, playerHand.transform.position );
 
 			yield return playerHand.AddCard( cardView );
@@ -300,6 +302,7 @@ namespace KesselSabacc.Gameplay
 			{
 				yield return cardView.ShowBackAsync();
 			}
+
 
 			onEnd?.Invoke( cardView );
 		}
@@ -316,6 +319,8 @@ namespace KesselSabacc.Gameplay
 			Model.Players[playerIndex].DiscardCardFromHand( card );
 
 			yield return uiView.tableView.playerHands[playerIndex].RemoveCard( card );
+
+			CardSortingSystem.Instance.AddCardToZone( cardView, CardZone.Discard );
 
 			yield return MoveCardToPosition( cardView, discardPile.transform.position );
 
@@ -334,6 +339,8 @@ namespace KesselSabacc.Gameplay
 			Card card = deck.Model.Pop();
 
 			yield return cardView.Flip();
+
+			CardSortingSystem.Instance.AddCardToZone( cardView, CardZone.Discard );
 
 			yield return MoveCardToPosition( cardView, discardPile.transform.position );
 

@@ -89,6 +89,7 @@ namespace KesselSabacc.Views
 				{
 					cardView.ShowFront();
 				}
+				CardSortingSystem.Instance.AddCardToZone( cardView, CardZone.Deck );
 
 				// Slight offset for stacking effect
 				Vector3 offset = new Vector3( 0, 0.01f * i, -0.01f * i );

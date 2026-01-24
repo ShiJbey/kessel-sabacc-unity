@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 964852055378710348}
   - component: {fileID: 1989226599082992097}
   - component: {fileID: -5639541549039624099}
+  - component: {fileID: -5289022782235228703}
   m_Layer: 0
   m_Name: CardStackView
   m_TagString: Untagged
@@ -47,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68e4cc9792e674dae99b4dee945c951b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Views.CardStackView
-  _cardView: {fileID: 2528441448103395970}
+  deckSpawnDuration: 1
 --- !u!210 &-5639541549039624099
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -61,6 +62,18 @@ SortingGroup:
   m_SortingOrder: 2
   m_SortAtRoot: 0
   m_Sort3DAs2D: 0
+--- !u!114 &-5289022782235228703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383643221011915875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b639c9fe7ce3c46f0974f246b1e893d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: KesselSabacc::KesselSabacc.Views.CardZoneManager
 --- !u!1 &7158204739050922817
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,17 +222,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
---- !u!114 &2528441448103395970 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 83316977861157430, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
-  m_PrefabInstance: {fileID: 2467643018677559476}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa1d349473e6e794483c3fceeb85961f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.CardView
 --- !u!4 &5449756786133205660 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7611004944639926824, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
