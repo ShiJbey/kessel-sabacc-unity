@@ -44,15 +44,7 @@ namespace KesselSabacc.Views
 		/// <returns></returns>
 		public IEnumerator AddCard(CardView cardView)
 		{
-			if ( cardView.Card.Suit == CardSuit.SAND )
-			{
-				// This card need to be appended to the front of the list
-				_cards.Insert( 0, cardView );
-			}
-			else
-			{
-				_cards.Add( cardView );
-			}
+			_cards.Add( cardView );
 
 			cardView.transform.SetParent( transform );
 
