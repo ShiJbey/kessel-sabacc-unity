@@ -42,6 +42,11 @@ namespace KesselSabacc.Views
 			// }
 		}
 
+		public int Count()
+		{
+			return _cards.Count;
+		}
+
 		public void Clear()
 		{
 			foreach ( CardView cardView in _cards )
@@ -102,29 +107,9 @@ namespace KesselSabacc.Views
 
 		public IEnumerator AddCard(CardView cardView)
 		{
-			// TODO: Tween the card view from its current position to the stack.
-			//       Then replace the current card view with this new one. It
-			//       should create the effect of adding a card to the top of the
-			//		 stack.
-			IsAnimating = true;
 			_cards.Add( cardView );
 
-			var sequence = DOTween.Sequence();
-
-			sequence.Append(
-				cardView.transform.DOMove( transform.position, 0.35f ).SetEase( Ease.OutQuad )
-			);
-
-			sequence.Join(
-				cardView.transform.DORotate( transform.rotation.eulerAngles, .035f ).SetEase( Ease.OutQuad )
-			);
-
-			sequence.onComplete += () =>
-			{
-				IsAnimating = false;
-			};
-
-			yield return sequence.WaitForCompletion();
+			yield return null;
 		}
 	}
 }

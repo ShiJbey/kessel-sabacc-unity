@@ -23,6 +23,7 @@ namespace KesselSabacc.Gameplay
 		public float delayBetweenCards = 0.3f;
 		public float deckSpawnDuration = 1f;
 		public float roundPanelDisplayTime = 2f;
+		public float cardMovementSpeed = 0.3f;
 
 		private IGameState _currentGameState = null;
 		private bool _isSwitchingState = false;
@@ -290,7 +291,9 @@ namespace KesselSabacc.Gameplay
 
 			CardSortingSystem.Instance.AddCardToZone( cardView, CardZone.Hand );
 
-			yield return MoveCardToPosition( cardView, playerHand.transform.position );
+			yield return MoveCardToPosition(
+				cardView, playerHand.transform.position, playerHand.transform.rotation.eulerAngles
+			);
 
 			yield return playerHand.AddCard( cardView );
 
@@ -322,7 +325,13 @@ namespace KesselSabacc.Gameplay
 
 			CardSortingSystem.Instance.AddCardToZone( cardView, CardZone.Discard );
 
-			yield return MoveCardToPosition( cardView, discardPile.transform.position );
+			float placementJitter = (discardPile.Count() == 0) ?
+				0 : UnityEngine.Random.Range( -10f, 10f );
+
+			yield return MoveCardToPosition(
+				cardView, discardPile.transform.position,
+				discardPile.transform.rotation.eulerAngles + new Vector3( 0, 0, placementJitter )
+			);
 
 			yield return cardView.ShowFrontAsync();
 
@@ -342,19 +351,31 @@ namespace KesselSabacc.Gameplay
 
 			CardSortingSystem.Instance.AddCardToZone( cardView, CardZone.Discard );
 
-			yield return MoveCardToPosition( cardView, discardPile.transform.position );
+			yield return MoveCardToPosition(
+				cardView, discardPile.transform.position, discardPile.transform.rotation.eulerAngles
+			);
 
 			discardPile.Model.Add( card );
 
 			yield return discardPile.AddCard( cardView );
 		}
 
-		public IEnumerator MoveCardToPosition(CardView card, Vector3 position)
+		public IEnumerator MoveCardToPosition(CardView card, Vector3 position, Vector3 rotation)
 		{
 			var sequence = DOTween.Sequence();
 
 			sequence.Append(
-				card.transform.DOMove( position, 0.4f ).SetEase( Ease.OutQuad )
+				card.transform.DOMove( position, cardMovementSpeed ).SetEase( Ease.OutQuad )
+			);
+
+			sequence.Join(
+				DOTween.Sequence()
+				.Append( card.transform.DOScale( 1.3f, cardMovementSpeed / 2 ) )
+				.Append( card.transform.DOScale( 1f, cardMovementSpeed / 2 ) )
+			);
+
+			sequence.Join(
+				card.transform.DORotate( rotation, cardMovementSpeed ).SetEase( Ease.OutQuad )
 			);
 
 			yield return sequence.WaitForCompletion();
