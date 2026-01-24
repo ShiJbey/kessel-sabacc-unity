@@ -74,6 +74,8 @@ namespace KesselSabacc.UI
 			// Sort by score (descending)
 			_scoreRows.Sort( (a, b) => b.Result.CompareTo( a.Result ) );
 
+			yield return null;
+
 			// Update ranks and reorder
 			yield return ReorderRows();
 		}
