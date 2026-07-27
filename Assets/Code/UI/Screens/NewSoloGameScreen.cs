@@ -107,7 +107,7 @@ namespace KesselSabacc.UI.Screens
 
 		private void OnPlayButtonClicked()
 		{
-			LoadingScreen loadingScreen = FindFirstObjectByType<LoadingScreen>( FindObjectsInactive.Include );
+			LoadingScreen loadingScreen = FindAnyObjectByType<LoadingScreen>( FindObjectsInactive.Include );
 			loadingScreen?.Show();
 			SceneManager.LoadScene( "Scenes/SoloMatch" );
 		}
