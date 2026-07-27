@@ -48,9 +48,7 @@ namespace KesselSabacc.Gameplay
 
 		private IEnumerator InitializeGame()
 		{
-			yield return new WaitUntil( () => AutoLoadManager.Instance.isReady );
-
-			var loadingScreen = FindAnyObjectByType<LoadingScreen>( FindObjectsInactive.Include );
+			var loadingScreen = ApplicationManager.Instance.LoadingScreen;
 			loadingScreen.Show();
 			yield return null;
 
