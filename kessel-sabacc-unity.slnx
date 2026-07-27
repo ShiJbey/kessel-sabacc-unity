@@ -1,5 +1,5 @@
 ﻿<Solution>
-  <Project Path="KesselSabacc.csproj" />
   <Project Path="DOTween.Modules.csproj" />
+  <Project Path="KesselSabacc.csproj" />
   <Project Path="Tests.csproj" />
 </Solution>
