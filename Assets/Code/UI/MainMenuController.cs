@@ -29,7 +29,7 @@ namespace KesselSabacc.UI
 		{
 			yield return new WaitUntil( () => AutoLoadManager.Instance.isReady );
 
-			var loadingScreen = FindFirstObjectByType<LoadingScreen>( FindObjectsInactive.Include );
+			var loadingScreen = FindAnyObjectByType<LoadingScreen>( FindObjectsInactive.Include );
 			loadingScreen.Show();
 
 			_homeScreen.Initialize( this );
