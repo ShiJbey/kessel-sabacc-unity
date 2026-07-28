@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: sabacc-card-sand-back
+      name: sand_back
       rect:
         serializedVersion: 2
         x: 0
-        y: 225
-        width: 150
-        height: 225
+        y: 222
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,20 +125,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3878b8213cb9e4755b9d3163abdff31a
-      internalID: -1821309033
+      spriteID: 58dc154a2b5094d919a44000b8aaced1
+      internalID: -266781179
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-card-sand-sylop
+      name: sand_sylop
       rect:
         serializedVersion: 2
-        x: 150
-        y: 225
-        width: 150
-        height: 225
+        x: 148
+        y: 222
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -147,20 +147,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e930ca8471056492198058bc70b69f08
-      internalID: 1314376027
+      spriteID: 22708be79bbef43a8b0db459303bb187
+      internalID: -2074711280
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-card-sand-1
+      name: sand_1
       rect:
         serializedVersion: 2
-        x: 299
-        y: 225
-        width: 150
-        height: 225
+        x: 296
+        y: 222
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,20 +169,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b63f660cb90894610947451749623139
-      internalID: -2032802704
+      spriteID: d6452a107495d475a9a7a637140f1975
+      internalID: 1301980477
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-card-sand-2
+      name: sand_2
       rect:
         serializedVersion: 2
-        x: 450
-        y: 225
-        width: 150
-        height: 225
+        x: 444
+        y: 222
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -191,20 +191,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6a9533f6e633d4671b3c721a710e8faa
-      internalID: -1998930838
+      spriteID: 798b3afc4345941e398900793f6b7e90
+      internalID: 812978803
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-card-sand-3
+      name: sand_3
       rect:
         serializedVersion: 2
-        x: 600
-        y: 225
-        width: 150
-        height: 225
+        x: 592
+        y: 222
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,20 +213,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e51f576fc980448fea461f9e2560ce07
-      internalID: 1387212894
+      spriteID: 79ffae10454624ea18b89cccb2ef8d21
+      internalID: -2072046367
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-card-sand-4
+      name: sand_4
       rect:
         serializedVersion: 2
-        x: 750
-        y: 225
-        width: 150
-        height: 225
+        x: 740
+        y: 222
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -235,20 +235,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eed9261059b904bf9a6eeb287cf10196
-      internalID: 1599729137
+      spriteID: f64d809040f8241569274fbbdc74b6a2
+      internalID: -1046646972
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-card-sand-5
+      name: sand_5
       rect:
         serializedVersion: 2
-        x: 900
-        y: 225
-        width: 150
-        height: 225
+        x: 888
+        y: 222
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -257,20 +257,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4595fa0ed19a74d3fb12d68322cb1bc9
-      internalID: 1582420304
+      spriteID: 645d9df70cdd34957aff922e326c8252
+      internalID: 2039725758
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-card-sand-6
+      name: sand_6
       rect:
         serializedVersion: 2
-        x: 1050
-        y: 225
-        width: 150
-        height: 225
+        x: 1036
+        y: 222
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -279,20 +279,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 91a2d043a90404f66a8a1fda1fcd06af
-      internalID: 490073600
+      spriteID: 57c32f042e878440ab76162af2cee0ec
+      internalID: 1272460870
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-card-sand-imposter
+      name: sand_imposter
       rect:
         serializedVersion: 2
-        x: 1200
-        y: 225
-        width: 150
-        height: 225
+        x: 1184
+        y: 222
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -301,20 +301,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3f8c9a05fca7a45f88123dd373bba8df
-      internalID: 1794151879
+      spriteID: 9b42b10fbd283474fbe889ea7b35e5fa
+      internalID: 1493803250
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-cards-blood-back
+      name: blood_back
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 150
-        height: 225
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -323,20 +323,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ab2030ad7b2294ba3a5aa8d8aaba33a9
-      internalID: 1852652304
+      spriteID: 1c69e8319a2bf426ba8a2faa5038b2f9
+      internalID: 447138486
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-cards-blood-sylop
+      name: blood_sylop
       rect:
         serializedVersion: 2
-        x: 150
+        x: 148
         y: 0
-        width: 150
-        height: 225
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -345,20 +345,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ce2589145a78c4672a93bde52a631c25
-      internalID: 1363787609
+      spriteID: d49ad18dd6fb04cb98448aa1b99d4461
+      internalID: -622201982
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-cards-blood-1
+      name: blood_1
       rect:
         serializedVersion: 2
-        x: 299
+        x: 296
         y: 0
-        width: 150
-        height: 225
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -367,20 +367,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 057f80014d9a24b6fa1ad92f0abe599f
-      internalID: -1966503233
+      spriteID: c30e627dbfd2f40709e41a687a598bff
+      internalID: 1244883192
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-cards-blood-2
+      name: blood_2
       rect:
         serializedVersion: 2
-        x: 450
+        x: 444
         y: 0
-        width: 150
-        height: 225
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -389,20 +389,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d575468378a054b028c5e58579437e62
-      internalID: 705617475
+      spriteID: cde9664732e554697884d16360b96acf
+      internalID: -65805070
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-cards-blood-3
+      name: blood_3
       rect:
         serializedVersion: 2
-        x: 600
+        x: 592
         y: 0
-        width: 150
-        height: 225
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -411,20 +411,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dea2f95ba21b44fb198d4327875b500b
-      internalID: -85111770
+      spriteID: cab5be87f3bea4680832632e2149234f
+      internalID: -260815639
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-cards-blood-4
+      name: blood_4
       rect:
         serializedVersion: 2
-        x: 750
+        x: 740
         y: 0
-        width: 150
-        height: 225
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -433,20 +433,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: afe88f0b18b9c44eb965c4d5eaf7e795
-      internalID: -1458809934
+      spriteID: 6d59236bef48d4726a0a375015cbd044
+      internalID: -1625505249
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-cards-blood-5
+      name: blood_5
       rect:
         serializedVersion: 2
-        x: 900
+        x: 888
         y: 0
-        width: 150
-        height: 225
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -455,20 +455,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d612b0d97308044e69c80ff906b532dd
-      internalID: 659734928
+      spriteID: 8d3cd67b79db94a77ae291716c21b87e
+      internalID: 1167764594
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-cards-blood-6
+      name: blood_6
       rect:
         serializedVersion: 2
-        x: 1050
+        x: 1036
         y: 0
-        width: 150
-        height: 225
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -477,20 +477,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 95fd58c65baa2452f9ff7a465a5e6419
-      internalID: -1982159482
+      spriteID: 45587d404cf564757905b256e2f6099d
+      internalID: 1313141381
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sabacc-cards-blood-imposter
+      name: blood_imposter
       rect:
         serializedVersion: 2
-        x: 1200
+        x: 1184
         y: 0
-        width: 150
-        height: 225
+        width: 148
+        height: 222
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -499,8 +499,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e3d356d91e537425fad0823b33260c5e
-      internalID: -842224745
+      spriteID: 8615e780ba34d4deca43e0e01ff13417
+      internalID: -323998242
       vertices: []
       indices: 
       edges: []
@@ -519,26 +519,26 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":9.0,"y":2.0},"gridSpriteSize":{"x":150.0,"y":225.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":9.0,"y":2.0},"gridSpriteSize":{"x":148.0,"y":222.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      sabacc-card-sand-1: -2032802704
-      sabacc-card-sand-2: -1998930838
-      sabacc-card-sand-3: 1387212894
-      sabacc-card-sand-4: 1599729137
-      sabacc-card-sand-5: 1582420304
-      sabacc-card-sand-6: 490073600
-      sabacc-card-sand-back: -1821309033
-      sabacc-card-sand-imposter: 1794151879
-      sabacc-card-sand-sylop: 1314376027
-      sabacc-cards-blood-1: -1966503233
-      sabacc-cards-blood-2: 705617475
-      sabacc-cards-blood-3: -85111770
-      sabacc-cards-blood-4: -1458809934
-      sabacc-cards-blood-5: 659734928
-      sabacc-cards-blood-6: -1982159482
-      sabacc-cards-blood-back: 1852652304
-      sabacc-cards-blood-imposter: -842224745
-      sabacc-cards-blood-sylop: 1363787609
+      blood_1: 1244883192
+      blood_2: -65805070
+      blood_3: -260815639
+      blood_4: -1625505249
+      blood_5: 1167764594
+      blood_6: 1313141381
+      blood_back: 447138486
+      blood_imposter: -323998242
+      blood_sylop: -622201982
+      sand_1: 1301980477
+      sand_2: 812978803
+      sand_3: -2072046367
+      sand_4: -1046646972
+      sand_5: 2039725758
+      sand_6: 1272460870
+      sand_back: -266781179
+      sand_imposter: 1493803250
+      sand_sylop: -2074711280
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
