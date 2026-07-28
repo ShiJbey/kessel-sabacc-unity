@@ -27,10 +27,10 @@ namespace KesselSabacc.UI
 
 		private IEnumerator Initialize()
 		{
-			yield return new WaitUntil( () => AutoLoadManager.Instance.isReady );
-
-			var loadingScreen = FindAnyObjectByType<LoadingScreen>( FindObjectsInactive.Include );
+			var loadingScreen = ApplicationManager.Instance.LoadingScreen;
 			loadingScreen.Show();
+
+			yield return null;
 
 			_homeScreen.Initialize( this );
 			_creditsScreen.Initialize( this );
@@ -41,6 +41,8 @@ namespace KesselSabacc.UI
 			_creditsScreen.Hide();
 			_newSoloGameScreen.Hide();
 			_settingsScreen.Hide();
+
+			yield return null;
 
 			ShowHomeScreen();
 			loadingScreen.Hide();

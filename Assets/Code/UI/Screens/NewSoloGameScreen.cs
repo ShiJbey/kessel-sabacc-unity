@@ -109,7 +109,14 @@ namespace KesselSabacc.UI.Screens
 		{
 			LoadingScreen loadingScreen = FindAnyObjectByType<LoadingScreen>( FindObjectsInactive.Include );
 			loadingScreen?.Show();
-			SceneManager.LoadScene( "Scenes/SoloMatch" );
+
+			SceneController.Instance
+				.NewTransition()
+				.Load( SceneDatabase.Slots.SessionContent, SceneDatabase.Scenes.SoloMatch, true )
+				.Unload( SceneDatabase.Slots.Menu )
+				.WithOverlay()
+				.WithClearUnusedAssets()
+				.Perform();
 		}
 	}
 }

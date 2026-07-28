@@ -40,7 +40,12 @@ namespace KesselSabacc.Gameplay.GameStates
 
 		private void OnContinue()
 		{
-			SceneManager.LoadScene( "Scenes/MainMenu" );
+			SceneController.Instance
+				.NewTransition()
+				.Unload( SceneDatabase.Slots.SessionContent )
+				.Load( SceneDatabase.Slots.Menu, SceneDatabase.Scenes.MainMenu )
+				.WithOverlay()
+				.Perform();
 		}
 	}
 }
