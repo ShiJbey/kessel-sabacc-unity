@@ -158,7 +158,7 @@ namespace KesselSabacc.Views
 
 		private void OnMouseUp()
 		{
-			OnMouseUpAsButton();
+			Debug.Log( "Mouse up." );
 		}
 
 		private void OnMouseOver()
@@ -174,7 +174,6 @@ namespace KesselSabacc.Views
 		private void OnMouseUpAsButton()
 		{
 			Debug.Log( "Card clicked" );
-			StartCoroutine( Flip() );
 		}
 
 		public void OnPointerClick(PointerEventData eventData)
