@@ -39,7 +39,6 @@ namespace KesselSabacc
 			}
 
 			Instance = this;
-			DontDestroyOnLoad( gameObject );
 		}
 
 		public void Start()
