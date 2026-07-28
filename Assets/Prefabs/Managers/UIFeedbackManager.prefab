@@ -44,4 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e6339854f4ff48cd8abf3e7be5d09a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.UIFeedbackManager
-  _buttonClickSound: {fileID: 0}
+  _buttonClickSound: {fileID: 8300000, guid: 1b96f4604a52d4123ac7f4f8e8e818fd, type: 3}

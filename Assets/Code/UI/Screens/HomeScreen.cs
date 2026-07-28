@@ -51,21 +51,26 @@ namespace KesselSabacc.UI.Screens
 
 		private void HandlePlayButtonClicked()
 		{
+			UIFeedbackManager.Instance.PlayButtonClickSound();
 			_mainMenuController.ShowSoloGameScreen();
 		}
 
 		private void HandleCreditsButtonClicked()
 		{
+			UIFeedbackManager.Instance.PlayButtonClickSound();
 			_mainMenuController.ShowCreditsScreen();
 		}
 
 		private void HandleSettingsButtonClicked()
 		{
+			UIFeedbackManager.Instance.PlayButtonClickSound();
 			_mainMenuController.ShowSettingsScreen();
 		}
 
 		private void HandleExitButtonClicked()
 		{
+			UIFeedbackManager.Instance.PlayButtonClickSound();
+
 #if UNITY_STANDALONE
 			Application.Quit();
 #endif

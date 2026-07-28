@@ -44,4 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 311475b5dded24076bbd661f83a82676, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.AudioManager
-  m_MainAudioMixer: {fileID: 0}
+  m_MainAudioMixer: {fileID: 24100000, guid: d40fe8ebd677a4d56aeeb5ec8235740a, type: 2}

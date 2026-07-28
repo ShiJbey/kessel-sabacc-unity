@@ -41,6 +41,7 @@ namespace KesselSabacc.UI
 
 		public void Continue()
 		{
+			UIFeedbackManager.Instance.PlayButtonClickSound();
 			OnContinue?.Invoke();
 		}
 	}

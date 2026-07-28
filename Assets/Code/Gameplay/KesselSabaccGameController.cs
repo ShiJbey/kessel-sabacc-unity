@@ -25,6 +25,9 @@ namespace KesselSabacc.Gameplay
 		public float roundPanelDisplayTime = 2f;
 		public float cardMovementSpeed = 0.3f;
 
+		[Header( "Sounds" )]
+		public AudioClip cardPlacedSound;
+
 		private IGameState _currentGameState = null;
 		private bool _isSwitchingState = false;
 		private List<PlayerController> _players = new();
@@ -293,6 +296,8 @@ namespace KesselSabacc.Gameplay
 				cardView, playerHand.transform.position, playerHand.transform.rotation.eulerAngles
 			);
 
+			AudioManager.PlayOneSFX( cardPlacedSound, Vector3.zero );
+
 			yield return playerHand.AddCard( cardView );
 
 			if ( playerIndex == 0 )
@@ -331,6 +336,8 @@ namespace KesselSabacc.Gameplay
 				discardPile.transform.rotation.eulerAngles + new Vector3( 0, 0, placementJitter )
 			);
 
+			AudioManager.PlayOneSFX( cardPlacedSound, Vector3.zero );
+
 			yield return cardView.ShowFrontAsync();
 
 			discardPile.Model.Add( card );
@@ -352,6 +359,8 @@ namespace KesselSabacc.Gameplay
 			yield return MoveCardToPosition(
 				cardView, discardPile.transform.position, discardPile.transform.rotation.eulerAngles
 			);
+
+			AudioManager.PlayOneSFX( cardPlacedSound, Vector3.zero );
 
 			discardPile.Model.Add( card );
 

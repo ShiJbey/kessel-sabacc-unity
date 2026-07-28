@@ -143,12 +143,14 @@ namespace KesselSabacc.UI.Screens
 		private void OnResetButtonClicked()
 		{
 			SettingsManager.Instance.Reset();
+			UIFeedbackManager.Instance.PlayButtonClickSound();
 			UpdateValues( SettingsManager.Instance.Settings );
 		}
 
 		private void OnBackButtonClicked()
 		{
 			SettingsManager.Instance.SaveSettings();
+			UIFeedbackManager.Instance.PlayButtonClickSound();
 			_mainMenuController.ShowHomeScreen();
 		}
 	}

@@ -3939,6 +3939,7 @@ MonoBehaviour:
   deckSpawnDuration: 1
   roundPanelDisplayTime: 2
   cardMovementSpeed: 0.3
+  cardPlacedSound: {fileID: 8300000, guid: 6627bcb85795b4221a560df5af414c33, type: 3}
 --- !u!1 &380515112
 GameObject:
   m_ObjectHideFlags: 0

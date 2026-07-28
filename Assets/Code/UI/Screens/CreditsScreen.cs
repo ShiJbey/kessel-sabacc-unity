@@ -27,6 +27,7 @@ namespace KesselSabacc.UI.Screens
 
 		private void HandleBackButtonClicked()
 		{
+			UIFeedbackManager.Instance.PlayButtonClickSound();
 			_mainMenuController.ShowHomeScreen();
 		}
 	}
