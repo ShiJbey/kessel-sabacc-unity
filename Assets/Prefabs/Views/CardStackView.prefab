@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 964852055378710348}
   - component: {fileID: 1989226599082992097}
   - component: {fileID: -5639541549039624099}
-  - component: {fileID: -5289022782235228703}
   m_Layer: 0
   m_Name: CardStackView
   m_TagString: Untagged
@@ -62,18 +61,6 @@ SortingGroup:
   m_SortingOrder: 2
   m_SortAtRoot: 0
   m_Sort3DAs2D: 0
---- !u!114 &-5289022782235228703
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1383643221011915875}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b639c9fe7ce3c46f0974f246b1e893d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: KesselSabacc::KesselSabacc.Views.CardZoneManager
 --- !u!1 &7158204739050922817
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,7 +95,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7532778830236587988
 SpriteRenderer:
-  serializedVersion: 2
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -165,6 +152,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
 --- !u!1001 &2467643018677559476
 PrefabInstance:
   m_ObjectHideFlags: 0
