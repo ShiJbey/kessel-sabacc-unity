@@ -15,15 +15,16 @@ namespace KesselSabacc.UI.Components
 		[SerializeField]
 		private TMP_Text _bloodCardValueLabel;
 		[SerializeField]
-		private ChipCounter _chipsCounter;
+		private RemainingChipCounter _chipsCounter;
 		[SerializeField]
-		private ChipCounter _chipsInvestedCounter;
+		private InvestedChipCounter _chipsInvestedCounter;
 		[SerializeField]
 		private GameObject _overlay;
 		[SerializeField]
 		private GameObject _rollingDiceOverlay;
 
 		private PlayerRoundResult _result;
+		private Player _player;
 
 		public RectTransform rectTransform { get; private set; }
 		public PlayerRoundResult Result => _result;
@@ -34,18 +35,35 @@ namespace KesselSabacc.UI.Components
 			rectTransform = GetComponent<RectTransform>();
 		}
 
+		protected override void OnDestroy()
+		{
+			base.OnDestroy();
+
+			if (_player != null)
+			{
+				_player.OnChipsChanged -= OnPlayerChipsChanged;
+				_player.OnChipsInvestedChanged -= OnPlayerChipsInvestedChanged;
+				_player.OnDisqualified -= OnPlayerDisqualified;
+				_player = null;
+			}
+		}
+
 		public void Initialize(PlayerRoundResult result)
 		{
 			_result = result;
+			_player = result.Player;
 			HideRank();
 			HideRollingDiceOverlay();
 			_overlay.SetActive( false );
 			SetName( result.Player.Name );
 			SetSandCardValue( result.SandCard.Value );
 			SetBloodCardValue( result.BloodCard.Value );
-			_chipsCounter.Initialize( result.Player );
-			_chipsInvestedCounter.Initialize( result.Player );
-			result.Player.OnDisqualified += OnPlayerDisqualified;
+			_chipsCounter.SetMaxChipCount(result.Player.StartingChips);
+			_chipsCounter.SetCurrentChipCount(result.Player.Chips);
+			_chipsInvestedCounter.SetChipCount(result.Player.ChipsInvested);
+			_player.OnChipsChanged += OnPlayerChipsChanged;
+			_player.OnChipsInvestedChanged += OnPlayerChipsInvestedChanged;
+			_player.OnDisqualified += OnPlayerDisqualified;
 		}
 
 		public void ShowRollingDiceOverlay()
@@ -93,13 +111,14 @@ namespace KesselSabacc.UI.Components
 			_overlay.SetActive( true );
 		}
 
-		protected override void OnDestroy()
+		private void OnPlayerChipsChanged(int chips)
 		{
-			base.OnDestroy();
-			if ( _result != null && _result.Player != null )
-			{
-				_result.Player.OnDisqualified -= OnPlayerDisqualified;
-			}
+			_chipsCounter.SetCurrentChipCount(chips);
+		}
+
+		private void OnPlayerChipsInvestedChanged(int chips)
+		{
+			_chipsInvestedCounter.SetChipCount(chips);
 		}
 	}
 }

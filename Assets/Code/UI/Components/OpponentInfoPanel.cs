@@ -8,18 +8,36 @@ namespace KesselSabacc.UI.Components
 	public class OpponentInfoPanel : UIComponent
 	{
 		[SerializeField]
-		private ChipCounter _chipsView;
+		private RemainingChipCounter _chipsView;
 		[SerializeField]
-		private ChipCounter _investedChipsView;
+		private InvestedChipCounter _investedChipsView;
 		[SerializeField]
 		private Image _playerImage;
 		[SerializeField]
 		private TMP_Text _playerName;
 
+		private Player _player;
+
+		protected override void OnDestroy()
+		{
+			base.OnDestroy();
+
+			if (_player != null)
+			{
+				_player.OnChipsChanged -= OnPlayerChipsChanged;
+				_player.OnChipsInvestedChanged -= OnPlayerChipsInvestedChanged;
+				_player = null;
+			}
+		}
+
 		public void Initialize(Player player)
 		{
-			_chipsView.Initialize( player );
-			_investedChipsView.Initialize( player );
+			_player = player;
+			_chipsView.SetMaxChipCount(player.StartingChips);
+			_chipsView.SetCurrentChipCount(player.Chips);
+			_investedChipsView.SetChipCount(0);
+			_player.OnChipsChanged += OnPlayerChipsChanged;
+			_player.OnChipsInvestedChanged += OnPlayerChipsInvestedChanged;
 			SetPlayerName( player.Name );
 		}
 
@@ -36,6 +54,16 @@ namespace KesselSabacc.UI.Components
 		public void SetPlayerSprite(Sprite sprite)
 		{
 			_playerImage.sprite = sprite;
+		}
+
+		private void OnPlayerChipsChanged(int chips)
+		{
+			_chipsView.SetCurrentChipCount(chips);
+		}
+
+		private void OnPlayerChipsInvestedChanged(int chips)
+		{
+			_investedChipsView.SetChipCount(chips);
 		}
 	}
 }

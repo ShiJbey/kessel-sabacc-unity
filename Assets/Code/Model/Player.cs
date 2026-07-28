@@ -1,15 +1,29 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace KesselSabacc.Model
 {
 	public class Player
 	{
+		/// <summary>
+		/// Name assigned to this player.
+		/// </summary>
 		private string _name;
+		/// <summary>
+		/// The current number of chips available to the player.
+		/// </summary>
 		private int _chips;
+		/// <summary>
+		/// The number of chips invested this round.
+		/// </summary>
 		private int _chipsInvested;
+		/// <summary>
+		/// Cards currently in the player's hand.
+		/// </summary>
 		private List<Card> _hand;
+		/// <summary>
+		/// Is the player currently disqualified from play.
+		/// </summary>
 		private bool _isDisqualified;
 
 		public string Name

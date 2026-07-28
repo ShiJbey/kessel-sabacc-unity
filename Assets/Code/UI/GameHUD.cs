@@ -16,28 +16,43 @@ namespace KesselSabacc.UI
 		[SerializeField]
 		private TurnCounterUI _turnCounter;
 		[SerializeField]
-		private ChipCounter _playerChips;
+		private RemainingChipCounter _playerChipsRemaining;
 		[SerializeField]
-		private ChipCounter _playerChipsInvested;
+		private InvestedChipCounter _playerChipsInvested;
 		[SerializeField]
 		private OpponentUIRefs[] _opponentUI;
+
+		private Player _player;
 
 		private KesselSabaccGameView _gameView;
 
 		public event Action OnDrawCardButtonClicked;
 		public event Action OnStandButtonClicked;
 
+		protected override void OnDestroy()
+		{
+			base.OnDestroy();
+
+			if (_player != null)
+			{
+				_player.OnChipsChanged -= OnPlayerChipsChanged;
+				_player.OnChipsInvestedChanged -= OnPlayerChipsInvestedChanged;
+				_player = null;
+			}
+		}
+
 		public void Initialize(KesselSabaccGameModel game, KesselSabaccGameView gameView, int playerIndex)
 		{
 			_gameView = gameView;
 			_turnCounter.Initialize( game );
 
-			var player = game.Players[playerIndex];
-			_playerChips.Initialize( player );
-			_playerChipsInvested.Initialize( player );
+			_player = game.Players[playerIndex];
 
-			player.OnChipsChanged += _playerChips.SetChips;
-			player.OnChipsInvestedChanged += _playerChipsInvested.SetChips;
+			_playerChipsRemaining.SetCurrentChipCount(_player.Chips);
+			_playerChipsInvested.SetChipCount(0);
+
+			_player.OnChipsChanged += OnPlayerChipsChanged;
+			_player.OnChipsInvestedChanged += OnPlayerChipsInvestedChanged;
 
 			int opponentUIIndex = 0;
 			for ( int i = 0; i < game.Players.Count; i++ )
@@ -97,6 +112,16 @@ namespace KesselSabacc.UI
 		private void HandleStandButtonClicked()
 		{
 			OnStandButtonClicked?.Invoke();
+		}
+
+		private void OnPlayerChipsChanged(int chips)
+		{
+			_playerChipsRemaining.SetCurrentChipCount(chips);
+		}
+
+		private void OnPlayerChipsInvestedChanged(int chips)
+		{
+			_playerChipsInvested.SetChipCount(chips);
 		}
 
 		[System.Serializable]
