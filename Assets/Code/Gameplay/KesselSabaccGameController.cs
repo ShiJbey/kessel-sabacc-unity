@@ -6,6 +6,7 @@ using KesselSabacc.Gameplay.AI;
 using KesselSabacc.Gameplay.GameStates;
 using KesselSabacc.Model;
 using KesselSabacc.Views;
+using KesselSabacc.Utils;
 using UnityEngine;
 
 namespace KesselSabacc.Gameplay
@@ -195,18 +196,18 @@ namespace KesselSabacc.Gameplay
 		/// <summary>
 		/// Reset the cards within the blood and sand decks, clear swap stacks.
 		/// </summary>
-		public IEnumerator ResetDecksAndPiles()
+		public async Awaitable ResetDecksAndPiles()
 		{
 			ResetDrawPiles();
 			ResetDiscardPiles();
 
-			_ = AnimateDeckSpawn( uiView.tableView.SandDeckView, Model.SandDeck );
-			_ = AnimateDeckSpawn( uiView.tableView.BloodDeckView, Model.BloodDeck );
-			yield return new WaitForSeconds( deckSpawnDuration );
-			yield return null;
+			await Task.WhenAll(
+				AnimateDeckSpawn( uiView.tableView.SandDeckView, Model.SandDeck ).AsTask(),
+				AnimateDeckSpawn( uiView.tableView.BloodDeckView, Model.BloodDeck ).AsTask()
+			);
 		}
 
-		public async Task AnimateDeckSpawn(CardStackView stackView, CardStack model)
+		public async Awaitable AnimateDeckSpawn(CardStackView stackView, CardStack model)
 		{
 			int totalCards = model.Cards.Count;
 			for ( int i = 0; i < totalCards; i++ )
@@ -294,18 +295,14 @@ namespace KesselSabacc.Gameplay
 
 			yield return uiView.tableView.playerHands[playerIndex].RemoveCard( card );
 
-			CardSortingSystem.Instance.AddCardToZone( cardView, CardZone.Discard );
-
 			yield return cardView.MoveCardToPosition(
 				discardPile.transform.position,
 				discardPile.transform.rotation.eulerAngles
 			);
 
-			yield return cardView.ShowFrontAsync();
-
-			discardPile.Model.Add( card );
-
 			discardPile.AddCard( cardView );
+
+			yield return cardView.ShowFrontAsync();
 
 			onEnd?.Invoke();
 		}
@@ -313,18 +310,14 @@ namespace KesselSabacc.Gameplay
 		public IEnumerator DiscardTopCardOfDeck(CardStackView deck, CardStackView discardPile)
 		{
 			CardView cardView = deck.Pop();
-			Card card = deck.Model.Pop();
+			deck.Model.Pop();
 
 			yield return cardView.Flip();
-
-			CardSortingSystem.Instance.AddCardToZone( cardView, CardZone.Discard );
 
 			yield return cardView.MoveCardToPosition(
 				discardPile.transform.position,
 				discardPile.transform.rotation.eulerAngles
 			);
-
-			discardPile.Model.Add( card );
 
 			discardPile.AddCard( cardView );
 		}

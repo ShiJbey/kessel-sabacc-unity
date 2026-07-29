@@ -144,7 +144,7 @@ namespace KesselSabacc.Views
 			}
 		}
 
-		public IEnumerator MoveCardToPosition(Vector3 position, Vector3 rotation)
+		public async Awaitable MoveCardToPosition(Vector3 position, Vector3 rotation)
 		{
 			var sequence = DOTween.Sequence();
 
@@ -162,7 +162,7 @@ namespace KesselSabacc.Views
 				transform.DORotate( rotation, _cardMovementSpeed ).SetEase( Ease.OutQuad )
 			);
 
-			yield return sequence.WaitForCompletion();
+			await sequence.AsyncWaitForCompletion();
 
 			AudioManager.PlayOneSFX( _cardPlacedSound, Vector3.zero );
 		}

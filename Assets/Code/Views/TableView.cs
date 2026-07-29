@@ -23,10 +23,10 @@ namespace KesselSabacc.Views
 
 		public void Initialize(KesselSabaccGameController gameController)
 		{
-			_sandDiscardPileView.Initialize( gameController.Model.SandDiscardPile );
-			_sandDeckView.Initialize( gameController.Model.SandDeck );
-			_bloodDeckView.Initialize( gameController.Model.BloodDeck );
-			_bloodDiscardPileView.Initialize( gameController.Model.BloodDiscardPile );
+			_sandDiscardPileView.Initialize( gameController.Model.SandDiscardPile, CardZone.Discard );
+			_sandDeckView.Initialize( gameController.Model.SandDeck, CardZone.Deck );
+			_bloodDeckView.Initialize( gameController.Model.BloodDeck, CardZone.Deck );
+			_bloodDiscardPileView.Initialize( gameController.Model.BloodDiscardPile, CardZone.Discard );
 		}
 	}
 }
