@@ -22,18 +22,6 @@ namespace KesselSabacc.Views
 		[Header( "View References" )]
 		public TableView tableView;
 
-		public static KesselSabaccGameView Instance { get; private set; }
-
-		private void Awake()
-		{
-			if ( Instance != null )
-			{
-				Destroy( this );
-				return;
-			}
-			Instance = this;
-		}
-
 		private void Start()
 		{
 			drawCardUI.Hide();
@@ -45,14 +33,6 @@ namespace KesselSabacc.Views
 			gameOverNotificationUI.Hide();
 			diceRollUI.Hide();
 			roundEndUI.Hide();
-		}
-
-		private void OnDestroy()
-		{
-			if ( Instance == this )
-			{
-				Instance = null;
-			}
 		}
 
 		public void Initialize(KesselSabaccGameController gameController)
