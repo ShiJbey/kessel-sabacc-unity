@@ -3,14 +3,13 @@ using System.Threading.Tasks;
 using DG.Tweening;
 using KesselSabacc.Model;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace KesselSabacc.Views
 {
 	/// <summary>
 	/// Manages the presentation of a single card on the screen.
 	/// </summary>
-	public class CardView : MonoBehaviour, IPointerClickHandler
+	public class CardView : MonoBehaviour
 	{
 		[SerializeField]
 		private Sprite _frontSprite;
@@ -154,31 +153,6 @@ namespace KesselSabacc.Views
 		{
 			_spriteRenderer.sprite = _backSprite;
 			_isFaceUp = false;
-		}
-
-		private void OnMouseUp()
-		{
-			Debug.Log( "Mouse up." );
-		}
-
-		private void OnMouseOver()
-		{
-			Debug.Log( "Mouse is hovering" );
-		}
-
-		private void OnMouseDown()
-		{
-			Debug.Log( "Mouse is down" );
-		}
-
-		private void OnMouseUpAsButton()
-		{
-			Debug.Log( "Card clicked" );
-		}
-
-		public void OnPointerClick(PointerEventData eventData)
-		{
-			// OnMouseUpAsButton();
 		}
 
 		/// <summary>
