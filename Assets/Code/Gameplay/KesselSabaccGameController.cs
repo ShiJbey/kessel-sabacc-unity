@@ -15,14 +15,20 @@ namespace KesselSabacc.Gameplay
 		[Header( "References" )]
 		public KesselSabaccGameView uiView;
 
-
 		[Header( "Animation Settings" )]
 		public float deckSpawnDuration = 1f;
+
+		[Header( "Configuration Settings" )]
+		public DeckConfiguration defaultDeckConfig;
+
+		[Header( "Asset References" )]
+		public GameObject cardViewPrefab;
 
 		private IGameState _currentGameState = null;
 		private bool _isSwitchingState = false;
 		private List<PlayerController> _players = new();
 		private KesselSabaccGameModel _model;
+		private DeckConfiguration _deckConfig;
 
 		public KesselSabaccGameModel Model => _model;
 		public IReadOnlyList<PlayerController> Players => _players;
@@ -46,8 +52,29 @@ namespace KesselSabacc.Gameplay
 			loadingScreen.Show();
 			yield return null;
 
-			CreateTestGame();
-			yield return null;
+			if ( NewGameManager.Instance.Data == null )
+			{
+				NewGameManager.Instance.CreateNewGame();
+			}
+
+			NewGameData newGameData = NewGameManager.Instance.Data;
+
+			// Set the deck
+			newGameData.deck = (newGameData.deck != null) ? newGameData.deck : defaultDeckConfig;
+			_deckConfig = newGameData.deck;
+
+			// Add human player
+			var player = new Player( "Player 1", newGameData.numChips );
+			AddPlayer( player );
+			AddPlayerController( new HumanController( 0, player ) );
+
+			// Add CPU player(s)
+			for ( int i = 1; i < newGameData.numPlayers; i++ )
+			{
+				var cpu = new Player( $"CPU {i}", newGameData.numChips );
+				AddPlayer( cpu );
+				AddPlayerController( new SimpleAIController( i, cpu ) );
+			}
 
 			uiView.Initialize( this );
 			yield return null;
@@ -114,66 +141,28 @@ namespace KesselSabacc.Gameplay
 			Model.AdvanceTurn();
 		}
 
-		public void ResetBloodDeck()
-		{
-			uiView.tableView.BloodDeckView.Clear();
-			_model.BloodDeck.Clear();
-
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.SYLOP ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.ONE ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.ONE ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.ONE ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.TWO ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.TWO ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.TWO ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.THREE ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.THREE ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.THREE ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.FOUR ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.FOUR ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.FOUR ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.FIVE ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.FIVE ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.FIVE ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.SIX ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.SIX ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.SIX ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.IMPOSTER ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.IMPOSTER ) );
-			_model.BloodDeck.Add( CreateCard( CardSuit.BLOOD, CardType.IMPOSTER ) );
-
-			_model.BloodDeck.Shuffle();
-		}
-
-		public void ResetSandDeck()
+		public void ResetDrawPiles()
 		{
 			uiView.tableView.SandDeckView.Clear();
 			_model.SandDeck.Clear();
 
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.SYLOP ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.ONE ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.ONE ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.ONE ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.TWO ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.TWO ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.TWO ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.THREE ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.THREE ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.THREE ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.FOUR ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.FOUR ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.FOUR ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.FIVE ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.FIVE ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.FIVE ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.SIX ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.SIX ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.SIX ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.IMPOSTER ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.IMPOSTER ) );
-			_model.SandDeck.Add( CreateCard( CardSuit.SAND, CardType.IMPOSTER ) );
+			uiView.tableView.BloodDeckView.Clear();
+			_model.BloodDeck.Clear();
+
+			foreach ( var entry in _deckConfig.cards )
+			{
+				for ( int i = 0; i < entry.count; i++ )
+				{
+					_model.SandDeck.Add(
+						new Card( CardSuit.SAND, entry.cardType, entry.sandFront, _deckConfig.sandCardBack ) );
+
+					_model.BloodDeck.Add(
+						new Card( CardSuit.BLOOD, entry.cardType, entry.bloodFront, _deckConfig.bloodCardBack ) );
+				}
+			}
 
 			_model.SandDeck.Shuffle();
+			_model.BloodDeck.Shuffle();
 		}
 
 		public void ResetDiscardPiles()
@@ -196,14 +185,19 @@ namespace KesselSabacc.Gameplay
 			playerController.Initialize( this );
 		}
 
+		public CardView SpawnCard(Card card, Vector3 position, Quaternion rotation)
+		{
+			CardView cardView = Instantiate( cardViewPrefab, position, rotation ).GetComponent<CardView>();
+			cardView.Initialize( card );
+			return cardView;
+		}
+
 		/// <summary>
 		/// Reset the cards within the blood and sand decks, clear swap stacks.
 		/// </summary>
 		public IEnumerator ResetDecksAndPiles()
 		{
-			Debug.Log( "Resetting Blood and Sand decks." );
-			ResetBloodDeck();
-			ResetSandDeck();
+			ResetDrawPiles();
 			ResetDiscardPiles();
 
 			_ = AnimateDeckSpawn( uiView.tableView.SandDeckView, Model.SandDeck );
@@ -218,7 +212,7 @@ namespace KesselSabacc.Gameplay
 			for ( int i = 0; i < totalCards; i++ )
 			{
 				Card card = model.Cards[i];
-				CardView cardView = uiView.SpawnCard( card, stackView.transform.position, stackView.transform.rotation );
+				CardView cardView = SpawnCard( card, stackView.transform.position, stackView.transform.rotation );
 				cardView.ShowBack();
 				stackView.AddCard( cardView );
 
@@ -254,46 +248,6 @@ namespace KesselSabacc.Gameplay
 				playerController.Model.ClearHand();
 				uiView.tableView.playerHands[playerController.PlayerIndex].Clear();
 			}
-		}
-
-		public Card CreateCard(CardSuit suit, CardType cardType)
-		{
-			return new Card(
-				suit,
-				cardType
-			);
-		}
-
-		private void CreateTestGame()
-		{
-			if ( NewGameManager.Instance.Data == null )
-			{
-				NewGameManager.Instance.CreateNewGame();
-			}
-
-			NewGameData newGameData = NewGameManager.Instance.Data;
-
-			Debug.Log(
-				$"Creating a new game with {newGameData.numPlayers} players and {newGameData.numChips} chips"
-			);
-
-			// Add human player
-			var player = new Model.Player( "Player 1", newGameData.numChips );
-			AddPlayer( player );
-			AddPlayerController( new HumanController( 0, player ) );
-
-			// Add CPU player(s)
-			for ( int i = 1; i < newGameData.numPlayers; i++ )
-			{
-				var cpu = new Model.Player( $"CPU {i}", newGameData.numChips );
-				AddPlayer( cpu );
-				AddPlayerController( new SimpleAIController( i, cpu ) );
-			}
-		}
-
-		public IEnumerator ResetCardStacks()
-		{
-			yield return null;
 		}
 
 		public IEnumerator DealCardToPlayer(CardStackView deck, int playerIndex, Action<CardView> onEnd = null)

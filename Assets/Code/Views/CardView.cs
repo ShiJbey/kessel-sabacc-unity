@@ -66,13 +66,13 @@ namespace KesselSabacc.Views
 		/// Initialize the card appearance using a Card Object
 		/// </summary>
 		/// <param name="card"></param>
-		public void Initialize(Card card, Sprite frontSprite, Sprite backSprite, bool isFaceUp = false)
+		public void Initialize(Card card, bool isFaceUp = false)
 		{
 			Card = card;
-			_frontSprite = frontSprite;
-			_backSprite = backSprite;
+			_frontSprite = card.FrontSprite;
+			_backSprite = card.BackSprite;
 			_isFaceUp = isFaceUp;
-			_spriteRenderer.sprite = isFaceUp ? frontSprite : backSprite;
+			_spriteRenderer.sprite = isFaceUp ? _frontSprite : _backSprite;
 		}
 
 		/// <summary>

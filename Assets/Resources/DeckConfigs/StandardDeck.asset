@@ -14,35 +14,76 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bloodCardBack: {fileID: 447138486, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
   sandCardBack: {fileID: -266781179, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+  cards:
+  - bloodFront: {fileID: -622201982, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: -2074711280, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 0
+    count: 1
+  - bloodFront: {fileID: 1244883192, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: 1301980477, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 1
+    count: 3
+  - bloodFront: {fileID: -65805070, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: 812978803, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 2
+    count: 3
+  - bloodFront: {fileID: -260815639, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: -2072046367, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 3
+    count: 3
+  - bloodFront: {fileID: -1625505249, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: -1046646972, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 4
+    count: 3
+  - bloodFront: {fileID: 1167764594, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: 2039725758, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 5
+    count: 3
+  - bloodFront: {fileID: 1313141381, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: 1272460870, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 6
+    count: 3
+  - bloodFront: {fileID: -323998242, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    sandFront: {fileID: 1493803250, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 7
+    count: 3
   sylopCards:
     bloodFront: {fileID: -622201982, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
     sandFront: {fileID: -2074711280, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 0
     count: 1
   oneCards:
     bloodFront: {fileID: 1244883192, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
     sandFront: {fileID: 1301980477, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 0
     count: 3
   twoCards:
     bloodFront: {fileID: -65805070, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
     sandFront: {fileID: 812978803, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 0
     count: 3
   threeCards:
     bloodFront: {fileID: -260815639, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
     sandFront: {fileID: -2072046367, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 0
     count: 3
   fourCards:
     bloodFront: {fileID: -1625505249, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
     sandFront: {fileID: -1046646972, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 0
     count: 3
   fiveCards:
     bloodFront: {fileID: 1167764594, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
     sandFront: {fileID: 2039725758, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 0
     count: 3
   sixCards:
     bloodFront: {fileID: 1313141381, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
     sandFront: {fileID: 1272460870, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 0
     count: 3
   imposterCards:
     bloodFront: {fileID: -323998242, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
     sandFront: {fileID: 1493803250, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
+    cardType: 0
     count: 3

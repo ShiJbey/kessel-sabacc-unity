@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace KesselSabacc.Model
 {
@@ -9,22 +10,30 @@ namespace KesselSabacc.Model
 	{
 		public CardSuit Suit { get; }
 		public CardType CardType { get; }
+		public Sprite FrontSprite { get; }
+		public Sprite BackSprite { get; }
 		public int Value { get; private set; }
 
 		public event Action<int> OnValueChanged;
 
-		public Card(CardSuit suit, CardType cardType)
+		public Card(CardSuit suit, CardType cardType, Sprite frontSprite, Sprite backSprite)
 		{
 			Suit = suit;
 			CardType = cardType;
 			Value = (int)cardType;
+			FrontSprite = frontSprite;
+			BackSprite = backSprite;
 		}
 
-		public Card(CardSuit suit, CardType cardType, int value)
+		public Card(CardSuit suit, CardType cardType) : this( suit, cardType, null, null )
 		{
-			Suit = suit;
-			CardType = cardType;
-			Value = value;
+
+		}
+
+		public Card WithValue(int value)
+		{
+			SetValue( value );
+			return this;
 		}
 
 		public void SetValue(int value)

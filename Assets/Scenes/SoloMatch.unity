@@ -633,12 +633,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Gameplay.KesselSabaccGameController
   uiView: {fileID: 2065205190}
-  cardDealSpeed: 0.5
-  delayBetweenCards: 0.3
   deckSpawnDuration: 1
-  roundPanelDisplayTime: 2
-  cardMovementSpeed: 0.3
-  cardPlacedSound: {fileID: 8300000, guid: 6627bcb85795b4221a560df5af414c33, type: 3}
+  defaultDeckConfig: {fileID: 11400000, guid: 8c803d76953d5fd4997848ada69b8b68, type: 2}
+  cardViewPrefab: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
 --- !u!1001 &385908102
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2280,7 +2277,6 @@ MonoBehaviour:
   roundEndUI: {fileID: 1724962887}
   tableView: {fileID: 477663661}
   cardViewPrefab: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
-  deckConfig: {fileID: 11400000, guid: 8c803d76953d5fd4997848ada69b8b68, type: 2}
 --- !u!114 &2065205191
 MonoBehaviour:
   m_ObjectHideFlags: 0

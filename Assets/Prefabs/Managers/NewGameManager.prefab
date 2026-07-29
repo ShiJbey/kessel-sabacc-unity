@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.NewGameManager
   m_Data:
     playerName: 
-    startingChips: 0
+    numChips: 4
     shiftTokensEnabled: 0
-    numberOfPlayers: 0
-  m_OverrideGameData: 0
+    numPlayers: 4
+    deck: {fileID: 11400000, guid: 8c803d76953d5fd4997848ada69b8b68, type: 2}

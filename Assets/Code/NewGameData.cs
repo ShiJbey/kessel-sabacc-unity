@@ -9,5 +9,6 @@ namespace KesselSabacc
 		public int numChips = 4;
 		public bool shiftTokensEnabled = true;
 		public int numPlayers = 4;
+		public DeckConfiguration deck;
 	}
 }

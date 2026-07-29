@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using KesselSabacc.Model;
 using KesselSabacc.UI.Components;
-using KesselSabacc.Views;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,16 +37,14 @@ namespace KesselSabacc.UI
 
 				DrawableCardUI selectableCardUI = obj.GetComponent<DrawableCardUI>();
 
-				selectableCardUI.Initialize(
-					KesselSabaccGameView.Instance.GetCardFront( card.Suit, card.CardType ) );
+				selectableCardUI.Initialize( card.FrontSprite );
 
 				selectableCardUI.OnClick += () => HandleCardSelected( card );
 
 				_selectableCards.Add( obj );
 			}
 
-			_otherCard.sprite = KesselSabaccGameView.Instance.GetCardFront(
-				otherCard.Suit, otherCard.CardType );
+			_otherCard.sprite = otherCard.FrontSprite;
 		}
 
 		public void HandleCardSelected(Card card)

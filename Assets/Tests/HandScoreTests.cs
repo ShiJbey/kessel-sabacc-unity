@@ -29,7 +29,7 @@ public class HandScoreTests
 		var p1 = new Player( "player", 0 );
 
 		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.SYLOP ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.IMPOSTER, (int)CardType.FOUR ) );
+		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.IMPOSTER ).WithValue( (int)CardType.FOUR ) );
 
 		Assert.True( HandScoreUtils.HasSabaccHand( p1 ) );
 		p1.ClearHand();
@@ -61,7 +61,7 @@ public class HandScoreTests
 		var p1 = new Player( "player", 0 );
 
 		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.TWO ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.IMPOSTER, (int)CardType.TWO ) );
+		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.IMPOSTER ).WithValue( (int)CardType.TWO ) );
 
 		Assert.True( HandScoreUtils.HasSabaccHand( p1 ) );
 		p1.ClearHand();
@@ -81,7 +81,7 @@ public class HandScoreTests
 		p1.ClearHand();
 
 		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.SYLOP ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.IMPOSTER, (int)CardType.THREE ) );
+		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.IMPOSTER ).WithValue( (int)CardType.THREE ) );
 
 		Assert.True( HandScoreUtils.HasSabaccHand( p1 ) );
 		p1.ClearHand();
@@ -99,7 +99,7 @@ public class HandScoreTests
 		p1.ClearHand();
 
 		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.ONE ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.IMPOSTER, (int)CardType.THREE ) );
+		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.IMPOSTER ).WithValue( (int)CardType.THREE ) );
 
 		Assert.False( HandScoreUtils.HasSabaccHand( p1 ) );
 		p1.ClearHand();
