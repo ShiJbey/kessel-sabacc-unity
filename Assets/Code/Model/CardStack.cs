@@ -10,17 +10,14 @@ namespace KesselSabacc.Model
 	{
 		private List<Card> _cards;
 
-		public bool IsFaceDown { get; }
-
 		public event Action<Card> OnCardAdded;
 		public event Action<Card> OnCardRemoved;
 		public event Action OnCardsCleared;
 
 		public IReadOnlyList<Card> Cards => _cards;
 
-		public CardStack(bool isFaceDown)
+		public CardStack()
 		{
-			IsFaceDown = isFaceDown;
 			_cards = new List<Card>();
 		}
 

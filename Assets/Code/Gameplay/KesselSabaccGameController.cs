@@ -215,8 +215,8 @@ namespace KesselSabacc.Gameplay
 			ResetSandDeck();
 			ResetDiscardPiles();
 
-			var sandDeckCoroutine = StartCoroutine( uiView.tableView.SandDeckView.AnimateDeckSpawn() );
-			var bloodDeckCoroutine = StartCoroutine( uiView.tableView.BloodDeckView.AnimateDeckSpawn() );
+			var sandDeckCoroutine = StartCoroutine( uiView.tableView.SandDeckView.AnimateDeckSpawn( true ) );
+			var bloodDeckCoroutine = StartCoroutine( uiView.tableView.BloodDeckView.AnimateDeckSpawn( true ) );
 			yield return null; // Give the above coroutines a chance to start
 
 			yield return new WaitUntil( () =>

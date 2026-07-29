@@ -77,7 +77,7 @@ namespace KesselSabacc.Views
 			return null;
 		}
 
-		public IEnumerator AnimateDeckSpawn()
+		public IEnumerator AnimateDeckSpawn(bool cardsFaceDown)
 		{
 			IsAnimating = true;
 			int totalCards = Model.Cards.Count;
@@ -86,7 +86,7 @@ namespace KesselSabacc.Views
 				Card card = Model.Cards[i];
 				CardView cardView = _gameController.uiView.SpawnCard( card, transform.position, transform.rotation );
 				_cards.Add( cardView );
-				if ( Model.IsFaceDown )
+				if ( cardsFaceDown )
 				{
 					cardView.ShowBack();
 				}
