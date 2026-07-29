@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DG.Tweening;
 using KesselSabacc.Gameplay.AI;
 using KesselSabacc.Gameplay.GameStates;
 using KesselSabacc.Model;
-using KesselSabacc.UI.Screens;
 using KesselSabacc.Views;
 using UnityEngine;
 
@@ -215,14 +215,24 @@ namespace KesselSabacc.Gameplay
 			ResetSandDeck();
 			ResetDiscardPiles();
 
-			var sandDeckCoroutine = StartCoroutine( uiView.tableView.SandDeckView.AnimateDeckSpawn( true ) );
-			var bloodDeckCoroutine = StartCoroutine( uiView.tableView.BloodDeckView.AnimateDeckSpawn( true ) );
-			yield return null; // Give the above coroutines a chance to start
+			_ = AnimateDeckSpawn( uiView.tableView.SandDeckView, Model.SandDeck );
+			_ = AnimateDeckSpawn( uiView.tableView.BloodDeckView, Model.BloodDeck );
+			yield return new WaitForSeconds( deckSpawnDuration );
+			yield return null;
+		}
 
-			yield return new WaitUntil( () =>
-				!uiView.tableView.SandDeckView.IsAnimating
-				&& !uiView.tableView.BloodDeckView.IsAnimating
-			);
+		public async Task AnimateDeckSpawn(CardStackView stackView, CardStack model)
+		{
+			int totalCards = model.Cards.Count;
+			for ( int i = 0; i < totalCards; i++ )
+			{
+				Card card = model.Cards[i];
+				CardView cardView = uiView.SpawnCard( card, stackView.transform.position, stackView.transform.rotation );
+				cardView.ShowBack();
+				stackView.AddCard( cardView );
+
+				await Awaitable.WaitForSecondsAsync( deckSpawnDuration / totalCards );
+			}
 		}
 
 		public void ClearHands()
@@ -342,7 +352,7 @@ namespace KesselSabacc.Gameplay
 
 			discardPile.Model.Add( card );
 
-			yield return discardPile.AddCard( cardView );
+			discardPile.AddCard( cardView );
 
 			onEnd?.Invoke();
 		}
@@ -364,7 +374,7 @@ namespace KesselSabacc.Gameplay
 
 			discardPile.Model.Add( card );
 
-			yield return discardPile.AddCard( cardView );
+			discardPile.AddCard( cardView );
 		}
 
 		public IEnumerator MoveCardToPosition(CardView card, Vector3 position, Vector3 rotation)

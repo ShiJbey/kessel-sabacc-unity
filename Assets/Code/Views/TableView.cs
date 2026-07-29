@@ -1,5 +1,4 @@
 using KesselSabacc.Gameplay;
-using KesselSabacc.Model;
 using UnityEngine;
 
 namespace KesselSabacc.Views
@@ -24,10 +23,10 @@ namespace KesselSabacc.Views
 
 		public void Initialize(KesselSabaccGameController gameController)
 		{
-			_sandDiscardPileView.Initialize( gameController, gameController.Model.SandDiscardPile );
-			_sandDeckView.Initialize( gameController, gameController.Model.SandDeck );
-			_bloodDeckView.Initialize( gameController, gameController.Model.BloodDeck );
-			_bloodDiscardPileView.Initialize( gameController, gameController.Model.BloodDiscardPile );
+			_sandDiscardPileView.Initialize( gameController.Model.SandDiscardPile );
+			_sandDeckView.Initialize( gameController.Model.SandDeck );
+			_bloodDeckView.Initialize( gameController.Model.BloodDeck );
+			_bloodDiscardPileView.Initialize( gameController.Model.BloodDiscardPile );
 		}
 	}
 }
