@@ -231,7 +231,6 @@ namespace KesselSabacc.Gameplay
 			TableView tableView = uiView.tableView;
 
 			yield return ResetDecksAndPiles();
-			yield return new WaitForSeconds( .500f );
 
 			yield return DiscardTopCardOfDeck(
 				tableView.SandDeckView, tableView.SandDiscardPileView );
@@ -239,15 +238,12 @@ namespace KesselSabacc.Gameplay
 			yield return DiscardTopCardOfDeck(
 				tableView.BloodDeckView, tableView.BloodDiscardPileView );
 
-			yield return new WaitForSeconds( .500f );
-
 			for ( int i = 0; i < Model.Players.Count; i++ )
 			{
 				var player = Model.Players[i];
 				if ( player.IsDisqualified ) continue;
 				yield return DealCardToPlayer( tableView.SandDeckView, i );
 				yield return DealCardToPlayer( tableView.BloodDeckView, i );
-				yield return new WaitForSeconds( .500f );
 			}
 		}
 
