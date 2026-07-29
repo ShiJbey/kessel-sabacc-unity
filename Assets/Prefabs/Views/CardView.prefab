@@ -109,8 +109,10 @@ MonoBehaviour:
   _frontSprite: {fileID: -2032802704, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
   _backSprite: {fileID: -1821309033, guid: 2dac48fc3c1cf4e64b517928a532bb35, type: 3}
   _flipAnimationTime: 0.3
+  _cardMovementSpeed: 0.3
   _isFaceUp: 1
   _spriteRenderer: {fileID: 1942152400934965377}
+  _cardPlacedSound: {fileID: 8300000, guid: 6627bcb85795b4221a560df5af414c33, type: 3}
 --- !u!61 &1193639320122278056
 BoxCollider2D:
   m_ObjectHideFlags: 0

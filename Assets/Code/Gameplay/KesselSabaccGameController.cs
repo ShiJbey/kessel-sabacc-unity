@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using DG.Tweening;
 using KesselSabacc.Gameplay.AI;
 using KesselSabacc.Gameplay.GameStates;
 using KesselSabacc.Model;
@@ -20,10 +18,6 @@ namespace KesselSabacc.Gameplay
 
 		[Header( "Animation Settings" )]
 		public float deckSpawnDuration = 1f;
-		public float cardMovementSpeed = 0.3f;
-
-		[Header( "Sounds" )]
-		public AudioClip cardPlacedSound;
 
 		private IGameState _currentGameState = null;
 		private bool _isSwitchingState = false;
@@ -317,11 +311,10 @@ namespace KesselSabacc.Gameplay
 
 			CardSortingSystem.Instance.AddCardToZone( cardView, CardZone.Hand );
 
-			yield return MoveCardToPosition(
-				cardView, playerHand.transform.position, playerHand.transform.rotation.eulerAngles
+			yield return cardView.MoveCardToPosition(
+				playerHand.transform.position,
+				playerHand.transform.rotation.eulerAngles
 			);
-
-			AudioManager.PlayOneSFX( cardPlacedSound, Vector3.zero );
 
 			yield return playerHand.AddCard( cardView );
 
@@ -353,15 +346,10 @@ namespace KesselSabacc.Gameplay
 
 			CardSortingSystem.Instance.AddCardToZone( cardView, CardZone.Discard );
 
-			float placementJitter = (discardPile.Count() == 0) ?
-				0 : UnityEngine.Random.Range( -10f, 10f );
-
-			yield return MoveCardToPosition(
-				cardView, discardPile.transform.position,
-				discardPile.transform.rotation.eulerAngles + new Vector3( 0, 0, placementJitter )
+			yield return cardView.MoveCardToPosition(
+				discardPile.transform.position,
+				discardPile.transform.rotation.eulerAngles
 			);
-
-			AudioManager.PlayOneSFX( cardPlacedSound, Vector3.zero );
 
 			yield return cardView.ShowFrontAsync();
 
@@ -381,36 +369,14 @@ namespace KesselSabacc.Gameplay
 
 			CardSortingSystem.Instance.AddCardToZone( cardView, CardZone.Discard );
 
-			yield return MoveCardToPosition(
-				cardView, discardPile.transform.position, discardPile.transform.rotation.eulerAngles
+			yield return cardView.MoveCardToPosition(
+				discardPile.transform.position,
+				discardPile.transform.rotation.eulerAngles
 			);
-
-			AudioManager.PlayOneSFX( cardPlacedSound, Vector3.zero );
 
 			discardPile.Model.Add( card );
 
 			discardPile.AddCard( cardView );
-		}
-
-		public IEnumerator MoveCardToPosition(CardView card, Vector3 position, Vector3 rotation)
-		{
-			var sequence = DOTween.Sequence();
-
-			sequence.Append(
-				card.transform.DOMove( position, cardMovementSpeed ).SetEase( Ease.OutQuad )
-			);
-
-			sequence.Join(
-				DOTween.Sequence()
-				.Append( card.transform.DOScale( 1.3f, cardMovementSpeed / 2 ) )
-				.Append( card.transform.DOScale( 1f, cardMovementSpeed / 2 ) )
-			);
-
-			sequence.Join(
-				card.transform.DORotate( rotation, cardMovementSpeed ).SetEase( Ease.OutQuad )
-			);
-
-			yield return sequence.WaitForCompletion();
 		}
 	}
 }

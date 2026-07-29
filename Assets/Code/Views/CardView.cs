@@ -18,9 +18,16 @@ namespace KesselSabacc.Views
 		[SerializeField]
 		private float _flipAnimationTime = 0.3f;
 		[SerializeField]
+		private float _cardMovementSpeed = 0.3f;
+		[SerializeField]
 		private bool _isFaceUp = true;
 		[SerializeField]
 		private SpriteRenderer _spriteRenderer;
+
+		[Header( "Sounds" )]
+		[SerializeField]
+		private AudioClip _cardPlacedSound;
+
 		private bool _isFlipping = false;
 		private CardZone _currentZone;
 
@@ -135,6 +142,29 @@ namespace KesselSabacc.Views
 			{
 				yield return ShowFrontAsync();
 			}
+		}
+
+		public IEnumerator MoveCardToPosition(Vector3 position, Vector3 rotation)
+		{
+			var sequence = DOTween.Sequence();
+
+			sequence.Append(
+				transform.DOMove( position, _cardMovementSpeed ).SetEase( Ease.OutQuad )
+			);
+
+			sequence.Join(
+				DOTween.Sequence()
+				.Append( transform.DOScale( 1.3f, _cardMovementSpeed / 2 ) )
+				.Append( transform.DOScale( 1f, _cardMovementSpeed / 2 ) )
+			);
+
+			sequence.Join(
+				transform.DORotate( rotation, _cardMovementSpeed ).SetEase( Ease.OutQuad )
+			);
+
+			yield return sequence.WaitForCompletion();
+
+			AudioManager.PlayOneSFX( _cardPlacedSound, Vector3.zero );
 		}
 
 		/// <summary>
