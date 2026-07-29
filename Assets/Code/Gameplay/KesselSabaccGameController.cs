@@ -235,6 +235,31 @@ namespace KesselSabacc.Gameplay
 			}
 		}
 
+		public IEnumerator PlayDealingSequence()
+		{
+			TableView tableView = uiView.tableView;
+
+			yield return ResetDecksAndPiles();
+			yield return new WaitForSeconds( .500f );
+
+			yield return DiscardTopCardOfDeck(
+				tableView.SandDeckView, tableView.SandDiscardPileView );
+
+			yield return DiscardTopCardOfDeck(
+				tableView.BloodDeckView, tableView.BloodDiscardPileView );
+
+			yield return new WaitForSeconds( .500f );
+
+			for ( int i = 0; i < Model.Players.Count; i++ )
+			{
+				var player = Model.Players[i];
+				if ( player.IsDisqualified ) continue;
+				yield return DealCardToPlayer( tableView.SandDeckView, i );
+				yield return DealCardToPlayer( tableView.BloodDeckView, i );
+				yield return new WaitForSeconds( .500f );
+			}
+		}
+
 		public void ClearHands()
 		{
 			foreach ( PlayerController playerController in _players )
@@ -244,14 +269,6 @@ namespace KesselSabacc.Gameplay
 			}
 		}
 
-		/// <summary>
-		/// Deal hands to the players.
-		/// </summary>
-		public void DealHands()
-		{
-			Debug.Log( "Dealing hands to the players." );
-		}
-
 		public Card CreateCard(CardSuit suit, CardType cardType)
 		{
 			return new Card(
@@ -259,6 +276,7 @@ namespace KesselSabacc.Gameplay
 				cardType
 			);
 		}
+
 		private void CreateTestGame()
 		{
 			if ( NewGameManager.Instance.Data == null )
