@@ -33,10 +33,10 @@ namespace KesselSabacc.Model
 			CurrentTurnTaker = 0;
 			IsRoundOver = false;
 			IsTurnOver = false;
-			SandDeck = new CardStack( "Sand Deck", true );
-			BloodDeck = new CardStack( "Blood Deck", true );
-			SandDiscardPile = new CardStack( "Sand Discard Pile", false );
-			BloodDiscardPile = new CardStack( "Blood Discard Pile", false );
+			SandDeck = new CardStack( true );
+			BloodDeck = new CardStack( true );
+			SandDiscardPile = new CardStack( false );
+			BloodDiscardPile = new CardStack( false );
 			RoundResults = new RoundResultList();
 		}
 

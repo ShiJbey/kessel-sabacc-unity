@@ -10,7 +10,6 @@ namespace KesselSabacc.Model
 	{
 		private List<Card> _cards;
 
-		public string Name { get; }
 		public bool IsFaceDown { get; }
 
 		public event Action<Card> OnCardAdded;
@@ -19,9 +18,8 @@ namespace KesselSabacc.Model
 
 		public IReadOnlyList<Card> Cards => _cards;
 
-		public CardStack(string name, bool isFaceDown)
+		public CardStack(bool isFaceDown)
 		{
-			Name = name;
 			IsFaceDown = isFaceDown;
 			_cards = new List<Card>();
 		}
