@@ -19,10 +19,7 @@ namespace KesselSabacc.Gameplay
 
 
 		[Header( "Animation Settings" )]
-		public float cardDealSpeed = 0.5f;
-		public float delayBetweenCards = 0.3f;
 		public float deckSpawnDuration = 1f;
-		public float roundPanelDisplayTime = 2f;
 		public float cardMovementSpeed = 0.3f;
 
 		[Header( "Sounds" )]
