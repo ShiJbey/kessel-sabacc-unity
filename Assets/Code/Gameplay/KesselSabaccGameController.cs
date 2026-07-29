@@ -321,5 +321,15 @@ namespace KesselSabacc.Gameplay
 
 			discardPile.AddCard( cardView );
 		}
+
+		public void GoToMainMenu()
+		{
+			SceneController.Instance
+				.NewTransition()
+				.Unload( SceneDatabase.Slots.SessionContent )
+				.Load( SceneDatabase.Slots.Menu, SceneDatabase.Scenes.MainMenu )
+				.WithOverlay()
+				.Perform();
+		}
 	}
 }

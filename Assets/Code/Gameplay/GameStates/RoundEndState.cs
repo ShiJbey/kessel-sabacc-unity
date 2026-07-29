@@ -20,12 +20,10 @@ namespace KesselSabacc.Gameplay.GameStates
 			_gameController.Model.RoundResults.Clear();
 
 			_gameController.uiView.roundEndUI.OnNextButtonClicked += OnNextButtonClicked;
-			Debug.Log( $"Ending Round {_gameController.Model.CurrentRound}" );
-			_gameController.uiView.roundNotificationUI.ShowRoundEndMessage( _gameController.Model.CurrentRound );
-			_gameController.uiView.roundNotificationUI.Show();
-			yield return new WaitForSeconds( 2f );
 
-			_gameController.uiView.roundNotificationUI.Hide();
+			yield return _gameController.uiView.roundNotificationUI.PlayRoundStartAnim(
+				_gameController.Model.CurrentRound
+			);
 
 			yield return RevealHandsAnimation();
 

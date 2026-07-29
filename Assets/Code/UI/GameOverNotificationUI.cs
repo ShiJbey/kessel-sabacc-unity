@@ -1,4 +1,5 @@
 using System;
+using KesselSabacc.Gameplay;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,7 +15,12 @@ namespace KesselSabacc.UI
 
 		private string _messageTemplateString;
 
-		public event Action OnContinue;
+		private KesselSabaccGameController _gameController;
+
+		public void Initialize(KesselSabaccGameController gameController)
+		{
+			_gameController = gameController;
+		}
 
 		protected override void Awake()
 		{
@@ -25,24 +31,26 @@ namespace KesselSabacc.UI
 		protected override void SubscribeToEvents()
 		{
 			base.SubscribeToEvents();
-			_continueButton.onClick.AddListener( Continue );
+			_continueButton.onClick.AddListener( OnContinueButtonClicked );
 		}
 
 		protected override void UnsubscribeFromEvents()
 		{
 			base.UnsubscribeFromEvents();
-			_continueButton.onClick.RemoveListener( Continue );
+			_continueButton.onClick.RemoveListener( OnContinueButtonClicked );
 		}
 
-		public void SetPlayerName(string name)
+		public void ShowWinner(string name)
 		{
 			_messageLabel.SetText( _messageTemplateString.Replace( "#player#", name ) );
+			Show();
 		}
 
-		public void Continue()
+		private void OnContinueButtonClicked()
 		{
 			UIFeedbackManager.Instance.PlayButtonClickSound();
-			OnContinue?.Invoke();
+			Hide();
+			_gameController.GoToMainMenu();
 		}
 	}
 }

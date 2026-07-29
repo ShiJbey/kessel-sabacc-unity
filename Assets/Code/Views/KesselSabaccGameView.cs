@@ -40,6 +40,7 @@ namespace KesselSabacc.Views
 			hud.Initialize( gameController.Model, this, 0 );
 			tableView.Initialize( gameController );
 			roundEndUI.Initialize( gameController.Model );
+			gameOverNotificationUI.Initialize( gameController );
 		}
 	}
 }

@@ -16,15 +16,9 @@ namespace KesselSabacc.Gameplay.GameStates
 		{
 			_gameController.AdvanceRound();
 
-			Debug.Log( $"Staring Round {_gameController.Model.CurrentRound}" );
-			_gameController.uiView.roundNotificationUI.ShowRoundStartMessage( _gameController.Model.CurrentRound );
-			_gameController.uiView.roundNotificationUI.Show();
-
-			yield return new WaitForSeconds( 2f );
-
-			_gameController.uiView.roundNotificationUI.Hide();
-
-			yield return null;
+			yield return _gameController.uiView.roundNotificationUI.PlayRoundStartAnim(
+				_gameController.Model.CurrentRound
+			);
 
 			while ( !_gameController.Model.IsRoundOver )
 			{

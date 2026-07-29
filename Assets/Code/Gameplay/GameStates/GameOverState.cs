@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEngine.SceneManagement;
 
 namespace KesselSabacc.Gameplay.GameStates
 {
@@ -15,16 +14,14 @@ namespace KesselSabacc.Gameplay.GameStates
 
 		public IEnumerator OnEnter()
 		{
-			var winner = _gameController.Model.GetWinner();
-			_gameController.uiView.gameOverNotificationUI.SetPlayerName( winner.Name );
-			_gameController.uiView.gameOverNotificationUI.Show();
-			_gameController.uiView.gameOverNotificationUI.OnContinue += OnContinue;
+			_gameController.uiView.gameOverNotificationUI.ShowWinner(
+				_gameController.Model.GetWinner().Name
+			);
 			yield return null;
 		}
 
 		public IEnumerator OnExit()
 		{
-			_gameController.uiView.gameOverNotificationUI.OnContinue -= OnContinue;
 			yield return null;
 		}
 
@@ -36,16 +33,6 @@ namespace KesselSabacc.Gameplay.GameStates
 		public void OnUpdate()
 		{
 
-		}
-
-		private void OnContinue()
-		{
-			SceneController.Instance
-				.NewTransition()
-				.Unload( SceneDatabase.Slots.SessionContent )
-				.Load( SceneDatabase.Slots.Menu, SceneDatabase.Scenes.MainMenu )
-				.WithOverlay()
-				.Perform();
 		}
 	}
 }

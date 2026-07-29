@@ -1,6 +1,4 @@
 using System.Collections;
-using KesselSabacc.Views;
-using UnityEngine;
 
 namespace KesselSabacc.Gameplay.GameStates
 {
