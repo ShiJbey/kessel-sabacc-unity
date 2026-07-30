@@ -1,46 +1,36 @@
 using System;
-using System.Collections;
 using KesselSabacc.Model;
 using KesselSabacc.Views;
 using UnityEngine;
 
 namespace KesselSabacc.Gameplay.GameStates
 {
-	public class RoundOverState : IGameState
+	public class RoundOverState : GameState
 	{
-		private KesselSabaccGameController _gameController;
-
-		public RoundOverState(KesselSabaccGameController gameController)
+		public override async Awaitable OnEnter(KesselSabaccGameController gameController)
 		{
-			_gameController = gameController;
-		}
+			gameController.Model.RoundResults.Clear();
 
-		public IEnumerator OnEnter()
-		{
-			_gameController.Model.RoundResults.Clear();
-
-			_gameController.uiView.roundEndUI.OnNextButtonClicked += OnNextButtonClicked;
-
-			yield return _gameController.uiView.roundNotificationUI.PlayRoundStartAnim(
-				_gameController.Model.CurrentRound
+			await gameController.uiView.roundNotificationUI.PlayRoundStartAnim(
+				gameController.Model.CurrentRound
 			);
 
-			yield return RevealHandsAnimation();
+			await RevealHandsAnimation( gameController );
 
-			_gameController.uiView.roundEndUI.ClearScores();
-			_gameController.uiView.roundEndUI.HideContinueButton();
-			_gameController.uiView.roundEndUI.Show();
-			yield return null;
+			gameController.uiView.roundEndUI.ClearScores();
+			gameController.uiView.roundEndUI.HideContinueButton();
+			gameController.uiView.roundEndUI.Show();
+			await Awaitable.NextFrameAsync();
 
-			for ( int i = 0; i < _gameController.Players.Count; i++ )
+			for ( int i = 0; i < gameController.Players.Count; i++ )
 			{
-				PlayerController playerController = _gameController.Players[i];
+				PlayerController playerController = gameController.Players[i];
 				if ( playerController.Model.IsDisqualified ) continue;
 
-				yield return RollImposterCards( playerController );
+				await RollImposterCards( gameController, playerController );
 
-				var bloodCard = playerController.Model.GetFirstCardOfSuit( Model.CardSuit.BLOOD );
-				var sandCard = playerController.Model.GetFirstCardOfSuit( Model.CardSuit.SAND );
+				var bloodCard = playerController.Model.GetFirstCardOfSuit( CardSuit.BLOOD );
+				var sandCard = playerController.Model.GetFirstCardOfSuit( CardSuit.SAND );
 
 				// Assign Sylop Card values
 				if ( bloodCard.CardType == CardType.SYLOP ) bloodCard.SetValue( sandCard.Value );
@@ -50,15 +40,15 @@ namespace KesselSabacc.Gameplay.GameStates
 					playerController.Model, playerController.PlayerIndex
 				);
 
-				_gameController.Model.RoundResults.Add( roundResult );
+				gameController.Model.RoundResults.Add( roundResult );
 
-				yield return new WaitForSeconds( 0.5f );
+				await Awaitable.WaitForSecondsAsync( 0.5f );
 			}
 
-			_gameController.Model.RoundResults.Sort();
-			var bestResult = _gameController.Model.RoundResults.Results[0];
+			gameController.Model.RoundResults.Sort();
+			var bestResult = gameController.Model.RoundResults.Results[0];
 
-			foreach ( PlayerRoundResult roundResult in _gameController.Model.RoundResults.Results )
+			foreach ( PlayerRoundResult roundResult in gameController.Model.RoundResults.Results )
 			{
 				roundResult.WonRound = roundResult == bestResult
 					|| roundResult.CompareTo( bestResult ) == 0;
@@ -99,62 +89,46 @@ namespace KesselSabacc.Gameplay.GameStates
 				}
 			}
 
-			_gameController.uiView.roundEndUI.ShowContinueButton();
+			gameController.uiView.roundEndUI.ShowContinueButton();
 		}
 
-		public IEnumerator RollImposterCards(PlayerController playerController)
+		public async Awaitable RollImposterCards(KesselSabaccGameController gameController, PlayerController playerController)
 		{
 			var sandCard = playerController.Model.GetFirstCardOfSuit( CardSuit.SAND );
 			if ( sandCard.CardType == CardType.IMPOSTER && !sandCard.IsValueModified() )
 			{
-				yield return playerController.AssignImposterValue( _gameController, sandCard );
+				await playerController.AssignImposterValue( gameController, sandCard );
 			}
 
 			var bloodCard = playerController.Model.GetFirstCardOfSuit( CardSuit.BLOOD );
 			if ( bloodCard.CardType == CardType.IMPOSTER && !bloodCard.IsValueModified() )
 			{
-				yield return playerController.AssignImposterValue( _gameController, bloodCard );
+				await playerController.AssignImposterValue( gameController, bloodCard );
 			}
 		}
 
-		public IEnumerator OnExit()
+		public override void OnRoundAdvanced(KesselSabaccGameController gameController)
 		{
-			_gameController.uiView.roundEndUI.OnNextButtonClicked -= OnNextButtonClicked;
-			yield return null;
-		}
-
-		public void OnInput()
-		{
-
-		}
-
-		public void OnUpdate()
-		{
-
-		}
-
-		private void OnNextButtonClicked()
-		{
-			_gameController.uiView.roundEndUI.Hide();
-			if ( _gameController.Model.IsGameOver() )
+			gameController.uiView.roundEndUI.Hide();
+			if ( gameController.Model.IsGameOver() )
 			{
-				_gameController.GoToGameOverState();
+				gameController.GoToGameOverState();
 			}
 			else
 			{
-				_gameController.GoToDealingState();
+				gameController.GoToDealingState();
 			}
 		}
 
-		private IEnumerator RevealHandsAnimation()
+		private async Awaitable RevealHandsAnimation(KesselSabaccGameController gameController)
 		{
-			foreach ( HandView handView in _gameController.uiView.tableView.playerHands )
+			foreach ( HandView handView in gameController.uiView.tableView.playerHands )
 			{
 				foreach ( CardView cardView in handView.Cards )
 				{
-					yield return cardView.ShowFrontAsync();
+					await cardView.ShowFrontAsync();
 				}
-				yield return new WaitForSeconds( 1f );
+				await Awaitable.WaitForSecondsAsync( 1f );
 			}
 
 		}

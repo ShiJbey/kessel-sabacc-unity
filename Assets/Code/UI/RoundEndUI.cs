@@ -23,9 +23,9 @@ namespace KesselSabacc.UI
 		private float _tweenDuration = 0.35f;
 		[SerializeField] private AnimationCurve _tweenCurve = AnimationCurve.EaseInOut( 0, 0, 1, 1 );
 
-		private List<ScoreRow> _scoreRows = new();
+		private KesselSabaccGameController _gameController;
 
-		public event Action OnNextButtonClicked;
+		private List<ScoreRow> _scoreRows = new();
 
 		protected override void Awake()
 		{
@@ -33,10 +33,11 @@ namespace KesselSabacc.UI
 			_scoreRowPrefab.SetActive( false );
 		}
 
-		public void Initialize(KesselSabaccGameModel game)
+		public void Initialize(KesselSabaccGameController gameController)
 		{
-			game.RoundResults.OnResultAdded += OnRoundResultAdded;
-			game.RoundResults.OnResultsCleared += OnRoundResultsCleared;
+			_gameController = gameController;
+			gameController.Model.RoundResults.OnResultAdded += OnRoundResultAdded;
+			gameController.Model.RoundResults.OnResultsCleared += OnRoundResultsCleared;
 		}
 
 		protected override void SubscribeToEvents()
@@ -155,7 +156,7 @@ namespace KesselSabacc.UI
 		private void HandleNextButtonClicked()
 		{
 			UIFeedbackManager.Instance.PlayButtonClickSound();
-			OnNextButtonClicked?.Invoke();
+			_gameController.AdvanceRound();
 		}
 	}
 }

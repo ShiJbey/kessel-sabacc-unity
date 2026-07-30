@@ -1,7 +1,5 @@
-using System.Collections;
 using UnityEngine;
 using KesselSabacc.Model;
-using KesselSabacc.Views;
 
 namespace KesselSabacc.Gameplay.PlayerActions
 {
@@ -10,24 +8,21 @@ namespace KesselSabacc.Gameplay.PlayerActions
 	/// </summary>
 	public class DiscardCardAction : PlayerAction
 	{
-		private Card _card;
+		public readonly int PlayerIndex;
+		public readonly Card Card;
 
-		public DiscardCardAction(PlayerController performer, Card card) : base( performer )
+		public override ActionType ActionType => ActionType.DISCARD_CARD;
+
+		public DiscardCardAction(int playerIndex, Card card)
 		{
-			_card = card;
+			PlayerIndex = playerIndex;
+			Card = card;
 		}
 
-		public override void ApplyToModel(KesselSabaccGameModel model)
+		public override async Awaitable Execute(KesselSabaccGameController gameController)
 		{
-
-		}
-
-		public override IEnumerator Execute(KesselSabaccGameController gameController)
-		{
-			yield return gameController.DiscardCardFromPlayer( Performer.PlayerIndex, _card, () =>
-			{
-				Debug.Log( $"{Performer.Model.Name} discarded {_card}." );
-			} );
+			await gameController.DiscardCardFromPlayer( PlayerIndex, Card );
+			gameController.Model.IsPlayerTurnOver = true;
 		}
 	}
 }

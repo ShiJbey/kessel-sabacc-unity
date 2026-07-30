@@ -636,6 +636,8 @@ MonoBehaviour:
   deckSpawnDuration: 1
   defaultDeckConfig: {fileID: 11400000, guid: 8c803d76953d5fd4997848ada69b8b68, type: 2}
   cardViewPrefab: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
+  humanPlayerPrefab: {fileID: 7032496867150446563, guid: c1161096df1a53c4a8daf4f4b32646c9, type: 3}
+  cpuPlayerPrefab: {fileID: 4614989181126682047, guid: 9c12ad1e43c288f4985777d934a183dd, type: 3}
 --- !u!1001 &385908102
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2276,7 +2278,6 @@ MonoBehaviour:
   diceRollUI: {fileID: 245501668}
   roundEndUI: {fileID: 1724962887}
   tableView: {fileID: 477663661}
-  cardViewPrefab: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
 --- !u!114 &2065205191
 MonoBehaviour:
   m_ObjectHideFlags: 0

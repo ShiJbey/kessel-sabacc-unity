@@ -1,36 +1,14 @@
-using System.Collections;
+using UnityEngine;
 
 namespace KesselSabacc.Gameplay.GameStates
 {
-	public class DealingState : IGameState
+	public class DealingState : GameState
 	{
-		private KesselSabaccGameController _gameController;
-
-		public DealingState(KesselSabaccGameController gameController)
+		public override async Awaitable OnEnter(KesselSabaccGameController gameController)
 		{
-			_gameController = gameController;
-		}
-
-		public IEnumerator OnEnter()
-		{
-			_gameController.ClearHands();
-			yield return _gameController.PlayDealingSequence();
-			_gameController.GoToTurnTakingState();
-		}
-
-		public IEnumerator OnExit()
-		{
-			yield return null;
-		}
-
-		public void OnInput()
-		{
-
-		}
-
-		public void OnUpdate()
-		{
-
+			gameController.ClearHands();
+			await gameController.PlayDealingSequence();
+			gameController.GoToTurnTakingState();
 		}
 	}
 }

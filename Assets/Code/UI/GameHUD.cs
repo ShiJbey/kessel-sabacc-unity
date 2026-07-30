@@ -24,8 +24,6 @@ namespace KesselSabacc.UI
 
 		private Player _player;
 
-		private KesselSabaccGameView _gameView;
-
 		public event Action OnDrawCardButtonClicked;
 		public event Action OnStandButtonClicked;
 
@@ -33,7 +31,7 @@ namespace KesselSabacc.UI
 		{
 			base.OnDestroy();
 
-			if (_player != null)
+			if ( _player != null )
 			{
 				_player.OnChipsChanged -= OnPlayerChipsChanged;
 				_player.OnChipsInvestedChanged -= OnPlayerChipsInvestedChanged;
@@ -41,15 +39,14 @@ namespace KesselSabacc.UI
 			}
 		}
 
-		public void Initialize(KesselSabaccGameModel game, KesselSabaccGameView gameView, int playerIndex)
+		public void Initialize(KesselSabaccGameModel game, int playerIndex)
 		{
-			_gameView = gameView;
 			_turnCounter.Initialize( game );
 
 			_player = game.Players[playerIndex];
 
-			_playerChipsRemaining.SetCurrentChipCount(_player.Chips);
-			_playerChipsInvested.SetChipCount(0);
+			_playerChipsRemaining.SetCurrentChipCount( _player.Chips );
+			_playerChipsInvested.SetChipCount( 0 );
 
 			_player.OnChipsChanged += OnPlayerChipsChanged;
 			_player.OnChipsInvestedChanged += OnPlayerChipsInvestedChanged;
@@ -116,12 +113,12 @@ namespace KesselSabacc.UI
 
 		private void OnPlayerChipsChanged(int chips)
 		{
-			_playerChipsRemaining.SetCurrentChipCount(chips);
+			_playerChipsRemaining.SetCurrentChipCount( chips );
 		}
 
 		private void OnPlayerChipsInvestedChanged(int chips)
 		{
-			_playerChipsInvested.SetChipCount(chips);
+			_playerChipsInvested.SetChipCount( chips );
 		}
 
 		[System.Serializable]

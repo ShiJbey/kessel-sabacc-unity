@@ -42,13 +42,13 @@ namespace KesselSabacc.Views
 		/// </summary>
 		/// <param name="cardView"></param>
 		/// <returns></returns>
-		public IEnumerator AddCard(CardView cardView)
+		public async Awaitable AddCard(CardView cardView)
 		{
 			_cards.Add( cardView );
 
 			cardView.transform.SetParent( transform );
 
-			yield return UpdateCardPositions();
+			await UpdateCardPositions();
 		}
 
 		public CardView GetCard(Card card)
@@ -63,7 +63,7 @@ namespace KesselSabacc.Views
 			return null;
 		}
 
-		public IEnumerator RemoveCard(Card card)
+		public async Awaitable RemoveCard(Card card)
 		{
 			for ( int i = _cards.Count - 1; i >= 0; i-- )
 			{
@@ -72,7 +72,7 @@ namespace KesselSabacc.Views
 					_cards.RemoveAt( i );
 				}
 			}
-			yield return UpdateCardPositions();
+			await UpdateCardPositions();
 		}
 
 		public void Clear()
@@ -84,9 +84,10 @@ namespace KesselSabacc.Views
 			_cards.Clear();
 		}
 
-		private IEnumerator UpdateCardPositions()
+		private async Awaitable UpdateCardPositions()
 		{
-			if ( _cards.Count == 0 ) yield break;
+			if ( _cards.Count == 0 )
+				return;
 
 			// Spline is measured from 0 to 1. Players can have a maximum of
 			// 3 cards in their hand at once (drawing during sabacc). We space
@@ -122,7 +123,7 @@ namespace KesselSabacc.Views
 				sequence.Join( _cards[i].transform.DORotate( finalRotation, _cardRepositionAnimTime ) );
 			}
 
-			yield return sequence.WaitForCompletion();
+			await sequence.AsyncWaitForCompletion();
 		}
 	}
 }

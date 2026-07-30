@@ -1,5 +1,4 @@
-using System.Collections;
-using KesselSabacc.Model;
+using UnityEngine;
 
 namespace KesselSabacc.Gameplay
 {
@@ -8,15 +7,7 @@ namespace KesselSabacc.Gameplay
 	/// </summary>
 	public abstract class PlayerAction
 	{
-		public PlayerController Performer { get; }
-
-		public PlayerAction(PlayerController performer)
-		{
-			Performer = performer;
-		}
-
-		public abstract void ApplyToModel(KesselSabaccGameModel model);
-
-		public abstract IEnumerator Execute(KesselSabaccGameController gameController);
+		public abstract ActionType ActionType { get; }
+		public abstract Awaitable Execute(KesselSabaccGameController gameController);
 	}
 }
