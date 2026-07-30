@@ -179,17 +179,6 @@ namespace KesselSabacc.Model
 					);
 				}
 
-				if ( !BloodDiscardPile.IsEmpty() && player.Chips > 0 )
-				{
-					legalActions.Add(
-						new DrawCardAction(
-							playerIndex,
-							BloodDiscardPile.Peek(),
-							BloodDiscardPile
-						)
-					);
-				}
-
 				if ( !BloodDeck.IsEmpty() && player.Chips > 0 )
 				{
 					legalActions.Add(
@@ -197,6 +186,17 @@ namespace KesselSabacc.Model
 							playerIndex,
 							BloodDeck.Peek(),
 							BloodDeck
+						)
+					);
+				}
+
+				if ( !BloodDiscardPile.IsEmpty() && player.Chips > 0 )
+				{
+					legalActions.Add(
+						new DrawCardAction(
+							playerIndex,
+							BloodDiscardPile.Peek(),
+							BloodDiscardPile
 						)
 					);
 				}
