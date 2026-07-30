@@ -11,7 +11,7 @@ namespace KesselSabacc.Gameplay.GameStates
 		{
 			gameController.Model.RoundResults.Clear();
 
-			await gameController.uiView.roundNotificationUI.PlayRoundStartAnim(
+			await gameController.uiView.roundNotificationUI.PlayRoundEndAnim(
 				gameController.Model.CurrentRound
 			);
 
