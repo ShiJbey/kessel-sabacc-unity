@@ -52,7 +52,8 @@ namespace KesselSabacc.Model
 		{
 			CurrentRound++;
 			CurrentTurn = 1;
-			CurrentTurnTaker = GetNextEligiblePlayerIndex( PlayerWhoStartedTurn );
+			PlayerWhoStartedTurn = GetNextEligiblePlayerIndex(PlayerWhoStartedTurn);
+			CurrentTurnTaker = PlayerWhoStartedTurn;
 			PlayerWhoStartedTurn = CurrentTurnTaker;
 			IsRoundOver = false;
 			IsTurnOver = false;
@@ -64,8 +65,8 @@ namespace KesselSabacc.Model
 			if ( CurrentTurn < TURNS_PER_ROUND )
 			{
 				CurrentTurn++;
-				CurrentTurnTaker = GetNextEligiblePlayerIndex( PlayerWhoStartedTurn );
-				PlayerWhoStartedTurn = CurrentTurnTaker;
+				// CurrentTurnTaker = GetNextEligiblePlayerIndex( PlayerWhoStartedTurn );
+				// PlayerWhoStartedTurn = CurrentTurnTaker;
 				IsTurnOver = false;
 				foreach ( var p in _players )
 				{
