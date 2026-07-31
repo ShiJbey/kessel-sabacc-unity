@@ -15,7 +15,7 @@ namespace KesselSabacc.Gameplay.GameStates
 				gameController.Model.CurrentRound
 			);
 
-			await RevealHandsAnimation( gameController );
+			await gameController.RevealHands( gameController );
 
 			gameController.uiView.roundEndUI.ClearScores();
 			gameController.uiView.roundEndUI.HideContinueButton();
@@ -118,19 +118,6 @@ namespace KesselSabacc.Gameplay.GameStates
 			{
 				gameController.GoToDealingState();
 			}
-		}
-
-		private async Awaitable RevealHandsAnimation(KesselSabaccGameController gameController)
-		{
-			foreach ( HandView handView in gameController.uiView.tableView.playerHands )
-			{
-				foreach ( CardView cardView in handView.Cards )
-				{
-					await cardView.ShowFrontAsync();
-				}
-				await Awaitable.WaitForSecondsAsync( 1f );
-			}
-
 		}
 	}
 }

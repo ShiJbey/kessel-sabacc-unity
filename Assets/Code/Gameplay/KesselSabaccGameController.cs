@@ -18,6 +18,7 @@ namespace KesselSabacc.Gameplay
 
 		[Header( "Animation Settings" )]
 		public float deckSpawnDuration = 1f;
+		public float handRevealDelay = 2.5f;
 
 		[Header( "Configuration Settings" )]
 		public DeckConfiguration defaultDeckConfig;
@@ -220,6 +221,16 @@ namespace KesselSabacc.Gameplay
 
 				await Awaitable.WaitForSecondsAsync( deckSpawnDuration / totalCards );
 			}
+		}
+
+		public async Awaitable RevealHands(KesselSabaccGameController gameController)
+		{
+			foreach ( HandView handView in gameController.uiView.tableView.playerHands )
+			{
+				handView.RevealHand();
+			}
+
+			await Awaitable.WaitForSecondsAsync( handRevealDelay );
 		}
 
 		public async Awaitable PlayDealingSequence()

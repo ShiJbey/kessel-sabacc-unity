@@ -118,6 +118,14 @@ namespace KesselSabacc.Views
 			_cards.Clear();
 		}
 
+		public void RevealHand()
+		{
+			foreach ( CardView cardView in Cards )
+			{
+				_ = cardView.ShowFrontAsync();
+			}
+		}
+
 		private void OnPlayerThinkingStarted()
 		{
 			if (_thinkingIndicator != null)
