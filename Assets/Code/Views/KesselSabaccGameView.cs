@@ -62,6 +62,12 @@ namespace KesselSabacc.Views
 			gameOverNotificationUI.Initialize( gameController );
 		}
 
+		public void PresentDiceRoll(Action<int> onResult)
+		{
+			diceRollUI.SetResultCallback(onResult);
+			diceRollUI.Show();
+		}
+
 		public void PresentActionUI(IReadOnlyList<PlayerAction> legalActions, Action<PlayerAction> onChosen)
 		{
 			Dictionary<ActionType, IReadOnlyList<PlayerAction>> actionsByType = legalActions

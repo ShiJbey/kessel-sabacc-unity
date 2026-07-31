@@ -58,6 +58,6 @@ namespace KesselSabacc.Gameplay
 		protected abstract Awaitable<PlayerAction> SelectAction(
 			KesselSabaccGameController gameController, IReadOnlyList<PlayerAction> legalActions);
 
-		public abstract Awaitable AssignImposterValue(KesselSabaccGameController gameController, Card card);
+		public abstract Awaitable<int> PerformDiceRoll(KesselSabaccGameController gameController);
 	}
 }

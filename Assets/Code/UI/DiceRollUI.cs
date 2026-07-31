@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using KesselSabacc.Gameplay;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,12 +14,11 @@ namespace KesselSabacc.UI
 		[SerializeField]
 		private DieImage[] _dice;
 		[SerializeField]
+		private GameObject _rollButtonOverlay;
+		[SerializeField]
 		private Button _rollButton;
 
-		/// <summary>
-		/// Event invoked when a die value is selected;
-		/// </summary>
-		public event Action<int> OnDieResult;
+		private Action<int> _resultCallback;
 
 		protected override void SubscribeToEvents()
 		{
@@ -46,27 +44,34 @@ namespace KesselSabacc.UI
 			Reset();
 		}
 
+		public void SetResultCallback(Action<int> cb)
+		{
+			_resultCallback = cb;
+		}
+
 		public void Reset()
 		{
+			_rollButtonOverlay.SetActive(true);
 			foreach ( DieImage dieImage in _dice )
 			{
 				dieImage.Reset();
 			}
-			_rollButton.gameObject.SetActive( true );
 		}
 
 		public void SelectDieValue(int value)
 		{
-			OnDieResult?.Invoke( value );
+			_resultCallback?.Invoke(value);
+			_resultCallback = null;
+			Hide();
 		}
 
 		private void HandleRollButtonClicked()
 		{
+			_rollButtonOverlay.SetActive(false);
 			foreach ( DieImage dieImage in _dice )
 			{
 				dieImage.RollDie();
 			}
-			_rollButton.gameObject.SetActive( false );
 		}
 	}
 }

@@ -6,18 +6,17 @@ namespace KesselSabacc.Gameplay.AI
 {
 	public class HumanController : PlayerController
 	{
-		private int _dieValue;
-
 		private AwaitableCompletionSource<PlayerAction> _pendingSelection;
+		private AwaitableCompletionSource<int> _pendingDiceValue;
 
-		protected override Awaitable<PlayerAction> SelectAction(
+		protected override async Awaitable<PlayerAction> SelectAction(
 			KesselSabaccGameController gameController, IReadOnlyList<PlayerAction> legalActions)
 		{
 			_pendingSelection = new AwaitableCompletionSource<PlayerAction>();
 
 			gameController.uiView.PresentActionUI( legalActions, OnActionChosen );
 
-			return _pendingSelection.Awaitable;
+			return await _pendingSelection.Awaitable;
 		}
 
 		private void OnActionChosen(PlayerAction action)
@@ -27,28 +26,17 @@ namespace KesselSabacc.Gameplay.AI
 			_pendingSelection = null;
 		}
 
-		private void HandleDieSelected(int value)
+		private void OnDieResult(int value)
 		{
-			_dieValue = value;
+			_pendingDiceValue.SetResult(value);
+			_pendingDiceValue = null;
 		}
 
-		public override async Awaitable AssignImposterValue(KesselSabaccGameController gameController, Card card)
+		public override async Awaitable<int> PerformDiceRoll(KesselSabaccGameController gameController)
 		{
-			card.SetValue( UnityEngine.Random.Range( 1, 6 ) );
-			await Awaitable.WaitForSecondsAsync( 1f );
-
-			// _gameView.diceRollUI.Show();
-			// _gameView.diceRollUI.OnDieResult += HandleDieSelected;
-
-			// await Awaitable.FromAsyncOperation WaitUntil( () => _dieValue > 0 );
-
-			// _gameView.diceRollUI.OnDieResult -= HandleDieSelected;
-
-			// yield return new WaitUntil( () => !IsTakingTurn );
-
-			// card.SetValue( _dieValue );
-			// _gameView.diceRollUI.Hide();
-			// _dieValue = -1;
+			_pendingDiceValue = new AwaitableCompletionSource<int>();
+			gameController.uiView.PresentDiceRoll(OnDieResult);
+			return await _pendingDiceValue.Awaitable;
 		}
 	}
 }

@@ -97,13 +97,15 @@ namespace KesselSabacc.Gameplay.GameStates
 			var sandCard = playerController.Model.GetFirstCardOfSuit( CardSuit.SAND );
 			if ( sandCard.CardType == CardType.IMPOSTER && !sandCard.IsValueModified() )
 			{
-				await playerController.AssignImposterValue( gameController, sandCard );
+				int value = await playerController.PerformDiceRoll( gameController );
+				sandCard.SetValue(value);
 			}
 
 			var bloodCard = playerController.Model.GetFirstCardOfSuit( CardSuit.BLOOD );
 			if ( bloodCard.CardType == CardType.IMPOSTER && !bloodCard.IsValueModified() )
 			{
-				await playerController.AssignImposterValue( gameController, bloodCard );
+				int value = await playerController.PerformDiceRoll( gameController );
+				bloodCard.SetValue(value);
 			}
 		}
 
