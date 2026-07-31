@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace KesselSabacc.Gameplay.AI
 {
-	public class SimpleAIController : PlayerController
+	public class AIController : PlayerController
 	{
+		public AIStrategy Strategy { get; set; }
+
 		public override async Awaitable AssignImposterValue(KesselSabaccGameController gameController, Card card)
 		{
 			card.SetValue( UnityEngine.Random.Range( 1, 6 ) );
@@ -14,8 +16,7 @@ namespace KesselSabacc.Gameplay.AI
 
 		protected override async Awaitable<PlayerAction> SelectAction(KesselSabaccGameController gameController, IReadOnlyList<PlayerAction> legalActions)
 		{
-			await Awaitable.WaitForSecondsAsync(1.5f);
-			return legalActions[Random.Range( 0, legalActions.Count )];
+			return await Strategy.SelectAction(this, legalActions);
 		}
 	}
 }

@@ -27,6 +27,7 @@ namespace KesselSabacc.Gameplay
 		public GameObject cardViewPrefab;
 		public GameObject humanPlayerPrefab;
 		public GameObject cpuPlayerPrefab;
+		public AIStrategy defaultAIStrategy;
 
 		private GameState _currentGameState = null;
 		private bool _isSwitchingState = false;
@@ -78,7 +79,8 @@ namespace KesselSabacc.Gameplay
 			for ( int i = 1; i < newGameData.numPlayers; i++ )
 			{
 				var cpuPlayerModel = new Player( $"CPU {i}", newGameData.numChips );
-				var cpuPlayerController = Instantiate( cpuPlayerPrefab ).GetComponent<SimpleAIController>();
+				var cpuPlayerController = Instantiate( cpuPlayerPrefab ).GetComponent<AIController>();
+				cpuPlayerController.Strategy = defaultAIStrategy;
 				cpuPlayerController.Initialize( i, cpuPlayerModel, this );
 				_model.AddPlayer( cpuPlayerModel );
 				_players.Add( cpuPlayerController );
