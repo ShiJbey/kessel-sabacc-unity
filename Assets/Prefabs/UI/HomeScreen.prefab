@@ -1704,6 +1704,7 @@ MonoBehaviour:
   _creditsButton: {fileID: 7175224043500803145}
   _settingsButton: {fileID: 417130604401737677}
   _exitButton: {fileID: 416913405364984281}
+  _versionText: {fileID: 5093717330101210468}
 --- !u!1 &8355846617357305281
 GameObject:
   m_ObjectHideFlags: 0
