@@ -1181,7 +1181,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Roll the dice to set the value of the Imposter card.
+  m_text: 'Click the "Roll" button and select one (1) die to be the value of the
+    imposter card. '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 15e8888d0938947759fe3ee0162e6656, type: 2}
   m_sharedMaterial: {fileID: 421468523703021367, guid: 15e8888d0938947759fe3ee0162e6656, type: 2}
