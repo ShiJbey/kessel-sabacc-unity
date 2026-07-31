@@ -1,6 +1,5 @@
 using System;
 using KesselSabacc.Model;
-using KesselSabacc.Views;
 using UnityEngine;
 
 namespace KesselSabacc.Gameplay.GameStates
@@ -27,7 +26,13 @@ namespace KesselSabacc.Gameplay.GameStates
 				PlayerController playerController = gameController.Players[i];
 				if ( playerController.Model.IsDisqualified ) continue;
 
-				await RollImposterCards( gameController, playerController );
+				PlayerRoundResult roundResult = HandScoreUtils.CreateRoundResult(
+					playerController.Model, playerController.PlayerIndex
+				);
+
+				gameController.Model.RoundResults.Add( roundResult );
+
+				await RollImposterCards( roundResult, gameController, playerController );
 
 				var bloodCard = playerController.Model.GetFirstCardOfSuit( CardSuit.BLOOD );
 				var sandCard = playerController.Model.GetFirstCardOfSuit( CardSuit.SAND );
@@ -36,16 +41,19 @@ namespace KesselSabacc.Gameplay.GameStates
 				if ( bloodCard.CardType == CardType.SYLOP ) bloodCard.SetValue( sandCard.Value );
 				if ( sandCard.CardType == CardType.SYLOP ) sandCard.SetValue( bloodCard.Value );
 
-				PlayerRoundResult roundResult = HandScoreUtils.CreateRoundResult(
-					playerController.Model, playerController.PlayerIndex
-				);
-
-				gameController.Model.RoundResults.Add( roundResult );
+				roundResult.HandDifference = HandScoreUtils.GetCardDifference( playerController.Model );
+				roundResult.HandSize = HandScoreUtils.GetHandSize( playerController.Model );
+				roundResult.HasPrimeSabacc = HandScoreUtils.HasPrimeSabaccHand( playerController.Model );
+				roundResult.HasSabacc = HandScoreUtils.HasSabaccHand( playerController.Model );
+				roundResult.PerformanceScore = HandScoreUtils.GetPerformanceScore( playerController.Model );
 
 				await Awaitable.WaitForSecondsAsync( 0.5f );
 			}
 
 			gameController.Model.RoundResults.Sort();
+
+			await gameController.uiView.roundEndUI.SortRows();
+
 			var bestResult = gameController.Model.RoundResults.Results[0];
 
 			foreach ( PlayerRoundResult roundResult in gameController.Model.RoundResults.Results )
@@ -92,20 +100,24 @@ namespace KesselSabacc.Gameplay.GameStates
 			gameController.uiView.roundEndUI.ShowContinueButton();
 		}
 
-		public async Awaitable RollImposterCards(KesselSabaccGameController gameController, PlayerController playerController)
+		public async Awaitable RollImposterCards(PlayerRoundResult result,KesselSabaccGameController gameController, PlayerController playerController)
 		{
 			var sandCard = playerController.Model.GetFirstCardOfSuit( CardSuit.SAND );
 			if ( sandCard.CardType == CardType.IMPOSTER && !sandCard.IsValueModified() )
 			{
+				playerController.Model.IsRolling = true;
 				int value = await playerController.PerformDiceRoll( gameController );
-				sandCard.SetValue(value);
+				result.SandCard.SetValue(value);
+				playerController.Model.IsRolling = false;
 			}
 
 			var bloodCard = playerController.Model.GetFirstCardOfSuit( CardSuit.BLOOD );
 			if ( bloodCard.CardType == CardType.IMPOSTER && !bloodCard.IsValueModified() )
 			{
+				playerController.Model.IsRolling = true;
 				int value = await playerController.PerformDiceRoll( gameController );
-				bloodCard.SetValue(value);
+				result.BloodCard.SetValue(value);
+				playerController.Model.IsRolling = false;
 			}
 		}
 

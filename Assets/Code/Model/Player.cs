@@ -25,6 +25,7 @@ namespace KesselSabacc.Model
 		/// Is the player currently disqualified from play.
 		/// </summary>
 		private bool _isDisqualified;
+		private bool _isRolling;
 
 		public string Name
 		{
@@ -58,6 +59,16 @@ namespace KesselSabacc.Model
 			}
 		}
 
+		public bool IsRolling
+		{
+			get => _isRolling;
+			set
+			{
+				_isRolling = value;
+				OnIsRollingChanged?.Invoke(value);
+			}
+		}
+
 		public IReadOnlyList<Card> Hand => _hand;
 		public bool HasStoodThisTurn { get; set; }
 		public bool DrewCardThisTurn { get; set; }
@@ -67,6 +78,7 @@ namespace KesselSabacc.Model
 		public event Action<int> OnChipsChanged;
 		public event Action<int> OnChipsInvestedChanged;
 		public event Action OnDisqualified;
+		public event Action<bool> OnIsRollingChanged;
 
 		public Player(string name, int startingChips)
 		{

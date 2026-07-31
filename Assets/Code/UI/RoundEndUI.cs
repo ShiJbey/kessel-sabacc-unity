@@ -52,7 +52,7 @@ namespace KesselSabacc.UI
 
 		private void OnRoundResultAdded(PlayerRoundResult result)
 		{
-			StartCoroutine( AddScore( result ) );
+			AddScore( result );
 		}
 
 		private void OnRoundResultsCleared()
@@ -60,7 +60,7 @@ namespace KesselSabacc.UI
 			ClearScores();
 		}
 
-		public IEnumerator AddScore(PlayerRoundResult result)
+		public void AddScore(PlayerRoundResult result)
 		{
 			// Create new row
 			ScoreRow newRow = Instantiate( _scoreRowPrefab, _scoreRowContainer )
@@ -71,17 +71,15 @@ namespace KesselSabacc.UI
 			newRow.Initialize( result );
 
 			_scoreRows.Add( newRow );
-
-			// Sort by score (descending)
-			_scoreRows.Sort( (a, b) => b.Result.CompareTo( a.Result ) );
-
-			yield return null;
-
-			// Update ranks and reorder
-			yield return ReorderRows();
 		}
 
-		private IEnumerator ReorderRows()
+		public async Awaitable SortRows()
+		{
+			_scoreRows.Sort( (a, b) => b.Result.CompareTo( a.Result ) );
+			await ReorderRows();
+		}
+
+		private async Awaitable ReorderRows()
 		{
 			// Capture starting positions before reordering
 			Dictionary<ScoreRow, Vector2> startPositions = new Dictionary<ScoreRow, Vector2>();
@@ -99,7 +97,7 @@ namespace KesselSabacc.UI
 
 			// Force layout rebuild to get target positions
 			LayoutRebuilder.ForceRebuildLayoutImmediate( _scoreRowContainer.GetComponent<RectTransform>() );
-			yield return null; // Wait one frame for layout
+			await Awaitable.NextFrameAsync(); // Wait one frame for layout
 
 			// Capture target positions
 			Dictionary<ScoreRow, Vector2> targetPositions = new Dictionary<ScoreRow, Vector2>();
@@ -124,7 +122,7 @@ namespace KesselSabacc.UI
 					row.rectTransform.anchoredPosition = Vector2.Lerp( start, target, t );
 				}
 
-				yield return null;
+				await Awaitable.NextFrameAsync();
 			}
 
 			// Ensure final positions are exact

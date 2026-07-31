@@ -44,6 +44,7 @@ namespace KesselSabacc.UI.Components
 				_player.OnChipsChanged -= OnPlayerChipsChanged;
 				_player.OnChipsInvestedChanged -= OnPlayerChipsInvestedChanged;
 				_player.OnDisqualified -= OnPlayerDisqualified;
+				_player.OnIsRollingChanged -= OnRollingStatusChanged;
 				_player = null;
 			}
 		}
@@ -64,6 +65,7 @@ namespace KesselSabacc.UI.Components
 			_player.OnChipsChanged += OnPlayerChipsChanged;
 			_player.OnChipsInvestedChanged += OnPlayerChipsInvestedChanged;
 			_player.OnDisqualified += OnPlayerDisqualified;
+			_player.OnIsRollingChanged += OnRollingStatusChanged;
 		}
 
 		public void ShowRollingDiceOverlay()
@@ -119,6 +121,20 @@ namespace KesselSabacc.UI.Components
 		private void OnPlayerChipsInvestedChanged(int chips)
 		{
 			_chipsInvestedCounter.SetChipCount(chips);
+		}
+
+		private void OnRollingStatusChanged(bool isRolling)
+		{
+			if (isRolling)
+			{
+				ShowRollingDiceOverlay();
+			}
+			else
+			{
+				HideRollingDiceOverlay();
+				SetSandCardValue( _result.SandCard.Value );
+				SetBloodCardValue( _result.BloodCard.Value );
+			}
 		}
 	}
 }

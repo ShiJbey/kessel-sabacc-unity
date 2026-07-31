@@ -11,6 +11,7 @@ namespace KesselSabacc.Model
 
 		public event Action<PlayerRoundResult> OnResultAdded;
 		public event Action OnResultsCleared;
+		public event Action OnSort;
 
 		public void Add(PlayerRoundResult result)
 		{
@@ -21,6 +22,7 @@ namespace KesselSabacc.Model
 		public void Sort()
 		{
 			_results.Sort( (a, b) => b.CompareTo( a ) );
+			OnSort?.Invoke();
 		}
 
 		public void Clear()
