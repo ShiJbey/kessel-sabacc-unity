@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using KesselSabacc.Model;
 using UnityEngine;
@@ -11,6 +12,10 @@ namespace KesselSabacc.Gameplay
 		public bool IsTakingTurn { get; set; } = false;
 		public KesselSabaccGameController GameController { get; private set; }
 
+		public event Action OnTurnStarted;
+		public event Action OnTurnEnded;
+		public event Action OnThinkingStarted;
+		public event Action OnThinkingEnded;
 
 		public virtual void Initialize(int playerIndex, Player model, KesselSabaccGameController gameController)
 		{
@@ -25,8 +30,9 @@ namespace KesselSabacc.Gameplay
 
 		public async Awaitable TakeTurn(KesselSabaccGameController gameController)
 		{
+			OnTurnStarted?.Invoke();
 			StartTurn();
-
+			await Awaitable.NextFrameAsync();
 
 			while ( !gameController.Model.IsPlayerTurnOver )
 			{
@@ -35,11 +41,17 @@ namespace KesselSabacc.Gameplay
 				if ( legalActions.Count == 0 )
 					break;
 
+				OnThinkingStarted?.Invoke();
+				await Awaitable.NextFrameAsync();
+
 				PlayerAction chosenAction = await SelectAction( gameController, legalActions );
+
+				OnThinkingEnded?.Invoke();
 				await chosenAction.Execute( gameController );
 			}
 
-
+			OnTurnEnded?.Invoke();
+			await Awaitable.NextFrameAsync();
 			EndTurn();
 		}
 

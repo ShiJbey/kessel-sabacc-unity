@@ -56,8 +56,8 @@ namespace KesselSabacc.Views
 
 		public void Initialize(KesselSabaccGameController gameController)
 		{
-			hud.Initialize( gameController.Model, 0 );
-			tableView.Initialize( gameController );
+			hud.Initialize( gameController, 0 );
+			tableView.Initialize( gameController, 0 );
 			roundEndUI.Initialize( gameController );
 			gameOverNotificationUI.Initialize( gameController );
 		}

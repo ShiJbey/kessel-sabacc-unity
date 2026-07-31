@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using KesselSabacc.Gameplay;
 using KesselSabacc.Model;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -24,17 +25,50 @@ namespace KesselSabacc.Views
 		[SerializeField]
 		private float _cardRepositionAnimTime = 0.15f;
 
+		[SerializeField]
+		private SpriteRenderer _playerIndicator;
+
+		[SerializeField]
+		private GameObject _thinkingIndicator;
+
 		/// <summary>
 		/// All the cards currently in the player's hand.
 		/// </summary>
 		[SerializeField]
 		private List<CardView> _cards = new();
 
+		private PlayerController _player;
+
 		public IReadOnlyList<CardView> Cards => _cards;
 
 		private IEnumerator Start()
 		{
+			if (_thinkingIndicator != null)
+				_thinkingIndicator.SetActive(false);
+
 			yield return UpdateCardPositions();
+		}
+
+		private void OnDestroy()
+		{
+			if (_player != null)
+			{
+				_player.OnThinkingStarted -= OnPlayerThinkingStarted;
+				_player.OnThinkingEnded -= OnPlayerThinkingEnded;
+			}
+		}
+
+		public void Initialize(PlayerController player, Color color)
+		{
+			_player = player;
+			_player.OnThinkingStarted += OnPlayerThinkingStarted;
+			_player.OnThinkingEnded += OnPlayerThinkingEnded;
+			SetPlayerColor(color);
+		}
+
+		public void SetPlayerColor(Color color)
+		{
+			_playerIndicator.color = color;
 		}
 
 		/// <summary>
@@ -82,6 +116,18 @@ namespace KesselSabacc.Views
 				Destroy( cardView.gameObject );
 			}
 			_cards.Clear();
+		}
+
+		private void OnPlayerThinkingStarted()
+		{
+			if (_thinkingIndicator != null)
+				_thinkingIndicator.SetActive(true);
+		}
+
+		private void OnPlayerThinkingEnded()
+		{
+			if (_thinkingIndicator != null)
+				_thinkingIndicator.SetActive(false);
 		}
 
 		private async Awaitable UpdateCardPositions()

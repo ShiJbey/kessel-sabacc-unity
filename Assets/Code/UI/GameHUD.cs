@@ -1,4 +1,5 @@
 using System;
+using KesselSabacc.Gameplay;
 using KesselSabacc.Model;
 using KesselSabacc.UI.Components;
 using KesselSabacc.Views;
@@ -39,11 +40,11 @@ namespace KesselSabacc.UI
 			}
 		}
 
-		public void Initialize(KesselSabaccGameModel game, int playerIndex)
+		public void Initialize(KesselSabaccGameController gameController, int playerIndex)
 		{
-			_turnCounter.Initialize( game );
+			_turnCounter.Initialize( gameController.Model );
 
-			_player = game.Players[playerIndex];
+			_player = gameController.Players[playerIndex].Model;
 
 			_playerChipsRemaining.SetCurrentChipCount( _player.Chips );
 			_playerChipsInvested.SetChipCount( 0 );
@@ -52,11 +53,11 @@ namespace KesselSabacc.UI
 			_player.OnChipsInvestedChanged += OnPlayerChipsInvestedChanged;
 
 			int opponentUIIndex = 0;
-			for ( int i = 0; i < game.Players.Count; i++ )
+			for ( int i = 0; i < gameController.Players.Count; i++ )
 			{
 				if ( i == playerIndex ) continue;
 
-				_opponentUI[opponentUIIndex].infoPanel.Initialize( game.Players[i] );
+				_opponentUI[opponentUIIndex].infoPanel.Initialize( gameController.Players[i], gameController.playerColors[i] );
 				opponentUIIndex++;
 			}
 

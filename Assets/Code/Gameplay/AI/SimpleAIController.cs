@@ -14,7 +14,7 @@ namespace KesselSabacc.Gameplay.AI
 
 		protected override async Awaitable<PlayerAction> SelectAction(KesselSabaccGameController gameController, IReadOnlyList<PlayerAction> legalActions)
 		{
-			await Awaitable.NextFrameAsync();
+			await Awaitable.WaitForSecondsAsync(1.5f);
 			return legalActions[Random.Range( 0, legalActions.Count )];
 		}
 	}

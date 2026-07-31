@@ -21,6 +21,7 @@ namespace KesselSabacc.Gameplay
 
 		[Header( "Configuration Settings" )]
 		public DeckConfiguration defaultDeckConfig;
+		public Color[] playerColors;
 
 		[Header( "Asset References" )]
 		public GameObject cardViewPrefab;
