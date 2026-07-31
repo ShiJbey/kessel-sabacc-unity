@@ -47,6 +47,8 @@ namespace KesselSabacc.Gameplay.GameStates
 				roundResult.HasSabacc = HandScoreUtils.HasSabaccHand( playerController.Model );
 				roundResult.PerformanceScore = HandScoreUtils.GetPerformanceScore( playerController.Model );
 
+				roundResult.Update();
+
 				await Awaitable.WaitForSecondsAsync( 0.5f );
 			}
 
