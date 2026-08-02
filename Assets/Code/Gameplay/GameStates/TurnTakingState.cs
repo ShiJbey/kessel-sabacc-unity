@@ -1,57 +1,32 @@
-using System.Collections;
 using UnityEngine;
 
 namespace KesselSabacc.Gameplay.GameStates
 {
-	public class TurnTakingState : IGameState
+	public class TurnTakingState : GameState
 	{
-		private KesselSabaccGameController _gameController;
-
-		public TurnTakingState(KesselSabaccGameController gameController)
+		public override async Awaitable OnEnter(KesselSabaccGameController gameController)
 		{
-			_gameController = gameController;
-		}
-
-		public IEnumerator OnEnter()
-		{
-			_gameController.AdvanceRound();
-
-			yield return _gameController.uiView.roundNotificationUI.PlayRoundStartAnim(
-				_gameController.Model.CurrentRound
+			await gameController.uiView.roundNotificationUI.PlayRoundStartAnim(
+				gameController.Model.CurrentRound
 			);
 
-			while ( !_gameController.Model.IsRoundOver )
+			// Start the first player turn of the round
+			while ( !gameController.Model.IsRoundOver )
 			{
-				while ( !_gameController.Model.IsTurnOver )
+				while ( !gameController.Model.IsTurnOver )
 				{
-					int playerIndex = _gameController.Model.CurrentTurnTaker;
-					PlayerController playerController = _gameController.Players[playerIndex];
-					if ( !playerController.Model.IsDisqualified )
+					var player = gameController.Players[gameController.Model.CurrentTurnTaker];
+					if ( !player.Model.IsDisqualified )
 					{
-						yield return playerController.TakeTurn( _gameController );
+						await player.TakeTurn( gameController );
 					}
-					_gameController.AdvanceTurnTaker();
+					gameController.AdvanceTurnTaker();
 				}
 
-				_gameController.AdvanceTurn();
+				gameController.AdvanceTurn();
 			}
 
-			_gameController.GoToRoundOverState();
-		}
-
-		public IEnumerator OnExit()
-		{
-			yield return null;
-		}
-
-		public void OnInput()
-		{
-
-		}
-
-		public void OnUpdate()
-		{
-
+			gameController.GoToRoundOverState();
 		}
 	}
 }

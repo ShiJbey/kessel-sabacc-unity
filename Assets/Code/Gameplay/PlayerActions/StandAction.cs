@@ -1,6 +1,5 @@
-using System.Collections;
-using UnityEngine;
 using KesselSabacc.Model;
+using UnityEngine;
 
 namespace KesselSabacc.Gameplay.PlayerActions
 {
@@ -9,21 +8,21 @@ namespace KesselSabacc.Gameplay.PlayerActions
 	/// </summary>
 	public class StandAction : PlayerAction
 	{
-		public StandAction(PlayerController performer) : base( performer )
+		public readonly int PlayerIndex;
+
+		public override ActionType ActionType => ActionType.STAND;
+
+		public StandAction(int playerIndex)
 		{
+			PlayerIndex = playerIndex;
 		}
 
-		public override void ApplyToModel(KesselSabaccGameModel model)
+		public override async Awaitable Execute(KesselSabaccGameController gameController)
 		{
-
-		}
-
-		public override IEnumerator Execute(KesselSabaccGameController gameController)
-		{
-			Debug.Log( $"{Performer.Model.Name} has stood." );
-			Performer.Model.HasStoodThisTurn = true;
-			Performer.IsTakingTurn = false;
-			yield return null;
+			Player player = gameController.Model.Players[PlayerIndex];
+			player.HasStoodThisTurn = true;
+			gameController.Model.IsPlayerTurnOver = true;
+			await Awaitable.NextFrameAsync();
 		}
 	}
 }

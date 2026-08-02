@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Threading.Tasks;
 using DG.Tweening;
 using KesselSabacc.Model;
@@ -132,15 +131,15 @@ namespace KesselSabacc.Views
 			return sequence.AsyncWaitForCompletion();
 		}
 
-		public IEnumerator Flip()
+		public async Awaitable Flip()
 		{
 			if ( _isFaceUp )
 			{
-				yield return ShowBackAsync();
+				await ShowBackAsync();
 			}
 			else
 			{
-				yield return ShowFrontAsync();
+				await ShowFrontAsync();
 			}
 		}
 

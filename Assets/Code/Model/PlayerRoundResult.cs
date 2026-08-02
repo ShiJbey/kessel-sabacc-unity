@@ -18,6 +18,13 @@ namespace KesselSabacc.Model
 		public bool HasSabacc { get; set; }
 		public bool WonRound { get; set; }
 
+		public event Action OnResultUpdated;
+
+		public void Update()
+		{
+			OnResultUpdated?.Invoke();
+		}
+
 		public int CompareTo(PlayerRoundResult other)
 		{
 			if ( HasPrimeSabacc && !other.HasPrimeSabacc ) return 1;

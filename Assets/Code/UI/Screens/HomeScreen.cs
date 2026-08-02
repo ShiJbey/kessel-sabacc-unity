@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -21,11 +22,15 @@ namespace KesselSabacc.UI.Screens
 		[SerializeField]
 		private Button _exitButton;
 
+		[SerializeField]
+		private TMP_Text _versionText;
+
 		private MainMenuController _mainMenuController;
 
 		private void Start()
 		{
 			EventSystem.current.firstSelectedGameObject = _playButton.gameObject;
+			_versionText.SetText(Application.version);
 		}
 
 		public void Initialize(MainMenuController mainMenuController)

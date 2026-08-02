@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using KesselSabacc.Gameplay;
-using KesselSabacc.Model;
+using KesselSabacc.Gameplay.PlayerActions;
 using KesselSabacc.UI.Components;
-using KesselSabacc.Views;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,8 +25,6 @@ namespace KesselSabacc.UI
 
 		private List<DrawableCardUI> _cardViews = new();
 
-		public event Action<int> OnCardDrawn;
-
 		private void Start()
 		{
 			_cardPrefab.gameObject.SetActive( false );
@@ -43,7 +40,7 @@ namespace KesselSabacc.UI
 			_backButton.onClick.RemoveListener( OnBackButtonClicked );
 		}
 
-		public void UpdateView(KesselSabaccGameView gameView)
+		public void UpdateView(IReadOnlyList<DrawCardAction> actions, Action<PlayerAction> onChosen)
 		{
 			foreach ( var view in _cardViews )
 			{
@@ -51,29 +48,28 @@ namespace KesselSabacc.UI
 			}
 			_cardViews.Clear();
 
-			var cardView = InstantiateCardView( gameView.tableView.SandDiscardPileView.Peek() );
-			cardView.OnClick += () => { OnCardDrawn?.Invoke( 0 ); };
+			var cardView = InstantiateCardView( actions[0].Card.FrontSprite );
+			cardView.OnClick += () => { onChosen( actions[0] ); };
 			_cardViews.Add( cardView );
 
-
-			cardView = InstantiateCardView( gameView.tableView.SandDeckView.Peek() );
-			cardView.OnClick += () => { OnCardDrawn?.Invoke( 1 ); };
+			cardView = InstantiateCardView( actions[1].Card.BackSprite );
+			cardView.OnClick += () => { onChosen( actions[1] ); };
 			_cardViews.Add( cardView );
 
-			cardView = InstantiateCardView( gameView.tableView.BloodDeckView.Peek() );
-			cardView.OnClick += () => { OnCardDrawn?.Invoke( 2 ); };
+			cardView = InstantiateCardView( actions[2].Card.BackSprite );
+			cardView.OnClick += () => { onChosen( actions[2] ); };
 			_cardViews.Add( cardView );
 
-			cardView = InstantiateCardView( gameView.tableView.BloodDiscardPileView.Peek() );
-			cardView.OnClick += () => { OnCardDrawn?.Invoke( 3 ); };
+			cardView = InstantiateCardView( actions[3].Card.FrontSprite );
+			cardView.OnClick += () => { onChosen( actions[3] ); };
 			_cardViews.Add( cardView );
 		}
 
-		public DrawableCardUI InstantiateCardView(CardView cardView)
+		public DrawableCardUI InstantiateCardView(Sprite cardSprite)
 		{
 			var drawableCardView = Instantiate( _cardPrefab, _drawableCardContainer );
 			drawableCardView.gameObject.SetActive( true );
-			drawableCardView.Initialize( cardView.Sprite );
+			drawableCardView.Initialize( cardSprite );
 			return drawableCardView;
 		}
 

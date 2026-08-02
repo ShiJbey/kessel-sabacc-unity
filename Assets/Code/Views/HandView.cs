@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using KesselSabacc.Gameplay;
 using KesselSabacc.Model;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -24,17 +25,50 @@ namespace KesselSabacc.Views
 		[SerializeField]
 		private float _cardRepositionAnimTime = 0.15f;
 
+		[SerializeField]
+		private SpriteRenderer _playerIndicator;
+
+		[SerializeField]
+		private GameObject _thinkingIndicator;
+
 		/// <summary>
 		/// All the cards currently in the player's hand.
 		/// </summary>
 		[SerializeField]
 		private List<CardView> _cards = new();
 
+		private PlayerController _player;
+
 		public IReadOnlyList<CardView> Cards => _cards;
 
 		private IEnumerator Start()
 		{
+			if (_thinkingIndicator != null)
+				_thinkingIndicator.SetActive(false);
+
 			yield return UpdateCardPositions();
+		}
+
+		private void OnDestroy()
+		{
+			if (_player != null)
+			{
+				_player.OnThinkingStarted -= OnPlayerThinkingStarted;
+				_player.OnThinkingEnded -= OnPlayerThinkingEnded;
+			}
+		}
+
+		public void Initialize(PlayerController player, Color color)
+		{
+			_player = player;
+			_player.OnThinkingStarted += OnPlayerThinkingStarted;
+			_player.OnThinkingEnded += OnPlayerThinkingEnded;
+			SetPlayerColor(color);
+		}
+
+		public void SetPlayerColor(Color color)
+		{
+			_playerIndicator.color = color;
 		}
 
 		/// <summary>
@@ -42,13 +76,13 @@ namespace KesselSabacc.Views
 		/// </summary>
 		/// <param name="cardView"></param>
 		/// <returns></returns>
-		public IEnumerator AddCard(CardView cardView)
+		public async Awaitable AddCard(CardView cardView)
 		{
 			_cards.Add( cardView );
 
 			cardView.transform.SetParent( transform );
 
-			yield return UpdateCardPositions();
+			await UpdateCardPositions();
 		}
 
 		public CardView GetCard(Card card)
@@ -63,7 +97,7 @@ namespace KesselSabacc.Views
 			return null;
 		}
 
-		public IEnumerator RemoveCard(Card card)
+		public async Awaitable RemoveCard(Card card)
 		{
 			for ( int i = _cards.Count - 1; i >= 0; i-- )
 			{
@@ -72,7 +106,7 @@ namespace KesselSabacc.Views
 					_cards.RemoveAt( i );
 				}
 			}
-			yield return UpdateCardPositions();
+			await UpdateCardPositions();
 		}
 
 		public void Clear()
@@ -84,9 +118,30 @@ namespace KesselSabacc.Views
 			_cards.Clear();
 		}
 
-		private IEnumerator UpdateCardPositions()
+		public void RevealHand()
 		{
-			if ( _cards.Count == 0 ) yield break;
+			foreach ( CardView cardView in Cards )
+			{
+				_ = cardView.ShowFrontAsync();
+			}
+		}
+
+		private void OnPlayerThinkingStarted()
+		{
+			if (_thinkingIndicator != null)
+				_thinkingIndicator.SetActive(true);
+		}
+
+		private void OnPlayerThinkingEnded()
+		{
+			if (_thinkingIndicator != null)
+				_thinkingIndicator.SetActive(false);
+		}
+
+		private async Awaitable UpdateCardPositions()
+		{
+			if ( _cards.Count == 0 )
+				return;
 
 			// Spline is measured from 0 to 1. Players can have a maximum of
 			// 3 cards in their hand at once (drawing during sabacc). We space
@@ -122,7 +177,7 @@ namespace KesselSabacc.Views
 				sequence.Join( _cards[i].transform.DORotate( finalRotation, _cardRepositionAnimTime ) );
 			}
 
-			yield return sequence.WaitForCompletion();
+			await sequence.AsyncWaitForCompletion();
 		}
 	}
 }

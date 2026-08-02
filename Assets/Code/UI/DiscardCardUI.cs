@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using KesselSabacc.Gameplay;
+using KesselSabacc.Gameplay.PlayerActions;
 using KesselSabacc.Model;
 using KesselSabacc.UI.Components;
 using UnityEngine;
@@ -19,9 +21,7 @@ namespace KesselSabacc.UI
 
 		private List<GameObject> _selectableCards = new();
 
-		public event Action<Card> OnCardSelected;
-
-		public void UpdateView(Card[] disposableCards, Card otherCard)
+		public void UpdateView(IReadOnlyList<DiscardCardAction> actions, Action<PlayerAction> onChosen)
 		{
 			foreach ( GameObject cardUI in _selectableCards )
 			{
@@ -29,7 +29,7 @@ namespace KesselSabacc.UI
 			}
 			_selectableCards.Clear();
 
-			foreach ( Card card in disposableCards )
+			foreach ( DiscardCardAction action in actions )
 			{
 				GameObject obj = Instantiate( _selectableCardPrefab, _selectableCardsContainer );
 
@@ -37,19 +37,12 @@ namespace KesselSabacc.UI
 
 				DrawableCardUI selectableCardUI = obj.GetComponent<DrawableCardUI>();
 
-				selectableCardUI.Initialize( card.FrontSprite );
+				selectableCardUI.Initialize( action.Card.FrontSprite );
 
-				selectableCardUI.OnClick += () => HandleCardSelected( card );
+				selectableCardUI.OnClick += () => { onChosen( action ); };
 
 				_selectableCards.Add( obj );
 			}
-
-			_otherCard.sprite = otherCard.FrontSprite;
-		}
-
-		public void HandleCardSelected(Card card)
-		{
-			OnCardSelected?.Invoke( card );
 		}
 	}
 }

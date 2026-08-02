@@ -1,38 +1,16 @@
 using System.Collections;
+using UnityEngine;
 
 namespace KesselSabacc.Gameplay.GameStates
 {
-	public class GameOverState : IGameState
+	public class GameOverState : GameState
 	{
-
-		private KesselSabaccGameController _gameController;
-
-		public GameOverState(KesselSabaccGameController gameController)
+		public override async Awaitable OnEnter(KesselSabaccGameController gameController)
 		{
-			_gameController = gameController;
-		}
-
-		public IEnumerator OnEnter()
-		{
-			_gameController.uiView.gameOverNotificationUI.ShowWinner(
-				_gameController.Model.GetWinner().Name
+			gameController.uiView.gameOverNotificationUI.ShowWinner(
+				gameController.Model.GetWinner().Name
 			);
-			yield return null;
-		}
-
-		public IEnumerator OnExit()
-		{
-			yield return null;
-		}
-
-		public void OnInput()
-		{
-
-		}
-
-		public void OnUpdate()
-		{
-
+			await Awaitable.NextFrameAsync();
 		}
 	}
 }

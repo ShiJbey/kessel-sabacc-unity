@@ -1,31 +1,63 @@
-using System.Collections;
+using System;
+using System.Collections.Generic;
 using KesselSabacc.Model;
+using UnityEngine;
 
 namespace KesselSabacc.Gameplay
 {
-	public abstract class PlayerController
+	public abstract class PlayerController : MonoBehaviour
 	{
-		public Player Model { get; }
-		public int PlayerIndex { get; }
-		public bool IsTakingTurn { get; set; }
+		public Player Model { get; private set; }
+		public int PlayerIndex { get; private set; }
+		public bool IsTakingTurn { get; set; } = false;
+		public KesselSabaccGameController GameController { get; private set; }
 
-		public PlayerController(int playerIndex, Player model)
+		public event Action OnTurnStarted;
+		public event Action OnTurnEnded;
+		public event Action OnThinkingStarted;
+		public event Action OnThinkingEnded;
+
+		public virtual void Initialize(int playerIndex, Player model, KesselSabaccGameController gameController)
 		{
 			PlayerIndex = playerIndex;
 			Model = model;
+			GameController = gameController;
 		}
 
-		public virtual void Initialize(KesselSabaccGameController gameController) { }
+		public virtual void StartTurn() { }
 
-		// /// <summary>
-		// /// Select an action to perform from among those given.
-		// /// </summary>
-		// /// <param name="actions"></param>
-		// /// <returns></returns>
-		// public abstract Task<PlayerAction> SelectAction(IReadOnlyList<PlayerAction> actions);
+		public virtual void EndTurn() { }
 
-		public abstract IEnumerator TakeTurn(KesselSabaccGameController gameController);
+		public async Awaitable TakeTurn(KesselSabaccGameController gameController)
+		{
+			OnTurnStarted?.Invoke();
+			StartTurn();
+			await Awaitable.NextFrameAsync();
 
-		public abstract IEnumerator AssignImposterValue(KesselSabaccGameController gameController, Card card);
+			while ( !gameController.Model.IsPlayerTurnOver )
+			{
+				List<PlayerAction> legalActions = gameController.Model.GetLegalActions( PlayerIndex );
+
+				if ( legalActions.Count == 0 )
+					break;
+
+				OnThinkingStarted?.Invoke();
+				await Awaitable.NextFrameAsync();
+
+				PlayerAction chosenAction = await SelectAction( gameController, legalActions );
+
+				OnThinkingEnded?.Invoke();
+				await chosenAction.Execute( gameController );
+			}
+
+			OnTurnEnded?.Invoke();
+			await Awaitable.NextFrameAsync();
+			EndTurn();
+		}
+
+		protected abstract Awaitable<PlayerAction> SelectAction(
+			KesselSabaccGameController gameController, IReadOnlyList<PlayerAction> legalActions);
+
+		public abstract Awaitable<int> PerformDiceRoll(KesselSabaccGameController gameController);
 	}
 }

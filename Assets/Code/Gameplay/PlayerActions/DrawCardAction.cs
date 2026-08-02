@@ -1,7 +1,5 @@
-using System.Collections;
 using UnityEngine;
 using KesselSabacc.Model;
-using KesselSabacc.Views;
 
 namespace KesselSabacc.Gameplay.PlayerActions
 {
@@ -10,29 +8,26 @@ namespace KesselSabacc.Gameplay.PlayerActions
 	/// </summary>
 	public class DrawCardAction : PlayerAction
 	{
-		private CardStackView _cardStackView;
-		private Card _card;
+		public readonly int PlayerIndex;
+		public readonly CardStack CardStack;
+		public readonly Card Card;
 
-		public DrawCardAction(PlayerController performer, Card card, CardStackView cardStackView) : base( performer )
+		public override ActionType ActionType => ActionType.DRAW_CARD;
+
+		public DrawCardAction(int playerIndex, Card card, CardStack cardStack)
 		{
-			_cardStackView = cardStackView;
-			_card = card;
+			PlayerIndex = playerIndex;
+			CardStack = cardStack;
+			Card = card;
 		}
 
-		public override void ApplyToModel(KesselSabaccGameModel model)
+		public override async Awaitable Execute(KesselSabaccGameController gameController)
 		{
-
-		}
-
-		public override IEnumerator Execute(KesselSabaccGameController gameController)
-		{
-			yield return gameController.DealCardToPlayer( _cardStackView, Performer.PlayerIndex, (cardView) =>
-			{
-				Performer.Model.Chips -= 1;
-				Performer.Model.ChipsInvested += 1;
-				Performer.Model.DrewCardThisTurn = true;
-				Debug.Log( $"{Performer.Model.Name} drew {_card}." );
-			} );
+			await gameController.DealCardToPlayer( CardStack, PlayerIndex );
+			Player player = gameController.Model.Players[PlayerIndex];
+			player.Chips -= 1;
+			player.ChipsInvested += 1;
+			player.DrewCardThisTurn = true;
 		}
 	}
 }

@@ -1,3 +1,4 @@
+using KesselSabacc.Gameplay;
 using KesselSabacc.Model;
 using TMPro;
 using UnityEngine;
@@ -15,8 +16,13 @@ namespace KesselSabacc.UI.Components
 		private Image _playerImage;
 		[SerializeField]
 		private TMP_Text _playerName;
+		[SerializeField]
+		private Animator _animator;
+		[SerializeField]
+		private Image _playerColorIndicator;
 
-		private Player _player;
+
+		private PlayerController _player;
 
 		protected override void OnDestroy()
 		{
@@ -24,21 +30,31 @@ namespace KesselSabacc.UI.Components
 
 			if (_player != null)
 			{
-				_player.OnChipsChanged -= OnPlayerChipsChanged;
-				_player.OnChipsInvestedChanged -= OnPlayerChipsInvestedChanged;
+				_player.Model.OnChipsChanged -= OnPlayerChipsChanged;
+				_player.Model.OnChipsInvestedChanged -= OnPlayerChipsInvestedChanged;
+				_player.OnTurnStarted -= OnPlayerTurnStarted;
+				_player.OnTurnEnded -= OnPlayerTurnEnded;
 				_player = null;
 			}
 		}
 
-		public void Initialize(Player player)
+		public void Initialize(PlayerController player, Color color)
 		{
 			_player = player;
-			_chipsView.SetMaxChipCount(player.StartingChips);
-			_chipsView.SetCurrentChipCount(player.Chips);
+			_chipsView.SetMaxChipCount(player.Model.StartingChips);
+			_chipsView.SetCurrentChipCount(player.Model.Chips);
 			_investedChipsView.SetChipCount(0);
-			_player.OnChipsChanged += OnPlayerChipsChanged;
-			_player.OnChipsInvestedChanged += OnPlayerChipsInvestedChanged;
-			SetPlayerName( player.Name );
+			_player.Model.OnChipsChanged += OnPlayerChipsChanged;
+			_player.Model.OnChipsInvestedChanged += OnPlayerChipsInvestedChanged;
+			_player.OnTurnStarted += OnPlayerTurnStarted;
+			_player.OnTurnEnded += OnPlayerTurnEnded;
+			SetPlayerName( player.Model.Name );
+			SetPlayerColor(color);
+		}
+
+		public void SetPlayerColor(Color color)
+		{
+			_playerColorIndicator.color = color;
 		}
 
 		public void UpdateView(Player player)
@@ -64,6 +80,16 @@ namespace KesselSabacc.UI.Components
 		private void OnPlayerChipsInvestedChanged(int chips)
 		{
 			_investedChipsView.SetChipCount(chips);
+		}
+
+		private void OnPlayerTurnStarted()
+		{
+			_animator.SetBool("Focused", true);
+		}
+
+		private void OnPlayerTurnEnded()
+		{
+			_animator.SetBool("Focused", false);
 		}
 	}
 }

@@ -23,9 +23,9 @@ namespace KesselSabacc.UI
 		private float _tweenDuration = 0.35f;
 		[SerializeField] private AnimationCurve _tweenCurve = AnimationCurve.EaseInOut( 0, 0, 1, 1 );
 
-		private List<ScoreRow> _scoreRows = new();
+		private KesselSabaccGameController _gameController;
 
-		public event Action OnNextButtonClicked;
+		private List<ScoreRow> _scoreRows = new();
 
 		protected override void Awake()
 		{
@@ -33,10 +33,11 @@ namespace KesselSabacc.UI
 			_scoreRowPrefab.SetActive( false );
 		}
 
-		public void Initialize(KesselSabaccGameModel game)
+		public void Initialize(KesselSabaccGameController gameController)
 		{
-			game.RoundResults.OnResultAdded += OnRoundResultAdded;
-			game.RoundResults.OnResultsCleared += OnRoundResultsCleared;
+			_gameController = gameController;
+			gameController.Model.RoundResults.OnResultAdded += OnRoundResultAdded;
+			gameController.Model.RoundResults.OnResultsCleared += OnRoundResultsCleared;
 		}
 
 		protected override void SubscribeToEvents()
@@ -51,7 +52,7 @@ namespace KesselSabacc.UI
 
 		private void OnRoundResultAdded(PlayerRoundResult result)
 		{
-			StartCoroutine( AddScore( result ) );
+			AddScore( result );
 		}
 
 		private void OnRoundResultsCleared()
@@ -59,7 +60,7 @@ namespace KesselSabacc.UI
 			ClearScores();
 		}
 
-		public IEnumerator AddScore(PlayerRoundResult result)
+		public void AddScore(PlayerRoundResult result)
 		{
 			// Create new row
 			ScoreRow newRow = Instantiate( _scoreRowPrefab, _scoreRowContainer )
@@ -70,17 +71,15 @@ namespace KesselSabacc.UI
 			newRow.Initialize( result );
 
 			_scoreRows.Add( newRow );
-
-			// Sort by score (descending)
-			_scoreRows.Sort( (a, b) => b.Result.CompareTo( a.Result ) );
-
-			yield return null;
-
-			// Update ranks and reorder
-			yield return ReorderRows();
 		}
 
-		private IEnumerator ReorderRows()
+		public async Awaitable SortRows()
+		{
+			_scoreRows.Sort( (a, b) => b.Result.CompareTo( a.Result ) );
+			await ReorderRows();
+		}
+
+		private async Awaitable ReorderRows()
 		{
 			// Capture starting positions before reordering
 			Dictionary<ScoreRow, Vector2> startPositions = new Dictionary<ScoreRow, Vector2>();
@@ -98,7 +97,7 @@ namespace KesselSabacc.UI
 
 			// Force layout rebuild to get target positions
 			LayoutRebuilder.ForceRebuildLayoutImmediate( _scoreRowContainer.GetComponent<RectTransform>() );
-			yield return null; // Wait one frame for layout
+			await Awaitable.NextFrameAsync(); // Wait one frame for layout
 
 			// Capture target positions
 			Dictionary<ScoreRow, Vector2> targetPositions = new Dictionary<ScoreRow, Vector2>();
@@ -123,7 +122,7 @@ namespace KesselSabacc.UI
 					row.rectTransform.anchoredPosition = Vector2.Lerp( start, target, t );
 				}
 
-				yield return null;
+				await Awaitable.NextFrameAsync();
 			}
 
 			// Ensure final positions are exact
@@ -155,7 +154,7 @@ namespace KesselSabacc.UI
 		private void HandleNextButtonClicked()
 		{
 			UIFeedbackManager.Instance.PlayButtonClickSound();
-			OnNextButtonClicked?.Invoke();
+			_gameController.AdvanceRound();
 		}
 	}
 }

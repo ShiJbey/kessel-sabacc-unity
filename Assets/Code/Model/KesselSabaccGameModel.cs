@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using KesselSabacc.Gameplay;
+using KesselSabacc.Gameplay.PlayerActions;
 
 namespace KesselSabacc.Model
 {
@@ -20,6 +22,7 @@ namespace KesselSabacc.Model
 		public CardStack BloodDiscardPile { get; }
 		public bool IsRoundOver { get; private set; }
 		public bool IsTurnOver { get; private set; }
+		public bool IsPlayerTurnOver { get; set; }
 		public RoundResultList RoundResults { get; private set; }
 
 		public event Action<int> OnTurnStart;
@@ -27,7 +30,7 @@ namespace KesselSabacc.Model
 		public KesselSabaccGameModel()
 		{
 			_players = new List<Player>();
-			CurrentRound = 0;
+			CurrentRound = 1;
 			CurrentTurn = 1;
 			PlayerWhoStartedTurn = 0;
 			CurrentTurnTaker = 0;
@@ -49,7 +52,9 @@ namespace KesselSabacc.Model
 		{
 			CurrentRound++;
 			CurrentTurn = 1;
-			CurrentTurnTaker = 0;
+			PlayerWhoStartedTurn = GetNextEligiblePlayerIndex(PlayerWhoStartedTurn);
+			CurrentTurnTaker = PlayerWhoStartedTurn;
+			PlayerWhoStartedTurn = CurrentTurnTaker;
 			IsRoundOver = false;
 			IsTurnOver = false;
 			OnTurnStart?.Invoke( CurrentTurn );
@@ -60,7 +65,8 @@ namespace KesselSabacc.Model
 			if ( CurrentTurn < TURNS_PER_ROUND )
 			{
 				CurrentTurn++;
-				CurrentTurnTaker = 0;
+				// CurrentTurnTaker = GetNextEligiblePlayerIndex( PlayerWhoStartedTurn );
+				// PlayerWhoStartedTurn = CurrentTurnTaker;
 				IsTurnOver = false;
 				foreach ( var p in _players )
 				{
@@ -77,14 +83,26 @@ namespace KesselSabacc.Model
 
 		public void AdvanceTurnTaker()
 		{
-			if ( CurrentTurnTaker < _players.Count - 1 )
-			{
-				CurrentTurnTaker += 1;
-			}
-			else
+			CurrentTurnTaker = GetNextEligiblePlayerIndex( CurrentTurnTaker );
+			IsPlayerTurnOver = false;
+			if ( CurrentTurnTaker == PlayerWhoStartedTurn )
 			{
 				IsTurnOver = true;
 			}
+		}
+
+		private int GetNextEligiblePlayerIndex(int start)
+		{
+			for ( int i = start + 1; i < start + Players.Count; i++ )
+			{
+				int playerIndex = i % Players.Count;
+				if ( !Players[playerIndex].IsDisqualified )
+				{
+					return playerIndex;
+				}
+			}
+
+			return start;
 		}
 
 		public bool IsGameOver()
@@ -109,6 +127,85 @@ namespace KesselSabacc.Model
 			if ( remainingPlayers.Count == 1 ) return remainingPlayers[0];
 
 			return null;
+		}
+
+		public List<PlayerAction> GetLegalActions(int playerIndex)
+		{
+			List<PlayerAction> legalActions = new();
+
+			if ( CurrentTurnTaker != playerIndex ) return legalActions;
+
+			Player player = Players[playerIndex];
+
+			// Return an empty list.
+			if ( player.HasStoodThisTurn ) return legalActions;
+
+			if ( player.DrewCardThisTurn )
+			{
+				var sandCards = player.GetCardsOfSuit( CardSuit.SAND );
+				if ( sandCards.Length > 1 )
+				{
+					legalActions.Add( new DiscardCardAction( playerIndex, sandCards[0] ) );
+					legalActions.Add( new DiscardCardAction( playerIndex, sandCards[1] ) );
+				}
+
+				var bloodCards = player.GetCardsOfSuit( CardSuit.BLOOD );
+				if ( bloodCards.Length > 1 )
+				{
+					legalActions.Add( new DiscardCardAction( playerIndex, bloodCards[0] ) );
+					legalActions.Add( new DiscardCardAction( playerIndex, bloodCards[1] ) );
+				}
+			}
+			else
+			{
+				if ( !SandDiscardPile.IsEmpty() && player.Chips > 0 )
+				{
+					legalActions.Add(
+						new DrawCardAction(
+							playerIndex,
+							SandDiscardPile.Peek(),
+							SandDiscardPile
+						)
+					);
+				}
+
+				if ( !SandDeck.IsEmpty() && player.Chips > 0 )
+				{
+					legalActions.Add(
+						new DrawCardAction(
+							playerIndex,
+							SandDeck.Peek(),
+							SandDeck
+						)
+					);
+				}
+
+				if ( !BloodDeck.IsEmpty() && player.Chips > 0 )
+				{
+					legalActions.Add(
+						new DrawCardAction(
+							playerIndex,
+							BloodDeck.Peek(),
+							BloodDeck
+						)
+					);
+				}
+
+				if ( !BloodDiscardPile.IsEmpty() && player.Chips > 0 )
+				{
+					legalActions.Add(
+						new DrawCardAction(
+							playerIndex,
+							BloodDiscardPile.Peek(),
+							BloodDiscardPile
+						)
+					);
+				}
+
+				legalActions.Add( new StandAction( playerIndex ) );
+			}
+
+			return legalActions;
 		}
 	}
 }

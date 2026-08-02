@@ -18,14 +18,19 @@ namespace KesselSabacc.Gameplay
 
 		[Header( "Animation Settings" )]
 		public float deckSpawnDuration = 1f;
+		public float handRevealDelay = 2.5f;
 
 		[Header( "Configuration Settings" )]
 		public DeckConfiguration defaultDeckConfig;
+		public Color[] playerColors;
 
 		[Header( "Asset References" )]
 		public GameObject cardViewPrefab;
+		public GameObject humanPlayerPrefab;
+		public GameObject cpuPlayerPrefab;
+		public AIStrategy defaultAIStrategy;
 
-		private IGameState _currentGameState = null;
+		private GameState _currentGameState = null;
 		private bool _isSwitchingState = false;
 		private List<PlayerController> _players = new();
 		private KesselSabaccGameModel _model;
@@ -34,24 +39,24 @@ namespace KesselSabacc.Gameplay
 		public KesselSabaccGameModel Model => _model;
 		public IReadOnlyList<PlayerController> Players => _players;
 
-		private void Start()
+		private IEnumerator Start()
 		{
 			_model = new KesselSabaccGameModel();
-			StartCoroutine( InitializeGame() );
+			yield return InitializeGame();
 		}
 
 		private void Update()
 		{
 			if ( _isSwitchingState ) return;
-			_currentGameState?.OnInput();
-			_currentGameState?.OnUpdate();
+			_currentGameState?.OnInput( this );
+			_currentGameState?.OnUpdate( this );
 		}
 
-		private IEnumerator InitializeGame()
+		private async Awaitable InitializeGame()
 		{
 			var loadingScreen = ApplicationManager.Instance.LoadingScreen;
 			loadingScreen.Show();
-			yield return null;
+			await Awaitable.NextFrameAsync();
 
 			if ( NewGameManager.Instance.Data == null )
 			{
@@ -65,23 +70,28 @@ namespace KesselSabacc.Gameplay
 			_deckConfig = newGameData.deck;
 
 			// Add human player
-			var player = new Player( "Player 1", newGameData.numChips );
-			AddPlayer( player );
-			AddPlayerController( new HumanController( 0, player ) );
+			var humanPlayerModel = new Player( "Player 1", newGameData.numChips );
+			var humanPlayerController = Instantiate( humanPlayerPrefab ).GetComponent<HumanController>();
+			humanPlayerController.Initialize( 0, humanPlayerModel, this );
+			_model.AddPlayer( humanPlayerModel );
+			_players.Add( humanPlayerController );
 
 			// Add CPU player(s)
 			for ( int i = 1; i < newGameData.numPlayers; i++ )
 			{
-				var cpu = new Player( $"CPU {i}", newGameData.numChips );
-				AddPlayer( cpu );
-				AddPlayerController( new SimpleAIController( i, cpu ) );
+				var cpuPlayerModel = new Player( $"CPU {i}", newGameData.numChips );
+				var cpuPlayerController = Instantiate( cpuPlayerPrefab ).GetComponent<AIController>();
+				cpuPlayerController.Strategy = defaultAIStrategy;
+				cpuPlayerController.Initialize( i, cpuPlayerModel, this );
+				_model.AddPlayer( cpuPlayerModel );
+				_players.Add( cpuPlayerController );
 			}
 
 			uiView.Initialize( this );
-			yield return null;
+			await Awaitable.NextFrameAsync();
 
 			loadingScreen.Hide();
-			yield return null;
+			await Awaitable.NextFrameAsync();
 
 			StartGame();
 		}
@@ -93,36 +103,36 @@ namespace KesselSabacc.Gameplay
 
 		public void GoToDealingState()
 		{
-			StartCoroutine( SetGameState( new DealingState( this ) ) );
+			StartCoroutine( SetGameState( new DealingState() ) );
 		}
 
 		public void GoToTurnTakingState()
 		{
-			StartCoroutine( SetGameState( new TurnTakingState( this ) ) );
+			StartCoroutine( SetGameState( new TurnTakingState() ) );
 		}
 
 		public void GoToRoundOverState()
 		{
-			StartCoroutine( SetGameState( new RoundOverState( this ) ) );
+			StartCoroutine( SetGameState( new RoundOverState() ) );
 		}
 
 		public void GoToGameOverState()
 		{
-			StartCoroutine( SetGameState( new GameOverState( this ) ) );
+			StartCoroutine( SetGameState( new GameOverState() ) );
 		}
 
-		private IEnumerator SetGameState(IGameState newState)
+		private async Awaitable SetGameState(GameState newState)
 		{
 			_isSwitchingState = true;
 
 			if ( _currentGameState != null )
 			{
-				yield return _currentGameState.OnExit();
+				await _currentGameState.OnExit( this );
 			}
 
 			_currentGameState = newState;
 
-			yield return _currentGameState.OnEnter();
+			await _currentGameState.OnEnter( this );
 
 			_isSwitchingState = false;
 		}
@@ -130,16 +140,19 @@ namespace KesselSabacc.Gameplay
 		public void AdvanceTurnTaker()
 		{
 			Model.AdvanceTurnTaker();
+			_currentGameState.OnTurnTakerAdvanced( this );
 		}
 
 		public void AdvanceRound()
 		{
 			Model.AdvanceRound();
+			_currentGameState.OnRoundAdvanced( this );
 		}
 
 		public void AdvanceTurn()
 		{
 			Model.AdvanceTurn();
+			_currentGameState.OnTurnAdvanced( this );
 		}
 
 		public void ResetDrawPiles()
@@ -173,17 +186,6 @@ namespace KesselSabacc.Gameplay
 
 			uiView.tableView.BloodDiscardPileView.Clear();
 			_model.BloodDiscardPile.Clear();
-		}
-
-		public void AddPlayer(Player player)
-		{
-			_model.AddPlayer( player );
-		}
-
-		public void AddPlayerController(PlayerController playerController)
-		{
-			_players.Add( playerController );
-			playerController.Initialize( this );
 		}
 
 		public CardView SpawnCard(Card card, Vector3 position, Quaternion rotation)
@@ -221,24 +223,34 @@ namespace KesselSabacc.Gameplay
 			}
 		}
 
-		public IEnumerator PlayDealingSequence()
+		public async Awaitable RevealHands(KesselSabaccGameController gameController)
+		{
+			foreach ( HandView handView in gameController.uiView.tableView.playerHands )
+			{
+				handView.RevealHand();
+			}
+
+			await Awaitable.WaitForSecondsAsync( handRevealDelay );
+		}
+
+		public async Awaitable PlayDealingSequence()
 		{
 			TableView tableView = uiView.tableView;
 
-			yield return ResetDecksAndPiles();
+			await ResetDecksAndPiles();
 
-			yield return DiscardTopCardOfDeck(
+			await DiscardTopCardOfDeck(
 				tableView.SandDeckView, tableView.SandDiscardPileView );
 
-			yield return DiscardTopCardOfDeck(
+			await DiscardTopCardOfDeck(
 				tableView.BloodDeckView, tableView.BloodDiscardPileView );
 
 			for ( int i = 0; i < Model.Players.Count; i++ )
 			{
 				var player = Model.Players[i];
 				if ( player.IsDisqualified ) continue;
-				yield return DealCardToPlayer( tableView.SandDeckView, i );
-				yield return DealCardToPlayer( tableView.BloodDeckView, i );
+				await DealCardToPlayer( tableView.SandDeckView.Model, i );
+				await DealCardToPlayer( tableView.BloodDeckView.Model, i );
 			}
 		}
 
@@ -251,10 +263,10 @@ namespace KesselSabacc.Gameplay
 			}
 		}
 
-		public IEnumerator DealCardToPlayer(CardStackView deck, int playerIndex, Action<CardView> onEnd = null)
+		public async Awaitable DealCardToPlayer(CardStack deck, int playerIndex)
 		{
-			CardView cardView = deck.Pop();
-			Card card = deck.Model.Pop();
+			CardView cardView = GetCardStackView( deck ).Pop();
+			Card card = deck.Pop();
 
 			Model.Players[playerIndex].AddCardToHand( card );
 
@@ -262,27 +274,46 @@ namespace KesselSabacc.Gameplay
 
 			CardSortingSystem.Instance.AddCardToZone( cardView, CardZone.Hand );
 
-			yield return cardView.MoveCardToPosition(
+			await cardView.MoveCardToPosition(
 				playerHand.transform.position,
 				playerHand.transform.rotation.eulerAngles
 			);
 
-			yield return playerHand.AddCard( cardView );
+			await playerHand.AddCard( cardView );
 
 			if ( playerIndex == 0 )
 			{
-				yield return cardView.ShowFrontAsync();
+				await cardView.ShowFrontAsync();
 			}
 			else
 			{
-				yield return cardView.ShowBackAsync();
+				await cardView.ShowBackAsync();
 			}
-
-
-			onEnd?.Invoke( cardView );
 		}
 
-		public IEnumerator DiscardCardFromPlayer(int playerIndex, Card card, Action onEnd = null)
+		private CardStackView GetCardStackView(CardStack cardStack)
+		{
+			if ( cardStack == uiView.tableView.SandDiscardPileView.Model )
+			{
+				return uiView.tableView.SandDiscardPileView;
+			}
+			else if ( cardStack == uiView.tableView.SandDeckView.Model )
+			{
+				return uiView.tableView.SandDeckView;
+			}
+			else if ( cardStack == uiView.tableView.BloodDeckView.Model )
+			{
+				return uiView.tableView.BloodDeckView;
+			}
+			else if ( cardStack == uiView.tableView.BloodDiscardPileView.Model )
+			{
+				return uiView.tableView.BloodDiscardPileView;
+			}
+
+			return null;
+		}
+
+		public async Awaitable DiscardCardFromPlayer(int playerIndex, Card card)
 		{
 
 			CardView cardView = uiView.tableView.playerHands[playerIndex].GetCard( card );
@@ -293,28 +324,26 @@ namespace KesselSabacc.Gameplay
 
 			Model.Players[playerIndex].DiscardCardFromHand( card );
 
-			yield return uiView.tableView.playerHands[playerIndex].RemoveCard( card );
+			await uiView.tableView.playerHands[playerIndex].RemoveCard( card );
 
-			yield return cardView.MoveCardToPosition(
+			await cardView.MoveCardToPosition(
 				discardPile.transform.position,
 				discardPile.transform.rotation.eulerAngles
 			);
 
 			discardPile.AddCard( cardView );
 
-			yield return cardView.ShowFrontAsync();
-
-			onEnd?.Invoke();
+			await cardView.ShowFrontAsync();
 		}
 
-		public IEnumerator DiscardTopCardOfDeck(CardStackView deck, CardStackView discardPile)
+		public async Awaitable DiscardTopCardOfDeck(CardStackView deck, CardStackView discardPile)
 		{
 			CardView cardView = deck.Pop();
 			deck.Model.Pop();
 
-			yield return cardView.Flip();
+			await cardView.Flip();
 
-			yield return cardView.MoveCardToPosition(
+			await cardView.MoveCardToPosition(
 				discardPile.transform.position,
 				discardPile.transform.rotation.eulerAngles
 			);

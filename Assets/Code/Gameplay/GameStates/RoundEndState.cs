@@ -1,64 +1,64 @@
 using System;
-using System.Collections;
 using KesselSabacc.Model;
-using KesselSabacc.Views;
 using UnityEngine;
 
 namespace KesselSabacc.Gameplay.GameStates
 {
-	public class RoundOverState : IGameState
+	public class RoundOverState : GameState
 	{
-		private KesselSabaccGameController _gameController;
-
-		public RoundOverState(KesselSabaccGameController gameController)
+		public override async Awaitable OnEnter(KesselSabaccGameController gameController)
 		{
-			_gameController = gameController;
-		}
+			gameController.Model.RoundResults.Clear();
 
-		public IEnumerator OnEnter()
-		{
-			_gameController.Model.RoundResults.Clear();
-
-			_gameController.uiView.roundEndUI.OnNextButtonClicked += OnNextButtonClicked;
-
-			yield return _gameController.uiView.roundNotificationUI.PlayRoundStartAnim(
-				_gameController.Model.CurrentRound
+			await gameController.uiView.roundNotificationUI.PlayRoundEndAnim(
+				gameController.Model.CurrentRound
 			);
 
-			yield return RevealHandsAnimation();
+			await gameController.RevealHands( gameController );
 
-			_gameController.uiView.roundEndUI.ClearScores();
-			_gameController.uiView.roundEndUI.HideContinueButton();
-			_gameController.uiView.roundEndUI.Show();
-			yield return null;
+			gameController.uiView.roundEndUI.ClearScores();
+			gameController.uiView.roundEndUI.HideContinueButton();
+			gameController.uiView.roundEndUI.Show();
+			await Awaitable.NextFrameAsync();
 
-			for ( int i = 0; i < _gameController.Players.Count; i++ )
+			for ( int i = 0; i < gameController.Players.Count; i++ )
 			{
-				PlayerController playerController = _gameController.Players[i];
+				PlayerController playerController = gameController.Players[i];
 				if ( playerController.Model.IsDisqualified ) continue;
-
-				yield return RollImposterCards( playerController );
-
-				var bloodCard = playerController.Model.GetFirstCardOfSuit( Model.CardSuit.BLOOD );
-				var sandCard = playerController.Model.GetFirstCardOfSuit( Model.CardSuit.SAND );
-
-				// Assign Sylop Card values
-				if ( bloodCard.CardType == CardType.SYLOP ) bloodCard.SetValue( sandCard.Value );
-				if ( sandCard.CardType == CardType.SYLOP ) sandCard.SetValue( bloodCard.Value );
 
 				PlayerRoundResult roundResult = HandScoreUtils.CreateRoundResult(
 					playerController.Model, playerController.PlayerIndex
 				);
 
-				_gameController.Model.RoundResults.Add( roundResult );
+				gameController.Model.RoundResults.Add( roundResult );
 
-				yield return new WaitForSeconds( 0.5f );
+				await RollImposterCards( roundResult, gameController, playerController );
+
+				var bloodCard = playerController.Model.GetFirstCardOfSuit( CardSuit.BLOOD );
+				var sandCard = playerController.Model.GetFirstCardOfSuit( CardSuit.SAND );
+
+				// Assign Sylop Card values
+				if ( bloodCard.CardType == CardType.SYLOP ) bloodCard.SetValue( sandCard.Value );
+				if ( sandCard.CardType == CardType.SYLOP ) sandCard.SetValue( bloodCard.Value );
+
+				roundResult.HandDifference = HandScoreUtils.GetCardDifference( playerController.Model );
+				roundResult.HandSize = HandScoreUtils.GetHandSize( playerController.Model );
+				roundResult.HasPrimeSabacc = HandScoreUtils.HasPrimeSabaccHand( playerController.Model );
+				roundResult.HasSabacc = HandScoreUtils.HasSabaccHand( playerController.Model );
+				roundResult.PerformanceScore = HandScoreUtils.GetPerformanceScore( playerController.Model );
+
+				roundResult.Update();
+
+				await Awaitable.WaitForSecondsAsync( 0.5f );
 			}
 
-			_gameController.Model.RoundResults.Sort();
-			var bestResult = _gameController.Model.RoundResults.Results[0];
+			gameController.Model.RoundResults.Sort();
 
-			foreach ( PlayerRoundResult roundResult in _gameController.Model.RoundResults.Results )
+			await gameController.uiView.roundEndUI.SortRows();
+
+			var bestResult = gameController.Model.RoundResults.Results[0];
+
+			foreach ( PlayerRoundResult roundResult in gameController.Model.RoundResults.Results )
 			{
 				roundResult.WonRound = roundResult == bestResult
 					|| roundResult.CompareTo( bestResult ) == 0;
@@ -99,64 +99,41 @@ namespace KesselSabacc.Gameplay.GameStates
 				}
 			}
 
-			_gameController.uiView.roundEndUI.ShowContinueButton();
+			gameController.uiView.roundEndUI.ShowContinueButton();
 		}
 
-		public IEnumerator RollImposterCards(PlayerController playerController)
+		public async Awaitable RollImposterCards(PlayerRoundResult result,KesselSabaccGameController gameController, PlayerController playerController)
 		{
 			var sandCard = playerController.Model.GetFirstCardOfSuit( CardSuit.SAND );
 			if ( sandCard.CardType == CardType.IMPOSTER && !sandCard.IsValueModified() )
 			{
-				yield return playerController.AssignImposterValue( _gameController, sandCard );
+				playerController.Model.IsRolling = true;
+				int value = await playerController.PerformDiceRoll( gameController );
+				result.SandCard.SetValue(value);
+				playerController.Model.IsRolling = false;
 			}
 
 			var bloodCard = playerController.Model.GetFirstCardOfSuit( CardSuit.BLOOD );
 			if ( bloodCard.CardType == CardType.IMPOSTER && !bloodCard.IsValueModified() )
 			{
-				yield return playerController.AssignImposterValue( _gameController, bloodCard );
+				playerController.Model.IsRolling = true;
+				int value = await playerController.PerformDiceRoll( gameController );
+				result.BloodCard.SetValue(value);
+				playerController.Model.IsRolling = false;
 			}
 		}
 
-		public IEnumerator OnExit()
+		public override void OnRoundAdvanced(KesselSabaccGameController gameController)
 		{
-			_gameController.uiView.roundEndUI.OnNextButtonClicked -= OnNextButtonClicked;
-			yield return null;
-		}
-
-		public void OnInput()
-		{
-
-		}
-
-		public void OnUpdate()
-		{
-
-		}
-
-		private void OnNextButtonClicked()
-		{
-			_gameController.uiView.roundEndUI.Hide();
-			if ( _gameController.Model.IsGameOver() )
+			gameController.uiView.roundEndUI.Hide();
+			if ( gameController.Model.IsGameOver() )
 			{
-				_gameController.GoToGameOverState();
+				gameController.GoToGameOverState();
 			}
 			else
 			{
-				_gameController.GoToDealingState();
+				gameController.GoToDealingState();
 			}
-		}
-
-		private IEnumerator RevealHandsAnimation()
-		{
-			foreach ( HandView handView in _gameController.uiView.tableView.playerHands )
-			{
-				foreach ( CardView cardView in handView.Cards )
-				{
-					yield return cardView.ShowFrontAsync();
-				}
-				yield return new WaitForSeconds( 1f );
-			}
-
 		}
 	}
 }
