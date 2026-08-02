@@ -2,4 +2,5 @@
   <Project Path="KesselSabacc.csproj" />
   <Project Path="DOTween.Modules.csproj" />
   <Project Path="Tests.csproj" />
+  <Project Path="KesselSabacc.Editor.csproj" />
 </Solution>
