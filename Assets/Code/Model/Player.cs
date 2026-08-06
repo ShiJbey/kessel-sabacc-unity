@@ -18,10 +18,6 @@ namespace KesselSabacc.Model
 		/// </summary>
 		private int _chipsInvested;
 		/// <summary>
-		/// Cards currently in the player's hand.
-		/// </summary>
-		private List<Card> _hand;
-		/// <summary>
 		/// Is the player currently disqualified from play.
 		/// </summary>
 		private bool _isDisqualified;
@@ -69,7 +65,7 @@ namespace KesselSabacc.Model
 			}
 		}
 
-		public IReadOnlyList<Card> Hand => _hand;
+		public Hand Hand { get; }
 		public bool HasStoodThisTurn { get; set; }
 		public bool DrewCardThisTurn { get; set; }
 		public bool IsDisqualified => _isDisqualified;
@@ -86,7 +82,7 @@ namespace KesselSabacc.Model
 			_chips = startingChips;
 			_chipsInvested = 0;
 			StartingChips = startingChips;
-			_hand = new List<Card>();
+			Hand = new Hand();
 			HasStoodThisTurn = false;
 			_isDisqualified = false;
 		}
@@ -94,7 +90,7 @@ namespace KesselSabacc.Model
 		public void ResetForNewRound()
 		{
 			_chipsInvested = 0;
-			_hand.Clear();
+			Hand.Clear();
 			HasStoodThisTurn = false;
 		}
 
@@ -104,19 +100,19 @@ namespace KesselSabacc.Model
 			{
 				throw new NullReferenceException( "Card cannot be null" );
 			}
-			_hand.Add( card );
+			Hand.Add( card );
 		}
 
 		public bool DiscardCardFromHand(Card card)
 		{
-			return _hand.Remove( card );
+			return Hand.Remove( card );
 		}
 
 		public Card[] GetCardsOfSuit(CardSuit suit)
 		{
 			List<Card> cards = new();
 
-			foreach ( var card in _hand )
+			foreach ( var card in Hand.Cards )
 			{
 				if ( card.Suit == suit )
 				{
@@ -129,12 +125,12 @@ namespace KesselSabacc.Model
 
 		public void ClearHand()
 		{
-			_hand.Clear();
+			Hand.Clear();
 		}
 
 		public Card GetFirstCardOfSuit(CardSuit suit)
 		{
-			foreach ( var card in _hand )
+			foreach ( var card in Hand.Cards )
 			{
 				if ( card.Suit == suit )
 				{

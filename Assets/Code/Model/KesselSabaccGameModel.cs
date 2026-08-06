@@ -24,6 +24,8 @@ namespace KesselSabacc.Model
 		public bool IsTurnOver { get; private set; }
 		public bool IsPlayerTurnOver { get; set; }
 		public RoundResultList RoundResults { get; private set; }
+		public IHandScoreStrategy HandScorer { get; set; }
+		public CardType PrimeSabaccType { get; set; } = CardType.SYLOP;
 
 		public event Action<int> OnTurnStart;
 
@@ -41,6 +43,7 @@ namespace KesselSabacc.Model
 			SandDiscardPile = new CardStack();
 			BloodDiscardPile = new CardStack();
 			RoundResults = new RoundResultList();
+			HandScorer = new StandardHandScoreStrategy();
 		}
 
 		public void AddPlayer(Player player)
@@ -127,6 +130,11 @@ namespace KesselSabacc.Model
 			if ( remainingPlayers.Count == 1 ) return remainingPlayers[0];
 
 			return null;
+		}
+
+		public int GetPlayerScore(int playerIndex)
+		{
+			return HandScorer.ScoreHand(_players[playerIndex].Hand, PrimeSabaccType);
 		}
 
 		public List<PlayerAction> GetLegalActions(int playerIndex)
