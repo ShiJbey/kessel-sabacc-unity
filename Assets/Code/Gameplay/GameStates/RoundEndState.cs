@@ -57,48 +57,7 @@ namespace KesselSabacc.Gameplay.GameStates
 
 			await gameController.uiView.roundEndUI.SortRows();
 
-			var bestResult = gameController.Model.RoundResults.Results[0];
-
-			foreach ( PlayerRoundResult roundResult in gameController.Model.RoundResults.Results )
-			{
-				roundResult.WonRound = roundResult == bestResult
-					|| roundResult.CompareTo( bestResult ) == 0;
-
-				if ( roundResult.WonRound )
-				{
-					// Winner is not taxed.
-					roundResult.Player.Chips = Math.Max(
-						0,
-						roundResult.Player.Chips
-						+ roundResult.Player.ChipsInvested
-					);
-				}
-				else if ( roundResult.Player.Hand.HasSabacc() )
-				{
-					// Players that lose, but have sabacc are taxed one chip.
-					roundResult.Player.Chips = Math.Max(
-						0,
-						roundResult.Player.Chips
-						+ (roundResult.Player.ChipsInvested - 1)
-					);
-				}
-				else
-				{
-					// Losers without sabacc are taxed the difference of their cards.
-					roundResult.Player.Chips = Math.Max(
-						0,
-						roundResult.Player.Chips
-						+ (roundResult.Player.ChipsInvested - roundResult.Player.Hand.GetCardDifference())
-					);
-				}
-
-				roundResult.Player.ChipsInvested = 0;
-
-				if ( roundResult.Player.Chips == 0 )
-				{
-					roundResult.Player.DisqualifyPlayer();
-				}
-			}
+			gameController.Model.ApplyRoundEndResults();
 
 			gameController.uiView.roundEndUI.ShowContinueButton();
 		}

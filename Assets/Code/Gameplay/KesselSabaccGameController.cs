@@ -52,8 +52,17 @@ namespace KesselSabacc.Gameplay
 			_currentGameState?.OnUpdate( this );
 		}
 
+		private void OnDestroy()
+		{
+			_model.OnCardDrawn -= OnCardDrawn;
+			_model.OnCardDiscarded -= OnCardDiscarded;
+		}
+
 		private async Awaitable InitializeGame()
 		{
+			_model.OnCardDrawn += OnCardDrawn;
+			_model.OnCardDiscarded += OnCardDiscarded;
+
 			var loadingScreen = ApplicationManager.Instance.LoadingScreen;
 			loadingScreen.Show();
 			await Awaitable.NextFrameAsync();
@@ -168,10 +177,10 @@ namespace KesselSabacc.Gameplay
 				for ( int i = 0; i < entry.count; i++ )
 				{
 					_model.SandDeck.Add(
-						new Card( CardSuit.SAND, entry.cardType, entry.sandFront, _deckConfig.sandCardBack ) );
+						new Card( CardSuit.SAND, entry.cardType ) );
 
 					_model.BloodDeck.Add(
-						new Card( CardSuit.BLOOD, entry.cardType, entry.bloodFront, _deckConfig.bloodCardBack ) );
+						new Card( CardSuit.BLOOD, entry.cardType ) );
 				}
 			}
 
@@ -249,8 +258,10 @@ namespace KesselSabacc.Gameplay
 			{
 				var player = Model.Players[i];
 				if ( player.IsDisqualified ) continue;
-				await DealCardToPlayer( tableView.SandDeckView.Model, i );
-				await DealCardToPlayer( tableView.BloodDeckView.Model, i );
+				Model.DrawCard(i, Model.SandDeck);
+				await Awaitable.WaitForSecondsAsync(0.5f);
+				Model.DrawCard(i, Model.BloodDeck);
+				await Awaitable.WaitForSecondsAsync(0.5f);
 			}
 		}
 
@@ -263,12 +274,12 @@ namespace KesselSabacc.Gameplay
 			}
 		}
 
-		public async Awaitable DealCardToPlayer(CardStack deck, int playerIndex)
+		public async Awaitable DealCardToPlayer(CardStackView cardStackView, int playerIndex)
 		{
-			CardView cardView = GetCardStackView( deck ).Pop();
-			Card card = deck.Pop();
+			CardView cardView = cardStackView.Pop();
+			// Card card = deck.Pop();
 
-			Model.Players[playerIndex].AddCardToHand( card );
+			// Model.Players[playerIndex].AddCardToHand( card );
 
 			HandView playerHand = uiView.tableView.playerHands[playerIndex];
 
@@ -318,20 +329,20 @@ namespace KesselSabacc.Gameplay
 
 			CardView cardView = uiView.tableView.playerHands[playerIndex].GetCard( card );
 
-			CardStackView discardPile = card.Suit == CardSuit.SAND ?
+			CardStackView discardPileView = card.Suit == CardSuit.SAND ?
 				uiView.tableView.SandDiscardPileView
 				: uiView.tableView.BloodDiscardPileView;
 
-			Model.Players[playerIndex].DiscardCardFromHand( card );
+			// Model.Players[playerIndex].DiscardCardFromHand( card );
 
 			await uiView.tableView.playerHands[playerIndex].RemoveCard( card );
 
 			await cardView.MoveCardToPosition(
-				discardPile.transform.position,
-				discardPile.transform.rotation.eulerAngles
+				discardPileView.transform.position,
+				discardPileView.transform.rotation.eulerAngles
 			);
 
-			discardPile.AddCard( cardView );
+			discardPileView.AddCard( cardView );
 
 			await cardView.ShowFrontAsync();
 		}
@@ -359,6 +370,33 @@ namespace KesselSabacc.Gameplay
 				.Load( SceneDatabase.Slots.Menu, SceneDatabase.Scenes.MainMenu )
 				.WithOverlay()
 				.Perform();
+		}
+
+		private void OnCardDrawn(CardDrawnEventData eventData)
+		{
+			_ = DealCardToPlayer(GetCardStackViewOfKind(eventData.deck), eventData.playerIndex);
+		}
+
+		private void OnCardDiscarded(CardDiscardedEventData eventData)
+		{
+			_ = DiscardCardFromPlayer(eventData.playerIndex, eventData.card);
+		}
+
+		private CardStackView GetCardStackViewOfKind(CardStack.DeckKind kind)
+		{
+			switch (kind)
+			{
+				case CardStack.DeckKind.SAND_DISCARD:
+					return uiView.tableView.SandDiscardPileView;
+				case CardStack.DeckKind.SAND_DRAW:
+					return uiView.tableView.SandDeckView;
+				case CardStack.DeckKind.BLOOD_DISCARD:
+					return uiView.tableView.BloodDiscardPileView;
+				case CardStack.DeckKind.BLOOD_DRAW:
+					return uiView.tableView.BloodDeckView;
+				default:
+					return null;
+			}
 		}
 	}
 }

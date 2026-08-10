@@ -8,7 +8,17 @@ namespace KesselSabacc.Model
 	/// </summary>
 	public class CardStack
 	{
+		public enum DeckKind
+		{
+			SAND_DISCARD = 0,
+			SAND_DRAW = 1,
+			BLOOD_DISCARD = 2,
+			BLOOD_DRAW = 3
+		}
+
 		private List<Card> _cards;
+
+		public DeckKind Kind { get; }
 
 		public event Action<Card> OnCardAdded;
 		public event Action<Card> OnCardRemoved;
@@ -16,8 +26,9 @@ namespace KesselSabacc.Model
 
 		public IReadOnlyList<Card> Cards => _cards;
 
-		public CardStack()
+		public CardStack(DeckKind kind)
 		{
+			Kind = kind;
 			_cards = new List<Card>();
 		}
 

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using KesselSabacc.Gameplay;
-using KesselSabacc.Gameplay.PlayerActions;
+using KesselSabacc.Model;
+using KesselSabacc.Model.PlayerActions;
 using KesselSabacc.UI;
 using UnityEngine;
 

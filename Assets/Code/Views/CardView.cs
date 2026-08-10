@@ -68,8 +68,9 @@ namespace KesselSabacc.Views
 		public void Initialize(Card card, bool isFaceUp = false)
 		{
 			Card = card;
-			_frontSprite = card.FrontSprite;
-			_backSprite = card.BackSprite;
+			DeckConfiguration deckConfig = NewGameManager.Instance.Data.deck;
+			_frontSprite = deckConfig.GetFrontSprite(card.Suit, card.CardType);
+			_backSprite = deckConfig.GetBackSprite(card.Suit);
 			_isFaceUp = isFaceUp;
 			_spriteRenderer.sprite = isFaceUp ? _frontSprite : _backSprite;
 		}

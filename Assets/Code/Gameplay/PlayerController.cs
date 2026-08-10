@@ -34,20 +34,19 @@ namespace KesselSabacc.Gameplay
 			StartTurn();
 			await Awaitable.NextFrameAsync();
 
-			while ( !gameController.Model.IsPlayerTurnOver )
+			List<PlayerAction> legalActions = gameController.Model.GetLegalActions( PlayerIndex );
+
+			while ( legalActions.Count > 0 )
 			{
-				List<PlayerAction> legalActions = gameController.Model.GetLegalActions( PlayerIndex );
-
-				if ( legalActions.Count == 0 )
-					break;
-
 				OnThinkingStarted?.Invoke();
 				await Awaitable.NextFrameAsync();
 
 				PlayerAction chosenAction = await SelectAction( gameController, legalActions );
 
 				OnThinkingEnded?.Invoke();
-				await chosenAction.Execute( gameController );
+				chosenAction.Execute( gameController.Model );
+
+				legalActions = gameController.Model.GetLegalActions( PlayerIndex );
 			}
 
 			OnTurnEnded?.Invoke();

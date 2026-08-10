@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using KesselSabacc.Gameplay;
-using KesselSabacc.Gameplay.PlayerActions;
+using KesselSabacc.Model;
+using KesselSabacc.Model.PlayerActions;
 using KesselSabacc.UI.Components;
 using TMPro;
 using UnityEngine;
@@ -48,19 +48,21 @@ namespace KesselSabacc.UI
 			}
 			_cardViews.Clear();
 
-			var cardView = InstantiateCardView( actions[0].Card.FrontSprite );
+			DeckConfiguration deckConfig = NewGameManager.Instance.Data.deck;
+
+			var cardView = InstantiateCardView( deckConfig.GetFrontSprite(actions[0].Card.Suit, actions[0].Card.CardType) );
 			cardView.OnClick += () => { onChosen( actions[0] ); };
 			_cardViews.Add( cardView );
 
-			cardView = InstantiateCardView( actions[1].Card.BackSprite );
+			cardView = InstantiateCardView( deckConfig.GetFrontSprite(actions[1].Card.Suit, actions[1].Card.CardType) );
 			cardView.OnClick += () => { onChosen( actions[1] ); };
 			_cardViews.Add( cardView );
 
-			cardView = InstantiateCardView( actions[2].Card.BackSprite );
+			cardView = InstantiateCardView( deckConfig.GetFrontSprite(actions[2].Card.Suit, actions[2].Card.CardType) );
 			cardView.OnClick += () => { onChosen( actions[2] ); };
 			_cardViews.Add( cardView );
 
-			cardView = InstantiateCardView( actions[3].Card.FrontSprite );
+			cardView = InstantiateCardView( deckConfig.GetFrontSprite(actions[3].Card.Suit, actions[3].Card.CardType) );
 			cardView.OnClick += () => { onChosen( actions[3] ); };
 			_cardViews.Add( cardView );
 		}

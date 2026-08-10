@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using KesselSabacc.Gameplay;
-using KesselSabacc.Gameplay.PlayerActions;
 using KesselSabacc.Model;
+using KesselSabacc.Model.PlayerActions;
 using KesselSabacc.UI.Components;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,6 +28,8 @@ namespace KesselSabacc.UI
 			}
 			_selectableCards.Clear();
 
+			DeckConfiguration deckConfig = NewGameManager.Instance.Data.deck;
+
 			foreach ( DiscardCardAction action in actions )
 			{
 				GameObject obj = Instantiate( _selectableCardPrefab, _selectableCardsContainer );
@@ -37,7 +38,7 @@ namespace KesselSabacc.UI
 
 				DrawableCardUI selectableCardUI = obj.GetComponent<DrawableCardUI>();
 
-				selectableCardUI.Initialize( action.Card.FrontSprite );
+				selectableCardUI.Initialize( deckConfig.GetFrontSprite(action.cardSuit, action.cardType) );
 
 				selectableCardUI.OnClick += () => { onChosen( action ); };
 
