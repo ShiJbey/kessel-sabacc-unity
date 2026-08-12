@@ -1,7 +1,4 @@
-using UnityEngine;
-using KesselSabacc.Model;
-
-namespace KesselSabacc.Gameplay.PlayerActions
+namespace KesselSabacc.Model.PlayerActions
 {
 	/// <summary>
 	/// The performer draws a single card from one of the four piles.
@@ -21,13 +18,13 @@ namespace KesselSabacc.Gameplay.PlayerActions
 			Card = card;
 		}
 
-		public override async Awaitable Execute(KesselSabaccGameController gameController)
+		public override void Execute(KesselSabaccGameModel model)
 		{
-			await gameController.DealCardToPlayer( CardStack, PlayerIndex );
-			Player player = gameController.Model.Players[PlayerIndex];
+			Player player = model.Players[PlayerIndex];
 			player.Chips -= 1;
 			player.ChipsInvested += 1;
 			player.DrewCardThisTurn = true;
+			model.DrawCard(PlayerIndex, CardStack);
 		}
 	}
 }

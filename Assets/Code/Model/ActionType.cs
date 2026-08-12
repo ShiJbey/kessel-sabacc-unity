@@ -1,4 +1,4 @@
-namespace KesselSabacc.Gameplay
+namespace KesselSabacc.Model
 {
 	public enum ActionType
 	{

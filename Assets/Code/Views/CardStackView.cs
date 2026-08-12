@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using KesselSabacc.Model;
 using UnityEngine;
 
 namespace KesselSabacc.Views
@@ -10,14 +8,12 @@ namespace KesselSabacc.Views
 	/// </summary>
 	public class CardStackView : MonoBehaviour
 	{
-		public CardStack Model { get; private set; }
 		private CardZone _cardZone;
 		private List<CardView> _cards = new();
 
-		public void Initialize(CardStack stack, CardZone cardZone)
+		public void Initialize(CardZone cardZone)
 		{
 			_cardZone = cardZone;
-			Model = stack;
 		}
 
 		public int Count()
@@ -66,8 +62,6 @@ namespace KesselSabacc.Views
 			// Slight offset for stacking effect
 			Vector3 positionOffset = new Vector3( 0, 0.01f * numCards, -0.01f * numCards );
 			cardView.transform.position = transform.position + positionOffset;
-
-			Model.Add( cardView.Card );
 
 			_cards.Add( cardView );
 		}

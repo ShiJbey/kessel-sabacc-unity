@@ -14,7 +14,9 @@ namespace KesselSabacc.Gameplay.GameStates
 				gameController.Model.CurrentRound
 			);
 
-			await gameController.RevealHands( gameController );
+			gameController.RevealHands( gameController );
+
+			await gameController.CommandSystem.WaitUntilIdle();
 
 			gameController.uiView.roundEndUI.ClearScores();
 			gameController.uiView.roundEndUI.HideContinueButton();
@@ -26,9 +28,14 @@ namespace KesselSabacc.Gameplay.GameStates
 				PlayerController playerController = gameController.Players[i];
 				if ( playerController.Model.IsDisqualified ) continue;
 
-				PlayerRoundResult roundResult = HandScoreUtils.CreateRoundResult(
-					playerController.Model, playerController.PlayerIndex
-				);
+				PlayerRoundResult roundResult = new PlayerRoundResult()
+				{
+					Player = playerController.Model,
+					PlayerIndex = playerController.PlayerIndex,
+					HandScore = gameController.Model.GetPlayerScore(i),
+					SandCard = playerController.Model.Hand.GetFirstCardOfSuit( CardSuit.SAND ),
+					BloodCard = playerController.Model.Hand.GetFirstCardOfSuit( CardSuit.BLOOD ),
+				};
 
 				gameController.Model.RoundResults.Add( roundResult );
 
@@ -41,11 +48,7 @@ namespace KesselSabacc.Gameplay.GameStates
 				if ( bloodCard.CardType == CardType.SYLOP ) bloodCard.SetValue( sandCard.Value );
 				if ( sandCard.CardType == CardType.SYLOP ) sandCard.SetValue( bloodCard.Value );
 
-				roundResult.HandDifference = HandScoreUtils.GetCardDifference( playerController.Model );
-				roundResult.HandSize = HandScoreUtils.GetHandSize( playerController.Model );
-				roundResult.HasPrimeSabacc = HandScoreUtils.HasPrimeSabaccHand( playerController.Model );
-				roundResult.HasSabacc = HandScoreUtils.HasSabaccHand( playerController.Model );
-				roundResult.PerformanceScore = HandScoreUtils.GetPerformanceScore( playerController.Model );
+				roundResult.HandScore = gameController.Model.GetPlayerScore(i);
 
 				roundResult.Update();
 
@@ -56,48 +59,7 @@ namespace KesselSabacc.Gameplay.GameStates
 
 			await gameController.uiView.roundEndUI.SortRows();
 
-			var bestResult = gameController.Model.RoundResults.Results[0];
-
-			foreach ( PlayerRoundResult roundResult in gameController.Model.RoundResults.Results )
-			{
-				roundResult.WonRound = roundResult == bestResult
-					|| roundResult.CompareTo( bestResult ) == 0;
-
-				if ( roundResult.WonRound )
-				{
-					// Winner is not taxed.
-					roundResult.Player.Chips = Math.Max(
-						0,
-						roundResult.Player.Chips
-						+ roundResult.Player.ChipsInvested
-					);
-				}
-				else if ( roundResult.HasSabacc )
-				{
-					// Players that lose, but have sabacc are taxed one chip.
-					roundResult.Player.Chips = Math.Max(
-						0,
-						roundResult.Player.Chips
-						+ (roundResult.Player.ChipsInvested - 1)
-					);
-				}
-				else
-				{
-					// Losers without sabacc are taxed the difference of their cards.
-					roundResult.Player.Chips = Math.Max(
-						0,
-						roundResult.Player.Chips
-						+ (roundResult.Player.ChipsInvested - roundResult.HandDifference)
-					);
-				}
-
-				roundResult.Player.ChipsInvested = 0;
-
-				if ( roundResult.Player.Chips == 0 )
-				{
-					roundResult.Player.DisqualifyPlayer();
-				}
-			}
+			gameController.Model.ApplyRoundEndResults();
 
 			gameController.uiView.roundEndUI.ShowContinueButton();
 		}

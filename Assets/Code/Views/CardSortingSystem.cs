@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using KesselSabacc.Model;
 using UnityEngine;
 
 namespace KesselSabacc.Views

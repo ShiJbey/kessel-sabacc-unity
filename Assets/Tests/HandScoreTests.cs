@@ -1,4 +1,4 @@
-using KesselSabacc.Gameplay;
+using System.Collections.Generic;
 using KesselSabacc.Model;
 using NUnit.Framework;
 
@@ -8,63 +8,64 @@ public class HandScoreTests
 	[Test]
 	public void TestHasSabaccHand()
 	{
-		var p1 = new Player( "player", 0 );
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.ONE ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.ONE ) );
+		var p1 = new Hand();
 
-		Assert.True( HandScoreUtils.HasSabaccHand( p1 ) );
-		p1.ClearHand();
+		p1.Add( new Card( CardSuit.SAND, CardType.ONE ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.ONE ) );
 
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.SIX ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.SIX ) );
+		Assert.True( p1.HasSabacc() );
+		p1.Clear();
 
-		Assert.True( HandScoreUtils.HasSabaccHand( p1 ) );
-		p1.ClearHand();
+		p1.Add( new Card( CardSuit.SAND, CardType.SIX ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.SIX ) );
+
+		Assert.True( p1.HasSabacc() );
+		p1.Clear();
 	}
 
 	[Test]
 	public void TestHasSabaccHandSylop()
 	{
 		// Ensure that sylop + any card results in a sabacc hand
-		var p1 = new Player( "player", 0 );
+		var p1 = new Hand();
 
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.SYLOP ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.IMPOSTER ).WithValue( (int)CardType.FOUR ) );
+		p1.Add( new Card( CardSuit.SAND, CardType.SYLOP ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.IMPOSTER ).WithValue( (int)CardType.FOUR ) );
 
-		Assert.True( HandScoreUtils.HasSabaccHand( p1 ) );
-		p1.ClearHand();
+		Assert.True( p1.HasSabacc() );
+		p1.Clear();
 
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.SYLOP ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.THREE ) );
+		p1.Add( new Card( CardSuit.SAND, CardType.SYLOP ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.THREE ) );
 
-		Assert.True( HandScoreUtils.HasSabaccHand( p1 ) );
-		p1.ClearHand();
+		Assert.True( p1.HasSabacc() );
+		p1.Clear();
 	}
 
 	[Test]
 	public void TestHasSabaccHandImposter()
 	{
 		// Ensure that imposter cards with overwritten values
-		var p1 = new Player( "player", 0 );
+		var p1 = new Hand();
 
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.FIVE ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.IMPOSTER ) );
+		p1.Add( new Card( CardSuit.SAND, CardType.FIVE ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.IMPOSTER ) );
 
-		Assert.False( HandScoreUtils.HasSabaccHand( p1 ) );
-		p1.ClearHand();
+		Assert.False( p1.HasSabacc() );
+		p1.Clear();
 	}
 
 	[Test]
 	public void TestHasSabaccHandImposterWithValue()
 	{
 		// Ensure that imposter cards with overwritten values
-		var p1 = new Player( "player", 0 );
+		var p1 = new Hand();
 
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.TWO ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.IMPOSTER ).WithValue( (int)CardType.TWO ) );
+		p1.Add( new Card( CardSuit.SAND, CardType.TWO ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.IMPOSTER ).WithValue( (int)CardType.TWO ) );
 
-		Assert.True( HandScoreUtils.HasSabaccHand( p1 ) );
-		p1.ClearHand();
+		Assert.True( p1.HasSabacc() );
+		p1.Clear();
 	}
 
 	[Test]
@@ -72,183 +73,175 @@ public class HandScoreTests
 	{
 		// Ensure that imposter cards, regardless of value, result in a sabacc hand
 		// when paired with a sylop
-		var p1 = new Player( "player", 0 );
+		var p1 = new Hand();
 
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.SYLOP ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.IMPOSTER ) );
+		p1.Add( new Card( CardSuit.SAND, CardType.SYLOP ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.IMPOSTER ) );
 
-		Assert.True( HandScoreUtils.HasSabaccHand( p1 ) );
-		p1.ClearHand();
+		Assert.True( p1.HasSabacc() );
+		p1.Clear();
 
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.SYLOP ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.IMPOSTER ).WithValue( (int)CardType.THREE ) );
+		p1.Add( new Card( CardSuit.SAND, CardType.SYLOP ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.IMPOSTER ).WithValue( (int)CardType.THREE ) );
 
-		Assert.True( HandScoreUtils.HasSabaccHand( p1 ) );
-		p1.ClearHand();
+		Assert.True( p1.HasSabacc() );
+		p1.Clear();
 	}
 
 	[Test]
 	public void TestHasSabaccHandFails()
 	{
-		var p1 = new Player( "player", 0 );
+		var p1 = new Hand();
 
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.ONE ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.TWO ) );
+		p1.Add( new Card( CardSuit.SAND, CardType.ONE ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.TWO ) );
 
-		Assert.False( HandScoreUtils.HasSabaccHand( p1 ) );
-		p1.ClearHand();
+		Assert.False( p1.HasSabacc() );
+		p1.Clear();
 
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.ONE ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.IMPOSTER ).WithValue( (int)CardType.THREE ) );
+		p1.Add( new Card( CardSuit.SAND, CardType.ONE ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.IMPOSTER ).WithValue( (int)CardType.THREE ) );
 
-		Assert.False( HandScoreUtils.HasSabaccHand( p1 ) );
-		p1.ClearHand();
+		Assert.False( p1.HasSabacc() );
+		p1.Clear();
 	}
 
 	[Test]
 	public void TestHasPrimeSabaccHand()
 	{
-		var p1 = new Player( "player", 0 );
+		var p1 = new Hand();
 
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.SYLOP ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.SYLOP ) );
+		p1.Add( new Card( CardSuit.SAND, CardType.SYLOP ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.SYLOP ) );
 
-		Assert.True( HandScoreUtils.HasPrimeSabaccHand( p1 ) );
+		Assert.True( p1.HasPrimeSabacc() );
 
-		p1.ClearHand();
+		p1.Clear();
 	}
 
 	[Test]
 	public void TestHasPrimeSabaccFails()
 	{
-		var p1 = new Player( "player", 0 );
+		var p1 = new Hand();
 
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.SYLOP ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.ONE ) );
+		p1.Add( new Card( CardSuit.SAND, CardType.SYLOP ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.ONE ) );
 
-		Assert.False( HandScoreUtils.HasPrimeSabaccHand( p1 ) );
+		Assert.False( p1.HasPrimeSabacc() );
 
-		p1.ClearHand();
+		p1.Clear();
 	}
 
 	[Test]
 	public void TestPrimeSabaccBeatsSabacc()
 	{
-		var p1 = new Player( "Player 1", 0 );
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.TWO ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.TWO ) );
-		var p1_Result = HandScoreUtils.CreateRoundResult( p1, 1 );
+		IHandScoreStrategy handScorer = new StandardHandScoreStrategy();
 
-		var p2 = new Player( "Player 1", 0 );
-		p2.AddCardToHand( new Card( CardSuit.SAND, CardType.SYLOP ) );
-		p2.AddCardToHand( new Card( CardSuit.BLOOD, CardType.ONE ) );
-		var p2_Result = HandScoreUtils.CreateRoundResult( p2, 2 );
+		var p1 = new Hand();
+		p1.Add( new Card( CardSuit.SAND, CardType.TWO ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.TWO ) );
+		var p1_Result = handScorer.ScoreHand( p1 );
 
-		Assert.AreEqual( p1_Result.HandDifference, p2_Result.HandDifference );
-		Assert.True( p1_Result.PerformanceScore < p2_Result.PerformanceScore );
-		Assert.True( p1_Result.HandSize > p2_Result.HandSize );
+		var p2 = new Hand();
+		p2.Add( new Card( CardSuit.SAND, CardType.SYLOP ) );
+		p2.Add( new Card( CardSuit.BLOOD, CardType.ONE ) );
+		var p2_Result = handScorer.ScoreHand( p2 );
+
+		Assert.True( p1_Result < p2_Result );
 	}
 
 	[Test]
 	public void TestSabaccBeatsNormalHand()
 	{
+		IHandScoreStrategy handScorer = new StandardHandScoreStrategy();
+
 		// Test that Sabacc and Prime Sabacc hands beat other hands
-		var p1 = new Player( "Player 1", 0 );
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.SIX ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.SIX ) );
-		var p1_Result = HandScoreUtils.CreateRoundResult( p1, 1 );
+		var p1 = new Hand();
+		p1.Add( new Card( CardSuit.SAND, CardType.SIX ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.SIX ) );
+		var p1_Result = handScorer.ScoreHand( p1 );
 
-		var p2 = new Player( "Player 2", 0 );
-		p2.AddCardToHand( new Card( CardSuit.SAND, CardType.THREE ) );
-		p2.AddCardToHand( new Card( CardSuit.BLOOD, CardType.FOUR ) );
-		var p2_Result = HandScoreUtils.CreateRoundResult( p2, 2 );
+		var p2 = new Hand();
+		p2.Add( new Card( CardSuit.SAND, CardType.THREE ) );
+		p2.Add( new Card( CardSuit.BLOOD, CardType.FOUR ) );
+		var p2_Result = handScorer.ScoreHand( p2 );
 
-		Assert.True( p1_Result.HandDifference < p2_Result.HandDifference );
-		Assert.True( p1_Result.PerformanceScore > p2_Result.PerformanceScore );
-		Assert.True( p1_Result.HandSize > p2_Result.HandSize );
+		Assert.True( p1_Result > p2_Result );
 
-		var p3 = new Player( "Player 3", 0 );
-		p3.AddCardToHand( new Card( CardSuit.SAND, CardType.SYLOP ) );
-		p3.AddCardToHand( new Card( CardSuit.BLOOD, CardType.SYLOP ) );
-		var p3_Result = HandScoreUtils.CreateRoundResult( p3, 1 );
+		var p3 = new Hand();
+		p3.Add( new Card( CardSuit.SAND, CardType.SYLOP ) );
+		p3.Add( new Card( CardSuit.BLOOD, CardType.SYLOP ) );
+		var p3_Result = handScorer.ScoreHand( p3 );
 
-		var p4 = new Player( "Player 4", 0 );
-		p4.AddCardToHand( new Card( CardSuit.SAND, CardType.FIVE ) );
-		p4.AddCardToHand( new Card( CardSuit.BLOOD, CardType.FOUR ) );
-		var p4_Result = HandScoreUtils.CreateRoundResult( p4, 2 );
+		var p4 = new Hand();
+		p4.Add( new Card( CardSuit.SAND, CardType.FIVE ) );
+		p4.Add( new Card( CardSuit.BLOOD, CardType.FOUR ) );
+		var p4_Result = handScorer.ScoreHand( p4 );
 
-		Assert.True( p3_Result.HandDifference < p4_Result.HandDifference );
-		Assert.True( p3_Result.PerformanceScore > p4_Result.PerformanceScore );
-		Assert.True( p3_Result.HandSize < p4_Result.HandSize );
+		Assert.True( p3_Result > p4_Result );
 	}
 
 	[Test]
 	public void TestLowerHandBeatsOtherHand()
 	{
+		IHandScoreStrategy handScorer = new StandardHandScoreStrategy();
+
 		// Test that a hand with a smaller difference beats the other hand.
 		// This is the most basic check.
-		var p1 = new Player( "Player 1", 0 );
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.THREE ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.TWO ) );
-		var p1_Result = HandScoreUtils.CreateRoundResult( p1, 1 );
+		var p1 = new Hand();
+		p1.Add( new Card( CardSuit.SAND, CardType.THREE ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.TWO ) );
+		var p1_Result = handScorer.ScoreHand( p1 );
 
-		var p2 = new Player( "Player 2", 0 );
-		p2.AddCardToHand( new Card( CardSuit.SAND, CardType.ONE ) );
-		p2.AddCardToHand( new Card( CardSuit.BLOOD, CardType.FOUR ) );
-		var p2_Result = HandScoreUtils.CreateRoundResult( p2, 2 );
+		var p2 = new Hand();
+		p2.Add( new Card( CardSuit.SAND, CardType.ONE ) );
+		p2.Add( new Card( CardSuit.BLOOD, CardType.FOUR ) );
+		var p2_Result = handScorer.ScoreHand( p2 );
 
-		Assert.True( p1_Result.HandDifference < p2_Result.HandDifference );
-		Assert.True( p1_Result.PerformanceScore > p2_Result.PerformanceScore );
-		Assert.True( p1_Result.HandSize == p2_Result.HandSize );
+		Assert.True( p1_Result > p2_Result );
 
-		p1 = new Player( "Player 1", 0 );
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.THREE ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.ONE ) );
-		p1_Result = HandScoreUtils.CreateRoundResult( p1, 1 );
+		p1 = new Hand();
+		p1.Add( new Card( CardSuit.SAND, CardType.THREE ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.ONE ) );
+		p1_Result = handScorer.ScoreHand( p1 );
 
-		p2 = new Player( "Player 2", 0 );
-		p2.AddCardToHand( new Card( CardSuit.SAND, CardType.THREE ) );
-		p2.AddCardToHand( new Card( CardSuit.BLOOD, CardType.FOUR ) );
-		p2_Result = HandScoreUtils.CreateRoundResult( p2, 2 );
+		p2 = new Hand();
+		p2.Add( new Card( CardSuit.SAND, CardType.THREE ) );
+		p2.Add( new Card( CardSuit.BLOOD, CardType.FOUR ) );
+		p2_Result = handScorer.ScoreHand( p2 );
 
-
-		Assert.AreEqual( p2_Result.CompareTo( p1_Result ), 1 );
-		// Assert.True( p1_Result.HandDifference > p2_Result.HandDifference );
-		// Assert.True( p1_Result.PerformanceScore < p2_Result.PerformanceScore );
-		// Assert.True( p1_Result.HandSize < p2_Result.HandSize );
+		Assert.True( p2_Result > p1_Result );
 	}
 
 	[Test]
 	public void TestSmallerHandBeatsSameDifference()
 	{
+		IHandScoreStrategy handScorer = new StandardHandScoreStrategy();
+
 		// Test that a hand with a smaller overall size should have a better
 		// overall score than another hand with the same card difference.
-		var p1 = new Player( "Player 1", 0 );
-		p1.AddCardToHand( new Card( CardSuit.SAND, CardType.THREE ) );
-		p1.AddCardToHand( new Card( CardSuit.BLOOD, CardType.TWO ) );
-		var p1_Result = HandScoreUtils.CreateRoundResult( p1, 1 );
+		var p1 = new Hand();
+		p1.Add( new Card( CardSuit.SAND, CardType.THREE ) );
+		p1.Add( new Card( CardSuit.BLOOD, CardType.TWO ) );
+		var p1_Result = handScorer.ScoreHand( p1 );
 
-		var p2 = new Player( "Player 2", 0 );
-		p2.AddCardToHand( new Card( CardSuit.SAND, CardType.THREE ) );
-		p2.AddCardToHand( new Card( CardSuit.BLOOD, CardType.FOUR ) );
-		var p2_Result = HandScoreUtils.CreateRoundResult( p2, 2 );
+		var p2 = new Hand();
+		p2.Add( new Card( CardSuit.SAND, CardType.THREE ) );
+		p2.Add( new Card( CardSuit.BLOOD, CardType.FOUR ) );
+		var p2_Result = handScorer.ScoreHand( p2 );
 
-		Assert.AreEqual( p1_Result.HandDifference, p2_Result.HandDifference );
-		Assert.True( p1_Result.PerformanceScore > p2_Result.PerformanceScore );
-		Assert.True( p1_Result.HandSize < p2_Result.HandSize );
+		Assert.True( p1_Result > p2_Result );
 
-		var p3 = new Player( "Player 3", 0 );
-		p3.AddCardToHand( new Card( CardSuit.SAND, CardType.THREE ) );
-		p3.AddCardToHand( new Card( CardSuit.BLOOD, CardType.THREE ) );
-		var p3_Result = HandScoreUtils.CreateRoundResult( p3, 1 );
+		var p3 = new Hand();
+		p3.Add( new Card( CardSuit.SAND, CardType.THREE ) );
+		p3.Add( new Card( CardSuit.BLOOD, CardType.THREE ) );
+		var p3_Result = handScorer.ScoreHand( p3 );
 
-		var p4 = new Player( "Player 4", 0 );
-		p4.AddCardToHand( new Card( CardSuit.SAND, CardType.FOUR ) );
-		p4.AddCardToHand( new Card( CardSuit.BLOOD, CardType.FOUR ) );
-		var p4_Result = HandScoreUtils.CreateRoundResult( p4, 2 );
+		var p4 = new Hand();
+		p4.Add( new Card( CardSuit.SAND, CardType.FOUR ) );
+		p4.Add( new Card( CardSuit.BLOOD, CardType.FOUR ) );
+		var p4_Result = handScorer.ScoreHand( p4 );
 
-		Assert.AreEqual( p3_Result.HandDifference, p4_Result.HandDifference );
-		Assert.True( p3_Result.PerformanceScore > p4_Result.PerformanceScore );
-		Assert.True( p3_Result.HandSize < p4_Result.HandSize );
+		Assert.True( p3_Result > p4_Result );
 	}
 }

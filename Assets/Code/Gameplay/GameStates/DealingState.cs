@@ -6,8 +6,15 @@ namespace KesselSabacc.Gameplay.GameStates
 	{
 		public override async Awaitable OnEnter(KesselSabaccGameController gameController)
 		{
-			gameController.ClearHands();
-			await gameController.PlayDealingSequence();
+			// gameController.PlayDealingSequence();
+			gameController.Model.ClearHands();
+			gameController.Model.ClearDiscardPiles();
+			gameController.Model.ClearDrawPiles();
+			await gameController.CommandSystem.WaitUntilIdle();
+			gameController.Model.ResetDrawPiles();
+			await gameController.CommandSystem.WaitUntilIdle();
+			gameController.Model.DealHands();
+			await gameController.CommandSystem.WaitUntilIdle();
 			gameController.GoToTurnTakingState();
 		}
 	}

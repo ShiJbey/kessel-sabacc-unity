@@ -11,11 +11,7 @@ namespace KesselSabacc.Model
 		public Player Player { get; set; }
 		public Card SandCard { get; set; }
 		public Card BloodCard { get; set; }
-		public int HandSize { get; set; }
-		public int HandDifference { get; set; }
-		public int PerformanceScore { get; set; }
-		public bool HasPrimeSabacc { get; set; }
-		public bool HasSabacc { get; set; }
+		public int HandScore { get; set; }
 		public bool WonRound { get; set; }
 
 		public event Action OnResultUpdated;
@@ -27,43 +23,17 @@ namespace KesselSabacc.Model
 
 		public int CompareTo(PlayerRoundResult other)
 		{
-			if ( HasPrimeSabacc && !other.HasPrimeSabacc ) return 1;
-
-			if ( !HasPrimeSabacc && other.HasPrimeSabacc ) return -1;
-
-			if ( HasSabacc && !other.HasSabacc ) return 1;
-
-			if ( !HasSabacc && other.HasSabacc ) return -1;
-
-			if ( HasSabacc && other.HasSabacc || HandDifference == other.HandDifference )
+			if (this.HandScore > other.HandScore)
 			{
-				if ( HandSize > other.HandSize )
-				{
-					return -1;
-				}
-				else if ( HandSize < other.HandSize )
-				{
-					return 1;
-				}
-				else
-				{
-					return 0;
-				}
+				return 1;
+			}
+			else if (this.HandScore == other.HandScore)
+			{
+				return 0;
 			}
 			else
 			{
-				if ( HandDifference < other.HandDifference )
-				{
-					return 1;
-				}
-				else if ( HandDifference > other.HandDifference )
-				{
-					return -1;
-				}
-				else
-				{
-					return 0;
-				}
+				return -1;
 			}
 		}
 	}

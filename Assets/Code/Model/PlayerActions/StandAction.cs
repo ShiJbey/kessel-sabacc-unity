@@ -1,7 +1,4 @@
-using KesselSabacc.Model;
-using UnityEngine;
-
-namespace KesselSabacc.Gameplay.PlayerActions
+namespace KesselSabacc.Model.PlayerActions
 {
 	/// <summary>
 	/// The performer choses not to draw any cards this turn.
@@ -17,12 +14,10 @@ namespace KesselSabacc.Gameplay.PlayerActions
 			PlayerIndex = playerIndex;
 		}
 
-		public override async Awaitable Execute(KesselSabaccGameController gameController)
+		public override void Execute(KesselSabaccGameModel model)
 		{
-			Player player = gameController.Model.Players[PlayerIndex];
+			Player player = model.Players[PlayerIndex];
 			player.HasStoodThisTurn = true;
-			gameController.Model.IsPlayerTurnOver = true;
-			await Awaitable.NextFrameAsync();
 		}
 	}
 }
