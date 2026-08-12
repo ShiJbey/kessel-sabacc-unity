@@ -45,7 +45,7 @@ namespace KesselSabacc.Gameplay
 
 				OnThinkingEnded?.Invoke();
 				chosenAction.Execute( gameController.Model );
-
+				await gameController.CommandSystem.WaitUntilIdle();
 				legalActions = gameController.Model.GetLegalActions( PlayerIndex );
 			}
 

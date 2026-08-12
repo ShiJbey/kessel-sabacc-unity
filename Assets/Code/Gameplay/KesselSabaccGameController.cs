@@ -33,20 +33,20 @@ namespace KesselSabacc.Gameplay
 		private GameState _currentGameState = null;
 		private bool _isSwitchingState = false;
 		private List<PlayerController> _players = new();
-		private KesselSabaccGameModel _model;
-		private DeckConfiguration _deckConfig;
 
-		public KesselSabaccGameModel Model => _model;
+		public PresenterCommandSystem CommandSystem { get; } = new();
+		public KesselSabaccGameModel Model { get; private set;}
 		public IReadOnlyList<PlayerController> Players => _players;
 
 		private IEnumerator Start()
 		{
-			_model = new KesselSabaccGameModel();
+			Model = new KesselSabaccGameModel();
 			yield return InitializeGame();
 		}
 
 		private void Update()
 		{
+			CommandSystem.Update();
 			if ( _isSwitchingState ) return;
 			_currentGameState?.OnInput( this );
 			_currentGameState?.OnUpdate( this );
@@ -54,14 +54,24 @@ namespace KesselSabacc.Gameplay
 
 		private void OnDestroy()
 		{
-			_model.OnCardDrawn -= OnCardDrawn;
-			_model.OnCardDiscarded -= OnCardDiscarded;
+			Model.OnCardDrawn -= OnCardDrawn;
+			Model.OnCardDiscarded -= OnCardDiscarded;
+			Model.OnDrawPilesCleared -= OnDrawPilesCleared;
+			Model.OnDiscardPilesCleared -= OnDiscardPilesCleared;
+			Model.OnDrawPilesReset -= OnDrawPilesReset;
+			Model.OnHandDealt -= OnHandDealt;
+			Model.OnHandsCleared -= OnHandsCleared;
 		}
 
 		private async Awaitable InitializeGame()
 		{
-			_model.OnCardDrawn += OnCardDrawn;
-			_model.OnCardDiscarded += OnCardDiscarded;
+			Model.OnCardDrawn += OnCardDrawn;
+			Model.OnCardDiscarded += OnCardDiscarded;
+			Model.OnDrawPilesCleared += OnDrawPilesCleared;
+			Model.OnDiscardPilesCleared += OnDiscardPilesCleared;
+			Model.OnDrawPilesReset += OnDrawPilesReset;
+			Model.OnHandDealt += OnHandDealt;
+			Model.OnHandsCleared += OnHandsCleared;
 
 			var loadingScreen = ApplicationManager.Instance.LoadingScreen;
 			loadingScreen.Show();
@@ -76,13 +86,13 @@ namespace KesselSabacc.Gameplay
 
 			// Set the deck
 			newGameData.deck = (newGameData.deck != null) ? newGameData.deck : defaultDeckConfig;
-			_deckConfig = newGameData.deck;
+			Model.SetDeckConfig( newGameData.deck.GetCardCountsByType() );
 
 			// Add human player
 			var humanPlayerModel = new Player( "Player 1", newGameData.numChips );
 			var humanPlayerController = Instantiate( humanPlayerPrefab ).GetComponent<HumanController>();
 			humanPlayerController.Initialize( 0, humanPlayerModel, this );
-			_model.AddPlayer( humanPlayerModel );
+			Model.AddPlayer( humanPlayerModel );
 			_players.Add( humanPlayerController );
 
 			// Add CPU player(s)
@@ -92,7 +102,7 @@ namespace KesselSabacc.Gameplay
 				var cpuPlayerController = Instantiate( cpuPlayerPrefab ).GetComponent<AIController>();
 				cpuPlayerController.Strategy = defaultAIStrategy;
 				cpuPlayerController.Initialize( i, cpuPlayerModel, this );
-				_model.AddPlayer( cpuPlayerModel );
+				Model.AddPlayer( cpuPlayerModel );
 				_players.Add( cpuPlayerController );
 			}
 
@@ -164,61 +174,70 @@ namespace KesselSabacc.Gameplay
 			_currentGameState.OnTurnAdvanced( this );
 		}
 
-		public void ResetDrawPiles()
+		private void OnDrawPilesCleared()
 		{
 			uiView.tableView.SandDeckView.Clear();
-			_model.SandDeck.Clear();
-
 			uiView.tableView.BloodDeckView.Clear();
-			_model.BloodDeck.Clear();
-
-			foreach ( var entry in _deckConfig.cards )
-			{
-				for ( int i = 0; i < entry.count; i++ )
-				{
-					_model.SandDeck.Add(
-						new Card( CardSuit.SAND, entry.cardType ) );
-
-					_model.BloodDeck.Add(
-						new Card( CardSuit.BLOOD, entry.cardType ) );
-				}
-			}
-
-			_model.SandDeck.Shuffle();
-			_model.BloodDeck.Shuffle();
 		}
 
-		public void ResetDiscardPiles()
+		private void OnDiscardPilesCleared()
 		{
 			uiView.tableView.SandDiscardPileView.Clear();
-			_model.SandDiscardPile.Clear();
-
 			uiView.tableView.BloodDiscardPileView.Clear();
-			_model.BloodDiscardPile.Clear();
 		}
 
-		public CardView SpawnCard(Card card, Vector3 position, Quaternion rotation)
+		private CardView SpawnCard(Card card, Vector3 position, Quaternion rotation)
 		{
 			CardView cardView = Instantiate( cardViewPrefab, position, rotation ).GetComponent<CardView>();
 			cardView.Initialize( card );
 			return cardView;
 		}
 
-		/// <summary>
-		/// Reset the cards within the blood and sand decks, clear swap stacks.
-		/// </summary>
-		public async Awaitable ResetDecksAndPiles()
+		private void OnDrawPilesReset()
 		{
-			ResetDrawPiles();
-			ResetDiscardPiles();
+			CommandSystem.QueueCommand(
+				PresenterCommandSystem.Func(
+					async () =>
+					{
+						await Task.WhenAll(
+							AnimateDeckSpawn( uiView.tableView.SandDeckView, Model.SandDeck ).AsTask(),
+							AnimateDeckSpawn( uiView.tableView.BloodDeckView, Model.BloodDeck ).AsTask()
+						);
 
-			await Task.WhenAll(
-				AnimateDeckSpawn( uiView.tableView.SandDeckView, Model.SandDeck ).AsTask(),
-				AnimateDeckSpawn( uiView.tableView.BloodDeckView, Model.BloodDeck ).AsTask()
+						// Temporarily add a sand card to the draw deck to animate it moving
+						// to the discard pile
+						Card sandCard = Model.SandDiscardPile.Cards[0];
+						CardView sandCardView = SpawnCard(
+							sandCard,
+							uiView.tableView.SandDeckView.transform.position,
+							uiView.tableView.SandDeckView.transform.rotation
+						);
+						sandCardView.ShowBack();
+						uiView.tableView.SandDeckView.AddCard( sandCardView );
+
+						// Temporarily add a blood card to the draw deck to animate it moving
+						// to the discard pile
+						Card bloodCard = Model.BloodDiscardPile.Cards[0];
+						CardView bloodCardView = SpawnCard(
+							bloodCard,
+							uiView.tableView.BloodDeckView.transform.position,
+							uiView.tableView.BloodDeckView.transform.rotation
+						);
+						bloodCardView.ShowBack();
+						uiView.tableView.BloodDeckView.AddCard( bloodCardView );
+
+						await Task.WhenAll(
+							DiscardTopCardOfDeck(
+								uiView.tableView.SandDeckView, uiView.tableView.SandDiscardPileView ).AsTask(),
+							DiscardTopCardOfDeck(
+								uiView.tableView.BloodDeckView, uiView.tableView.BloodDiscardPileView ).AsTask()
+						);
+					}
+				)
 			);
 		}
 
-		public async Awaitable AnimateDeckSpawn(CardStackView stackView, CardStack model)
+		private async Awaitable AnimateDeckSpawn(CardStackView stackView, CardStack model)
 		{
 			int totalCards = model.Cards.Count;
 			for ( int i = 0; i < totalCards; i++ )
@@ -232,54 +251,59 @@ namespace KesselSabacc.Gameplay
 			}
 		}
 
-		public async Awaitable RevealHands(KesselSabaccGameController gameController)
+		public void RevealHands(KesselSabaccGameController gameController)
 		{
-			foreach ( HandView handView in gameController.uiView.tableView.playerHands )
-			{
-				handView.RevealHand();
-			}
-
-			await Awaitable.WaitForSecondsAsync( handRevealDelay );
+			CommandSystem.QueueCommand(
+				PresenterCommandSystem.Func(
+					async () =>
+					{
+						foreach ( HandView handView in gameController.uiView.tableView.playerHands )
+						{
+							handView.RevealHand();
+							await Awaitable.WaitForSecondsAsync( handRevealDelay );
+						}
+					}
+				)
+			);
 		}
 
-		public async Awaitable PlayDealingSequence()
+		private void OnHandDealt(HandDealtEventData eventData)
 		{
-			TableView tableView = uiView.tableView;
-
-			await ResetDecksAndPiles();
-
-			await DiscardTopCardOfDeck(
-				tableView.SandDeckView, tableView.SandDiscardPileView );
-
-			await DiscardTopCardOfDeck(
-				tableView.BloodDeckView, tableView.BloodDiscardPileView );
-
-			for ( int i = 0; i < Model.Players.Count; i++ )
-			{
-				var player = Model.Players[i];
-				if ( player.IsDisqualified ) continue;
-				Model.DrawCard(i, Model.SandDeck);
-				await Awaitable.WaitForSecondsAsync(0.5f);
-				Model.DrawCard(i, Model.BloodDeck);
-				await Awaitable.WaitForSecondsAsync(0.5f);
-			}
+			CommandSystem.QueueCommand(
+				PresenterCommandSystem.Func(
+					async () =>
+					{
+						await Task.WhenAll(
+							DealCardToPlayer( CardStack.DeckKind.SAND_DRAW, eventData.playerIndex ).AsTask(),
+							DealCardToPlayer( CardStack.DeckKind.BLOOD_DRAW, eventData.playerIndex ).AsTask()
+						);
+						await Awaitable.WaitForSecondsAsync( 0.5f );
+					}
+				)
+			);
 		}
 
-		public void ClearHands()
+		public void PlayDealingSequence()
+		{
+			Model.ClearHands();
+			Model.ClearDiscardPiles();
+			Model.ClearDrawPiles();
+			Model.ResetDrawPiles();
+			Model.DealHands();
+		}
+
+		private void OnHandsCleared()
 		{
 			foreach ( PlayerController playerController in _players )
 			{
-				playerController.Model.ClearHand();
 				uiView.tableView.playerHands[playerController.PlayerIndex].Clear();
 			}
 		}
 
-		public async Awaitable DealCardToPlayer(CardStackView cardStackView, int playerIndex)
+		private async Awaitable DealCardToPlayer(CardStack.DeckKind deckKind, int playerIndex)
 		{
+			CardStackView cardStackView = GetCardStackViewOfKind( deckKind );
 			CardView cardView = cardStackView.Pop();
-			// Card card = deck.Pop();
-
-			// Model.Players[playerIndex].AddCardToHand( card );
 
 			HandView playerHand = uiView.tableView.playerHands[playerIndex];
 
@@ -302,40 +326,15 @@ namespace KesselSabacc.Gameplay
 			}
 		}
 
-		private CardStackView GetCardStackView(CardStack cardStack)
+		private async Awaitable DiscardCardFromPlayer(int playerIndex, int cardIndex, CardSuit suit)
 		{
-			if ( cardStack == uiView.tableView.SandDiscardPileView.Model )
-			{
-				return uiView.tableView.SandDiscardPileView;
-			}
-			else if ( cardStack == uiView.tableView.SandDeckView.Model )
-			{
-				return uiView.tableView.SandDeckView;
-			}
-			else if ( cardStack == uiView.tableView.BloodDeckView.Model )
-			{
-				return uiView.tableView.BloodDeckView;
-			}
-			else if ( cardStack == uiView.tableView.BloodDiscardPileView.Model )
-			{
-				return uiView.tableView.BloodDiscardPileView;
-			}
+			CardView cardView = uiView.tableView.playerHands[playerIndex].Cards[cardIndex];
 
-			return null;
-		}
-
-		public async Awaitable DiscardCardFromPlayer(int playerIndex, Card card)
-		{
-
-			CardView cardView = uiView.tableView.playerHands[playerIndex].GetCard( card );
-
-			CardStackView discardPileView = card.Suit == CardSuit.SAND ?
+			CardStackView discardPileView = suit == CardSuit.SAND ?
 				uiView.tableView.SandDiscardPileView
 				: uiView.tableView.BloodDiscardPileView;
 
-			// Model.Players[playerIndex].DiscardCardFromHand( card );
-
-			await uiView.tableView.playerHands[playerIndex].RemoveCard( card );
+			await uiView.tableView.playerHands[playerIndex].RemoveCard( cardIndex );
 
 			await cardView.MoveCardToPosition(
 				discardPileView.transform.position,
@@ -347,10 +346,9 @@ namespace KesselSabacc.Gameplay
 			await cardView.ShowFrontAsync();
 		}
 
-		public async Awaitable DiscardTopCardOfDeck(CardStackView deck, CardStackView discardPile)
+		private async Awaitable DiscardTopCardOfDeck(CardStackView deck, CardStackView discardPile)
 		{
 			CardView cardView = deck.Pop();
-			deck.Model.Pop();
 
 			await cardView.Flip();
 
@@ -374,17 +372,31 @@ namespace KesselSabacc.Gameplay
 
 		private void OnCardDrawn(CardDrawnEventData eventData)
 		{
-			_ = DealCardToPlayer(GetCardStackViewOfKind(eventData.deck), eventData.playerIndex);
+			CommandSystem.QueueCommand(
+				PresenterCommandSystem.Func(
+					async () =>
+					{
+						await DealCardToPlayer( eventData.deck, eventData.playerIndex );
+					}
+				)
+			);
 		}
 
 		private void OnCardDiscarded(CardDiscardedEventData eventData)
 		{
-			_ = DiscardCardFromPlayer(eventData.playerIndex, eventData.card);
+			CommandSystem.QueueCommand(
+				PresenterCommandSystem.Func(
+					async () =>
+					{
+						await DiscardCardFromPlayer( eventData.playerIndex, eventData.cardIndex, eventData.cardSuit );
+					}
+				)
+			);
 		}
 
 		private CardStackView GetCardStackViewOfKind(CardStack.DeckKind kind)
 		{
-			switch (kind)
+			switch ( kind )
 			{
 				case CardStack.DeckKind.SAND_DISCARD:
 					return uiView.tableView.SandDiscardPileView;

@@ -14,17 +14,27 @@ namespace KesselSabacc.Model
 		}
 	}
 
+	public class HandDealtEventData
+	{
+		public readonly int playerIndex;
+
+		public HandDealtEventData(int playerIndex)
+		{
+			this.playerIndex = playerIndex;
+		}
+	}
+
 	public class CardDiscardedEventData
 	{
 		public readonly int playerIndex;
 		public readonly int cardIndex;
-		public readonly Card card;
+		public readonly CardSuit cardSuit;
 
-		public CardDiscardedEventData(int playerIndex, int cardIndex, Card card)
+		public CardDiscardedEventData(int playerIndex, int cardIndex, CardSuit suit)
 		{
 			this.playerIndex = playerIndex;
 			this.cardIndex = cardIndex;
-			this.card = card;
+			this.cardSuit = suit;
 		}
 	}
 }

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using KesselSabacc.Gameplay;
-using KesselSabacc.Model;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -85,27 +84,9 @@ namespace KesselSabacc.Views
 			await UpdateCardPositions();
 		}
 
-		public CardView GetCard(Card card)
+		public async Awaitable RemoveCard(int cardIndex)
 		{
-			foreach ( CardView view in _cards )
-			{
-				if ( view.Card == card )
-				{
-					return view;
-				}
-			}
-			return null;
-		}
-
-		public async Awaitable RemoveCard(Card card)
-		{
-			for ( int i = _cards.Count - 1; i >= 0; i-- )
-			{
-				if ( _cards[i].Card == card )
-				{
-					_cards.RemoveAt( i );
-				}
-			}
+			_cards.RemoveAt(cardIndex);
 			await UpdateCardPositions();
 		}
 

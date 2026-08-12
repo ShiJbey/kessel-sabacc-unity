@@ -128,23 +128,24 @@ namespace KesselSabacc.Model
 		/// <returns></returns>
 		public int[] GetDiscardOptions()
 		{
-			Dictionary<CardSuit, int> suitCounts = new();
-			List<int> discardOptions = new();
+			Dictionary<CardSuit, List<int>> cardIndicesBySuit = new();
 
 			for (int i = 0; i < _cards.Count; i++)
 			{
-				Card card = _cards[i];
-
-				if (!suitCounts.ContainsKey(card.Suit))
+				if (!cardIndicesBySuit.ContainsKey(_cards[i].Suit))
 				{
-					suitCounts[card.Suit] = 0;
+					cardIndicesBySuit.Add(_cards[i].Suit, new List<int>());
 				}
 
-				suitCounts[card.Suit]++;
+				cardIndicesBySuit[_cards[i].Suit].Add(i);
+			}
 
-				if (suitCounts[card.Suit] > 1)
+			List<int> discardOptions = new();
+			foreach (var pair in cardIndicesBySuit)
+			{
+				if (pair.Value.Count > 1)
 				{
-					discardOptions.Add(i);
+					discardOptions.AddRange(pair.Value);
 				}
 			}
 

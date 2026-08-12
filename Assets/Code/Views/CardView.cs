@@ -30,7 +30,6 @@ namespace KesselSabacc.Views
 		private bool _isFlipping = false;
 		private CardZone _currentZone;
 
-		public Card Card { get; private set; }
 		public Sprite Sprite => _spriteRenderer.sprite;
 
 		public void Start()
@@ -67,10 +66,9 @@ namespace KesselSabacc.Views
 		/// <param name="card"></param>
 		public void Initialize(Card card, bool isFaceUp = false)
 		{
-			Card = card;
 			DeckConfiguration deckConfig = NewGameManager.Instance.Data.deck;
-			_frontSprite = deckConfig.GetFrontSprite(card.Suit, card.CardType);
-			_backSprite = deckConfig.GetBackSprite(card.Suit);
+			_frontSprite = deckConfig.GetFrontSprite( card.Suit, card.CardType );
+			_backSprite = deckConfig.GetBackSprite( card.Suit );
 			_isFaceUp = isFaceUp;
 			_spriteRenderer.sprite = isFaceUp ? _frontSprite : _backSprite;
 		}

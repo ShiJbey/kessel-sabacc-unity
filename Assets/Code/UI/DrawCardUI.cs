@@ -54,11 +54,11 @@ namespace KesselSabacc.UI
 			cardView.OnClick += () => { onChosen( actions[0] ); };
 			_cardViews.Add( cardView );
 
-			cardView = InstantiateCardView( deckConfig.GetFrontSprite(actions[1].Card.Suit, actions[1].Card.CardType) );
+			cardView = InstantiateCardView( deckConfig.GetBackSprite(actions[1].Card.Suit) );
 			cardView.OnClick += () => { onChosen( actions[1] ); };
 			_cardViews.Add( cardView );
 
-			cardView = InstantiateCardView( deckConfig.GetFrontSprite(actions[2].Card.Suit, actions[2].Card.CardType) );
+			cardView = InstantiateCardView( deckConfig.GetBackSprite(actions[2].Card.Suit) );
 			cardView.OnClick += () => { onChosen( actions[2] ); };
 			_cardViews.Add( cardView );
 
