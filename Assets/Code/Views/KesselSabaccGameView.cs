@@ -27,6 +27,9 @@ namespace KesselSabacc.Views
 		[Header( "View References" )]
 		public TableView tableView;
 
+		[Header( "Configuration Settings" )]
+		public Color[] playerColors;
+
 		private PlayerAction _standAction;
 		private Action<PlayerAction> _standCallback;
 
@@ -57,8 +60,8 @@ namespace KesselSabacc.Views
 
 		public void Initialize(KesselSabaccGameController gameController)
 		{
-			hud.Initialize( gameController, 0 );
-			tableView.Initialize( gameController, 0 );
+			hud.Initialize( gameController, 0, playerColors );
+			tableView.Initialize( gameController, 0, playerColors );
 			roundEndUI.Initialize( gameController );
 			gameOverNotificationUI.Initialize( gameController );
 		}

@@ -14,7 +14,7 @@ namespace KesselSabacc.Gameplay.GameStates
 				gameController.Model.CurrentRound
 			);
 
-			gameController.RevealHands( gameController );
+			gameController.uiView.tableView.RevealHands();
 
 			await gameController.CommandSystem.WaitUntilIdle();
 

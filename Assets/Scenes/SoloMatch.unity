@@ -427,15 +427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.Gameplay.KesselSabaccGameController
   uiView: {fileID: 2065205190}
-  deckSpawnDuration: 1
-  handRevealDelay: 2.5
   defaultDeckConfig: {fileID: 11400000, guid: 8c803d76953d5fd4997848ada69b8b68, type: 2}
-  playerColors:
-  - {r: 0.35169476, g: 1, b: 0, a: 1}
-  - {r: 0, g: 1, b: 1, a: 1}
-  - {r: 1, g: 0, b: 0.48748076, a: 1}
-  - {r: 1, g: 0.5795378, b: 0, a: 1}
-  cardViewPrefab: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
   humanPlayerPrefab: {fileID: 7032496867150446563, guid: c1161096df1a53c4a8daf4f4b32646c9, type: 3}
   cpuPlayerPrefab: {fileID: 4614989181126682047, guid: 9c12ad1e43c288f4985777d934a183dd, type: 3}
   defaultAIStrategy: {fileID: 11400000, guid: 549a66de6923b483f8492c834536ac7a, type: 2}
@@ -582,6 +574,7 @@ Transform:
   - {fileID: 94575153}
   - {fileID: 458651930}
   - {fileID: 878986613}
+  - {fileID: 1730904503}
   m_Father: {fileID: 2065205189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &477663661
@@ -600,6 +593,10 @@ MonoBehaviour:
   _sandDeckView: {fileID: 219677667}
   _bloodDeckView: {fileID: 2046391770}
   _bloodDiscardPileView: {fileID: 1791630222}
+  _cardsContainer: {fileID: 1730904503}
+  deckSpawnDuration: 1
+  handRevealDelay: 2.5
+  cardViewPrefab: {fileID: 8331269416852979838, guid: c56b7bee12a41de448652ae5fe43edf7, type: 3}
   playerHands:
   - {fileID: 645176885}
   - {fileID: 503708898}
@@ -1268,6 +1265,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28119e90b852cca4d971f8d068d2304d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KesselSabacc.UI.RoundEndUI
+--- !u!1 &1730904502
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1730904503}
+  m_Layer: 0
+  m_Name: Cards
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1730904503
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730904502}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 477663660}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1791630221 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 964852055378710348, guid: ca147e233bfdb1f4caf8fb42f8bf67ab, type: 3}
@@ -1571,6 +1599,11 @@ MonoBehaviour:
   diceRollUI: {fileID: 245501668}
   roundEndUI: {fileID: 1724962887}
   tableView: {fileID: 477663661}
+  playerColors:
+  - {r: 0, g: 0.85274386, b: 1, a: 1}
+  - {r: 0.009649992, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.49875253, b: 0, a: 1}
+  - {r: 0.81787574, g: 0, b: 1, a: 1}
 --- !u!114 &2065205191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2339,6 +2372,22 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5821149870612961111, guid: 2a6655f32c89c410a9f001877e8fa594, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6511351157390136089, guid: 2a6655f32c89c410a9f001877e8fa594, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6511351157390136089, guid: 2a6655f32c89c410a9f001877e8fa594, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6511351157390136089, guid: 2a6655f32c89c410a9f001877e8fa594, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6511351157390136089, guid: 2a6655f32c89c410a9f001877e8fa594, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}

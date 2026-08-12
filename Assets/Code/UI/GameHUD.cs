@@ -40,7 +40,7 @@ namespace KesselSabacc.UI
 			}
 		}
 
-		public void Initialize(KesselSabaccGameController gameController, int playerIndex)
+		public void Initialize(KesselSabaccGameController gameController, int playerIndex, Color[] playerColors)
 		{
 			_turnCounter.Initialize( gameController.Model );
 
@@ -57,7 +57,7 @@ namespace KesselSabacc.UI
 			{
 				if ( i == playerIndex ) continue;
 
-				_opponentUI[opponentUIIndex].infoPanel.Initialize( gameController.Players[i], gameController.playerColors[i] );
+				_opponentUI[opponentUIIndex].infoPanel.Initialize( gameController.Players[i], playerColors[i] );
 				opponentUIIndex++;
 			}
 
